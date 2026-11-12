@@ -99,6 +99,8 @@
     @media (max-width: 639px) and (max-height: 700px) {
       nav.safe-bottom { padding-top: 0.25rem; padding-bottom: max(0.4rem, env(safe-area-inset-bottom)); }
     }
+    @keyframes geSpin { to { transform: rotate(360deg); } }
+    @keyframes geFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   </style>
 </head>
 <body class="min-h-screen flex justify-center items-center antialiased selection:bg-indigo-500 selection:text-white">
@@ -133,6 +135,14 @@
 
   <!-- Mobile App Viewport Frame -->
   <div id="phone-container" class="relative w-full max-w-[435px] h-screen sm:h-[920px] sm:max-h-[94vh] royal-app-bg sm:rounded-[46px] overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9)] flex flex-col sm:border-[8px] sm:border-[#1a1d36]">
+    <!-- STARTUP SCREEN: covers the app until we know who the user is -->
+    <div id="ge-splash" style="position:absolute;inset:0;z-index:200;background:linear-gradient(180deg,#13162c 0%,#0b0c18 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .35s ease;">
+      <div style="font-size:56px;animation:geFade .5s ease both">🍽️</div>
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:26px;letter-spacing:.5px;color:#fff;animation:geFade .6s .1s ease both">Good Eats</div>
+      <div style="font-size:12px;color:#9ca3af;animation:geFade .6s .2s ease both">Dishes · Groceries · Macros</div>
+      <div style="width:22px;height:22px;border:3px solid rgba(255,255,255,.15);border-top-color:#22c55e;border-radius:50%;animation:geSpin .8s linear infinite;margin-top:10px"></div>
+    </div>
+
 
     <!-- INTERACTIVE TOAST NOTIFICATION -->
     <div id="toast" onclick="handleToastClick()" class="cursor-pointer absolute top-14 left-1/2 -translate-x-1/2 z-[90] transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-4 bg-[#181b34]/95 backdrop-blur-md text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 border border-emerald-500/60 whitespace-nowrap">
@@ -709,7 +719,7 @@
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Explore Cook Profiles</span>
             <button id="back-to-my-profile-btn" onclick="openUserProfile(ME)" class="hidden text-[11px] font-bold text-emerald-400 hover:underline flex items-center gap-1">
-              ← Back to My Profile (@<span class="me-name">HoldenBM</span>)
+              ← Back to My Profile (@<span class="me-name">you</span>)
             </button>
           </div>
           <div id="profile-switcher-pills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
@@ -1365,7 +1375,7 @@
               <h3 class="text-base font-extrabold text-white">Comments & Tweaks</h3>
               <span id="cmts-count-pill" class="px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-[11px] font-extrabold">3</span>
             </div>
-            <p id="cmts-subtitle" class="text-xs text-gray-400 truncate mt-0.5">Peanutty Pork • by @HoldenBM</p>
+            <p id="cmts-subtitle" class="text-xs text-gray-400 truncate mt-0.5">Dish comments</p>
           </div>
           <button onclick="closeCommentsModal()" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold text-gray-200 transition shrink-0">
             Close
@@ -1383,7 +1393,7 @@
             <button type="button" id="cmt-tweak-toggle" onclick="toggleCommentTweakMode()" class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#1b1f3d] text-gray-300 border border-white/10 transition flex items-center gap-1.5">
               <span>💡 Tag as Recipe Tweak / Substitution</span>
             </button>
-            <span class="text-[10px] text-gray-500">Posting as <strong class="text-gray-300">@<span class="me-name">HoldenBM</span></strong></span>
+            <span class="text-[10px] text-gray-500">Posting as <strong class="text-gray-300">@<span class="me-name">you</span></strong></span>
           </div>
 
           <div class="flex items-center gap-2">
@@ -1444,7 +1454,7 @@
        COMPLETE APPLICATION DATA & INTERACTIVE LOGIC
        ========================================================================= -->
   <script>
-    let ME = 'HoldenBM';
+    let ME = 'Guest';
     /* 0. DIRECTORY OF USER PROFILES (Viewable Social Profiles & Top 5 Favorites) */
     const USER_PROFILES = {
       'HoldenBM': {
@@ -4353,6 +4363,9 @@
 /* ===== Good Eats social layer: profiles, shared posts/likes/comments/follows ===== */
 (async function(){
 const $=id=>document.getElementById(id);
+let booted=false;
+function hideSplash(){booted=true;const s=$('ge-splash');if(!s)return;s.style.opacity='0';s.style.pointerEvents='none';setTimeout(()=>s.remove(),400)}
+setTimeout(()=>{if(!booted){if(!myProfile)openOnboard(false);hideSplash()}},12000);
 RECIPES.length=0;SOCIAL_REVIEWS.length=0;Object.keys(USER_PROFILES).forEach(k=>delete USER_PROFILES[k]);
 const _rmp=renderMealPlanner;renderMealPlanner=function(){if(!RECIPES.length){const c=$('meal-planner-slots');if(c)c.innerHTML='<p class="text-xs text-gray-400 text-center py-4">Your meal plan fills in once dishes are posted. Be the first to post one! 🍽️</p>';const tc=$('planner-total-cost');if(tc)tc.innerText='$0.00 / 5 meals';return}_rmp.apply(this,arguments)};
 const _rf=renderFeed;renderFeed=function(){_rf.apply(this,arguments);if(!RECIPES.length){const c=$('feed-stream');if(c)c.innerHTML='<div class="text-center py-16 px-6"><div class="text-5xl mb-3">🍽️</div><h3 class="text-base font-extrabold">No dishes yet</h3><p class="text-xs text-gray-400 mt-1">Be the first to share a dish — tap the ＋ button below.</p></div>'}};
@@ -4424,7 +4437,7 @@ const _cmt=submitNewComment;submitNewComment=function(){const t=APP_STATE.active
 const _fol=toggleFollowCreator;toggleFollowCreator=function(a,e){_fol(a,e);if(a===ME)return;const r=RECIPES.find(x=>x.author===a),on=r?r.isFollowing:true;
  if(online){const d=db.doc('follows/'+uid+'__'+lname(a));(on?d.set({uid,target:a}):d.delete()).catch(()=>{})}else{const f=new Set(ls.get('ge_follows')||[]);on?f.add(a):f.delete(a);ls.set('ge_follows',[...f])}};
 // ---------- settings entry ----------
-const st=$('tab-settings');if(st){const b=document.createElement('button');b.className='w-full py-3 rounded-2xl bg-white/[0.06] border border-white/10 text-sm font-bold';b.textContent='✏️ Edit my profile';b.onclick=()=>openOnboard(true);st.prepend(b);}
+const st=$('tab-settings');if(st){const b=document.createElement('button');b.className='w-full py-3 rounded-2xl bg-white/[0.06] border border-white/10 text-sm font-bold';b.textContent='✏️ Edit my profile';b.onclick=()=>openOnboard(true);st.prepend(b);const so=document.createElement('button');so.className='w-full py-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-sm font-bold text-rose-300';so.textContent='Sign out';so.onclick=async()=>{if(!confirm('Sign out? Your profile stays saved online, but this device will start fresh and you will need to create a new profile to continue.'))return;['ge_profile','ge_posts','ge_follows'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});try{if(window.firebase&&firebase.apps.length)await firebase.auth().signOut()}catch(e){}location.reload()};st.prepend(so);}
 // ---------- Top 5 favorite dishes ----------
 const CATALOG='Chicken Alfredo|🍝;Spaghetti Bolognese|🍝;Mac and Cheese|🧀;Chicken Parmesan|🍗;Pepperoni Pizza|🍕;Margherita Pizza|🍕;Cheeseburger|🍔;Smash Burger|🍔;Chicken Tenders|🍗;Buffalo Wings|🍗;Chicken Caesar Wrap|🌯;Chicken Burrito Bowl|🌯;Beef Tacos|🌮;Chicken Quesadilla|🧀;Steak and Rice|🥩;Grilled Chicken Salad|🥗;Greek Salad|🥗;Chicken Fried Rice|🍚;Teriyaki Chicken Bowl|🍱;Pad Thai|🍜;Chicken Ramen|🍜;Pho|🍜;Sushi Rolls|🍣;Salmon and Rice|🍣;Shrimp Scampi|🍤;Fish Tacos|🌮;BBQ Ribs|🍖;Pulled Pork Sandwich|🥪;Grilled Cheese|🥪;Turkey Club Sandwich|🥪;BLT|🥪;Chicken Biscuit|🍗;Breakfast Burrito|🌯;Pancakes|🥞;Waffles|🧇;French Toast|🍞;Scrambled Eggs and Toast|🍳;Omelet|🍳;Avocado Toast|🥑;Overnight Oats|🥣;Greek Yogurt Parfait|🥣;Protein Smoothie|🥤;Protein Shake|🥤;Acai Bowl|🥣;Chicken and Waffles|🍗;Loaded Nachos|🧀;Chicken Pesto Pasta|🍝;Lasagna|🍝;Meatballs|🍝;Beef Stew|🍲;Chili|🍲;Chicken Noodle Soup|🍲;Tomato Soup|🍲;Stuffed Peppers|🫑;Baked Potato|🥔;French Fries|🍟;Mashed Potatoes|🥔;Garlic Bread|🍞;Tuna Salad Sandwich|🥪;Chickpea Salad|🥗;Veggie Stir Fry|🥦;Falafel Wrap|🌯;Gyro|🥙;Chicken Shawarma|🥙;Hot Dog|🌭;Corn Dog|🌭;Chocolate Chip Cookies|🍪;Brownies|🍫;Ice Cream Sundae|🍨;Cheesecake|🍰;Banana Bread|🍞'.split(';').map(s=>s.split('|'));
 let top=[];
@@ -4466,7 +4479,7 @@ const to=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
 try{if(window.firebase&&window.FB_CFG){firebase.initializeApp(FB_CFG);const c=await to(firebase.auth().signInAnonymously(),8000);if(c&&c.user){db=firebase.firestore();uid=c.user.uid;online=true}}}catch(e){console.warn('Firebase unavailable',e)}
 if(!online){try{const U=await to(claude.use('user'),4000);const D=await to(claude.use('db'),4000);if(U&&D&&U.id){uid=await U.id();if(uid){db=D;online=true}}}catch(e){}}
 if(online){
- try{const q=await db.collection('profiles').where('uid','==',uid).limit(1).get();if(!q.empty)profile=q.docs[0].data();else if(profile&&!ls.get('ge_synced_'+uid)){await db.doc('profiles/u_'+lname(profile.username)).set(Object.assign({uid},profile));}}catch(e){}
+ try{const q=await db.collection('profiles').where('uid','==',uid).limit(1).get();profile=q.empty?null:q.docs[0].data()}catch(e){}
  db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid)return;if(USER_PROFILES[x.username]){USER_PROFILES[x.username].top5=mapT(x.top5);USER_PROFILES[x.username].bio=esc(x.bio||'');ch=true;return}
    USER_PROFILES[x.username]=Object.assign(getOrCreateProfileData(x.username),{initials:esc(x.emoji||x.username.slice(0,2).toUpperCase()),bio:esc(x.bio||''),school:esc(x.school||''),locationBadge:x.school&&x.school!=='Home Cook'?'🎓 '+x.school:'🌎 Home Cook',followers:0,followingCount:0,isSelf:false,top5:mapT(x.top5)});ch=true});if(ch)refresh()});
  db.collection('posts').orderBy('ts','desc').limit(60).onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();try{if(ingestRecipe(JSON.parse(x.json)))ch=true}catch(e){}});if(ch)refresh()});
@@ -4477,6 +4490,7 @@ if(online){
  db.collection('follows').where('uid','==',uid).onSnapshot(s=>{const t=new Set(s.docs.map(d=>d.data().target));RECIPES.forEach(r=>{if(r.author!==ME)r.isFollowing=t.has(r.author)});refresh()});
 }else{const f=new Set(ls.get('ge_follows')||[]);RECIPES.forEach(r=>{if(f.has(r.author))r.isFollowing=true})}
 if(profile&&profile.username)applyProfile(profile);else openOnboard(false);
+hideSplash();
 })();
 </script>
 
