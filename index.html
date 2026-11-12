@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Good Eats — Social Recipes, Grocery Prices & Macro Tracker</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script>window.FB_CFG={apiKey:"AIzaSyDIOkv3DmYllTQzr12gdw5d_jYJ-nzPf5g",authDomain:"good-eats-app.firebaseapp.com",projectId:"good-eats-app",storageBucket:"good-eats-app.firebasestorage.app",messagingSenderId:"703825120311",appId:"1:703825120311:web:ae5f7482f419e6210583b2"};</script>
+
   <style>
     :root {
       --bg-deep: #0b0c18;
@@ -76,6 +81,23 @@
     }
     .ge-custom-logo-wrap:hover {
       transform: scale(1.04);
+    }
+
+    /* Responsive fit: use the real visible viewport, never scroll the page itself */
+    html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+    body { min-height: 0 !important; }
+    #phone-container { height: 100vh; height: 100dvh; max-height: none; padding-top: env(safe-area-inset-top, 0px); }
+    #app-screens { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+    #app-screens { padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)); }
+    @media (max-width: 639px) {
+      body { position: fixed; inset: 0; width: 100%; display: block; }
+      #phone-container { max-width: 100%; border-radius: 0; border: 0; box-shadow: none; }
+    }
+    @media (min-width: 640px) {
+      #phone-container { height: min(920px, 94vh); height: min(920px, 94dvh); padding-top: 0; }
+    }
+    @media (max-width: 639px) and (max-height: 700px) {
+      nav.safe-bottom { padding-top: 0.25rem; padding-bottom: max(0.4rem, env(safe-area-inset-bottom)); }
     }
   </style>
 </head>
@@ -4408,8 +4430,9 @@ const _fol=toggleFollowCreator;toggleFollowCreator=function(a,e){_fol(a,e);if(a=
 const st=$('tab-settings');if(st){const b=document.createElement('button');b.className='w-full py-3 rounded-2xl bg-white/[0.06] border border-white/10 text-sm font-bold';b.textContent='✏️ Edit my profile';b.onclick=()=>openOnboard(true);st.prepend(b);}
 // ---------- boot ----------
 let profile=ls.get('ge_profile');
-try{const U=await Promise.race([claude.use('user'),new Promise(r=>setTimeout(()=>r(null),4000))]);const D=await Promise.race([claude.use('db'),new Promise(r=>setTimeout(()=>r(null),4000))]);
- if(U&&D&&U.id){uid=await U.id();if(uid){db=D;online=true}}}catch(e){}
+const to=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
+try{if(window.firebase&&window.FB_CFG){firebase.initializeApp(FB_CFG);const c=await to(firebase.auth().signInAnonymously(),8000);if(c&&c.user){db=firebase.firestore();uid=c.user.uid;online=true}}}catch(e){console.warn('Firebase unavailable',e)}
+if(!online){try{const U=await to(claude.use('user'),4000);const D=await to(claude.use('db'),4000);if(U&&D&&U.id){uid=await U.id();if(uid){db=D;online=true}}}catch(e){}}
 if(online){
  try{const q=await db.collection('profiles').where('uid','==',uid).limit(1).get();if(!q.empty)profile=q.docs[0].data();else if(profile&&!ls.get('ge_synced_'+uid)){await db.doc('profiles/u_'+lname(profile.username)).set(Object.assign({uid},profile));}}catch(e){}
  db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid||USER_PROFILES[x.username])return;
