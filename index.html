@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
-  <title>Good Eats — Social Recipes, Grocery Prices & Macro Tracker</title>
+  <title>Good Eats — Social Dishes, Grocery Prices & Macro Tracker</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -236,7 +236,7 @@
           <!-- Clean 3-Way Catalogue Switcher: All Recipes | Elon Dining | Grocery Cart -->
           <div class="grid grid-cols-3 gap-1 bg-[#181920] p-1 rounded-2xl border border-white/5 text-[11px]">
             <button id="cat-mode-recipes" onclick="switchCatalogueMode('recipes')" class="py-2 rounded-xl font-bold bg-[#3843d0] text-white shadow transition flex items-center justify-center gap-1">
-              <span>🌎 All Recipes</span>
+              <span>🌎 All Dishes</span>
             </button>
             <button id="cat-mode-dining" onclick="switchCatalogueMode('dining')" class="py-2 rounded-xl font-semibold text-gray-400 hover:text-white transition flex items-center justify-center gap-1">
               <span>🎓 Elon Dining</span>
@@ -691,7 +691,7 @@
               <h3 class="text-sm font-extrabold text-white">Weekly Meal Prep Planner</h3>
               <span class="text-xs font-bold text-[#7ed957]" id="planner-total-cost">$14.20 / wk</span>
             </div>
-            <p class="text-xs text-gray-400">Tap any slot to view or swap a recipe, or log it directly to Today.</p>
+            <p class="text-xs text-gray-400">Tap any slot to view or swap a dish, or log it directly to Today.</p>
           </div>
 
           <div id="meal-planner-slots" class="space-y-2.5">
@@ -741,7 +741,7 @@
 
         <!-- Profile Sub-Tabs: Created Recipes | Ranked Reviews | Saved Queue -->
         <div class="grid grid-cols-3 bg-[#14172b] p-1 rounded-xl border border-white/[0.06] text-xs">
-          <button id="prof-sub-recipes" onclick="setProfileSubTab('recipes')" class="py-1.5 rounded-lg font-bold bg-[#4f46e5] text-white transition">Recipes</button>
+          <button id="prof-sub-recipes" onclick="setProfileSubTab('recipes')" class="py-1.5 rounded-lg font-bold bg-[#4f46e5] text-white transition">Dishes</button>
           <button id="prof-sub-reviews" onclick="setProfileSubTab('reviews')" class="py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition">Reviews</button>
           <button id="prof-sub-saved" onclick="setProfileSubTab('saved')" class="py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition">Saved</button>
         </div>
@@ -800,7 +800,7 @@
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-sm font-extrabold text-white">Target Meal Budget</h3>
-              <p class="text-[11px] text-gray-400">Used to verify if recipes fit your wallet</p>
+              <p class="text-[11px] text-gray-400">Used to verify if dishes fit your wallet</p>
             </div>
             <span id="budget-slider-label" class="text-lg font-black text-[#7ed957]">$6.00 / serving</span>
           </div>
@@ -938,7 +938,7 @@
         <!-- Interactive Rating Drawer (Beli-Style Score + Notes) -->
         <div id="rm-rate-drawer" class="hidden bg-[#171a33] border border-[#7ed957]/40 rounded-2xl p-4 space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-white">Rate this Recipe (Beli Style)</span>
+            <span class="text-xs font-extrabold text-white">Rate this Dish (Beli Style)</span>
             <span id="user-rate-val" class="text-base font-black text-[#7ed957]">9.5</span>
           </div>
           <input id="user-rate-slider" type="range" min="1.0" max="10.0" step="0.1" value="9.5" oninput="document.getElementById('user-rate-val').innerText = parseFloat(this.value).toFixed(1)" class="w-full">
@@ -1053,7 +1053,7 @@
 
         <!-- 3-Mode Segmented Switcher -->
         <div class="grid grid-cols-3 gap-1 bg-[#1b1e38] p-1 rounded-2xl border border-white/10 text-xs">
-          <button id="cm-tab-recipe" onclick="switchCreateTab('recipe')" class="py-2 rounded-xl font-extrabold bg-[#7ed957] text-[#0b0c18] transition">🍳 Post Recipe</button>
+          <button id="cm-tab-recipe" onclick="switchCreateTab('recipe')" class="py-2 rounded-xl font-extrabold bg-[#7ed957] text-[#0b0c18] transition">🍳 Post Dish</button>
           <button id="cm-tab-rank" onclick="switchCreateTab('rank')" class="py-2 rounded-xl font-bold text-gray-300 hover:text-white transition">⭐ Rank Dish</button>
           <button id="cm-tab-log" onclick="switchCreateTab('log')" class="py-2 rounded-xl font-bold text-gray-300 hover:text-white transition">⚡ Quick Log</button>
         </div>
@@ -1240,7 +1240,7 @@
 
           <!-- Instant 1-Tap Log from Saved/Popular Recipes -->
           <div>
-            <label class="block text-xs font-bold text-gray-300 mb-1.5">2. Tap a Recipe or Dining Item to Log Immediately</label>
+            <label class="block text-xs font-bold text-gray-300 mb-1.5">2. Tap a Dish or Dining Item to Log Immediately</label>
             <div id="quick-log-presets" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
               <!-- Populated by JS -->
             </div>
@@ -1333,7 +1333,7 @@
     <div id="share-modal" class="absolute inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex-col justify-end">
       <div class="bg-[#14162b] border-t border-white/15 rounded-t-[32px] p-5 space-y-4 shadow-2xl">
         <div class="flex items-center justify-between">
-          <h3 class="text-base font-extrabold text-white">Share Recipe Card</h3>
+          <h3 class="text-base font-extrabold text-white">Share Dish Card</h3>
           <button onclick="closeShareSheet()" class="px-3 py-1 rounded-full bg-white/10 text-xs font-bold text-gray-300">Close</button>
         </div>
         <div id="share-card-preview" class="bg-[#0d0e1c] border border-white/10 rounded-2xl p-3.5 text-xs space-y-1 text-gray-300 font-mono">
@@ -2219,7 +2219,7 @@
                   <div class="min-w-0">
                     <div class="flex items-center gap-1.5 flex-wrap">
                       <span onclick="openUserProfile('${matchingReview.user.trim()}', event)" class="text-xs font-extrabold text-white hover:text-emerald-400 hover:underline transition">@${matchingReview.user.trim()}</span>
-                      <span class="text-[10px] text-gray-400">ranked a recipe</span>
+                      <span class="text-[10px] text-gray-400">ranked a dish</span>
                       <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${isSchoolReviewer ? 'bg-[#b8293d]/30 text-rose-200 border border-[#b8293d]/50' : 'bg-white/10 text-gray-300'}">
                         ${matchingReview.authorBadge || (isSchoolReviewer ? '🎓 Elon' : '🌎 Global')}
                       </span>
@@ -2944,7 +2944,7 @@
 
       const grid = document.getElementById('catalogue-recipes-grid');
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="p-8 text-center text-gray-400 text-xs bg-[#14162b] rounded-2xl">No recipes match those exact filters. Try relaxing the sliders!</div>`;
+        grid.innerHTML = `<div class="p-8 text-center text-gray-400 text-xs bg-[#14162b] rounded-2xl">No dishes match those exact filters. Try relaxing the sliders!</div>`;
         return;
       }
 
@@ -3099,7 +3099,7 @@
           needEl.innerText = `Left: ${remProt}g P · ${remCal} cal`;
           const candidates = RECIPES.filter(r => r.macros.cal <= Math.max(400, remCal + 100))
             .sort((a, b) => b.macros.p - a.macros.p);
-          const pick = candidates[0] || RECIPES[0];
+          const pick = candidates[0] || RECIPES[0] || { id: '', emoji: '🍽️', title: 'Post a dish to get suggestions', macros: { cal: 0, p: 0 }, ingredients: [] };
           const pickCost = getRecipeCost(pick).toFixed(2);
           sugEl.innerHTML = `
             <div onclick="openRecipeModal('${pick.id}')" class="cursor-pointer min-w-0">
@@ -3481,7 +3481,7 @@
       `).join('') || `<span class="text-[11px] text-gray-400">All items checked off in fridge/pantry! 🎉</span>`;
 
       if (APP_STATE.cart.length === 0) {
-        container.innerHTML = `<div class="p-8 text-center text-gray-400 text-xs bg-[#14162b] rounded-2xl">Your grocery cart is empty. Open any recipe and tap "+ Add All to Cart"!</div>`;
+        container.innerHTML = `<div class="p-8 text-center text-gray-400 text-xs bg-[#14162b] rounded-2xl">Your grocery cart is empty. Open any dish and tap "+ Add All to Cart"!</div>`;
         return;
       }
 
@@ -3803,7 +3803,7 @@
       const title = document.getElementById('new-recipe-title').value.trim() || 'Honey Garlic Chicken Bowl';
       const photo = document.getElementById('new-recipe-photo').value;
       const emoji = getAutoEmojiForTitle(title, photo);
-      const caption = document.getElementById('new-recipe-caption').value.trim() || `Just dropped my ${title} recipe! Check the macros and ingredient sources.`;
+      const caption = document.getElementById('new-recipe-caption').value.trim() || `Just dropped my ${title}! Check the macros and ingredient sources.`;
       const prepTime = document.getElementById('new-recipe-time').value.trim() || '15 min';
       const score = Math.min(10, Math.max(1, parseFloat(document.getElementById('new-recipe-score').value) || 9.5));
       const cal = parseInt(document.getElementById('new-recipe-cal').value) || 520;
@@ -3903,7 +3903,7 @@
       const summary = `Good Eats Recipe: ${recipe.emoji} ${recipe.title} by ${recipe.handle} (${recipe.rating.toFixed(1)}/10)\nMacros: ${recipe.macros.cal} cal | ${recipe.macros.p}g P | ${recipe.macros.c}g C | ${recipe.macros.f}g F\nCost: $${cost}/serving`;
       copyTextToClipboard(summary);
       closeShareSheet();
-      showToast('Copied shareable recipe card to clipboard!');
+      showToast('Copied shareable dish card to clipboard!');
     }
 
     function repostRecipeToFeed() {
@@ -3980,7 +3980,7 @@
         followingCount: 94,
         avgScore: 9.1,
         avatarGrad: 'from-indigo-500 to-emerald-400',
-        top5: top5List
+        top5: []
       };
     }
 
@@ -4082,7 +4082,7 @@
           <div class="grid grid-cols-4 gap-2 pt-3 border-t border-white/10 text-center">
             <div>
               <span class="text-sm font-black text-white">${userRecipes.length}</span>
-              <p class="text-[10px] text-gray-400 uppercase font-bold">Recipes</p>
+              <p class="text-[10px] text-gray-400 uppercase font-bold">Dishes</p>
             </div>
             <div>
               <span class="text-sm font-black text-white">${userReviews.length + prof.top5.length}</span>
@@ -4104,20 +4104,12 @@
       const top5Heading = document.getElementById('profile-top5-heading');
       const top5ListEl = document.getElementById('profile-top5-list');
       if (top5Heading) {
-        top5Heading.innerText = isSelf ? "Holden's Top 5 Favorite Dishes" : `${prof.handle}'s Top 5 Favorite Dishes`;
+        top5Heading.innerText = isSelf ? "My Top 5 Favorite Dishes" : `${prof.handle}'s Top 5 Favorite Dishes`;
       }
 
       if (top5ListEl) {
         // For HoldenBM, dynamically pull his top 5 highest rated dishes so new rankings/recipes update live
-        const top5Items = isSelf
-          ? [...RECIPES].sort((a, b) => b.rating - a.rating).slice(0, 5).map(r => ({
-              recipeId: r.id,
-              title: r.title,
-              subtitle: `${r.handle} · ${r.macros.cal} cal · ${r.macros.p}g P · $${getRecipeCost(r).toFixed(2)}`,
-              score: r.rating,
-              emoji: r.emoji
-            }))
-          : prof.top5.slice(0, 5);
+        const top5Items = (prof.top5 || []).slice(0, 5);
 
         const rankColors = [
           'bg-amber-400 text-[#0b0c18]',
@@ -4128,7 +4120,7 @@
         ];
 
         top5ListEl.innerHTML = top5Items.map((item, idx) => `
-          <div onclick="${item.recipeId ? `openRecipeModal('${item.recipeId}')` : `showToast('Campus Dish: Available in Elon Dining catalogue!')`}" class="cursor-pointer bg-[#1c203d]/80 hover:bg-[#23284d] border border-white/[0.06] rounded-2xl p-2.5 flex items-center justify-between transition group">
+          <div onclick="${item.recipeId ? `openRecipeModal('${item.recipeId}')` : `void 0`}" class="cursor-pointer bg-[#1c203d]/80 hover:bg-[#23284d] border border-white/[0.06] rounded-2xl p-2.5 flex items-center justify-between transition group">
             <div class="flex items-center gap-3 min-w-0">
               <span class="w-6 h-6 rounded-full ${rankColors[idx] || rankColors[4]} text-xs font-black flex items-center justify-center shrink-0 shadow">
                 #${idx + 1}
@@ -4141,7 +4133,7 @@
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <span class="w-9 h-9 rounded-full border-2 border-emerald-400 bg-[#0d0e1c] text-emerald-400 font-black text-xs flex items-center justify-center">
-                ${Number(item.score).toFixed(1)}
+                ${item.score != null ? Number(item.score).toFixed(1) : '♥'}
               </span>
             </div>
           </div>
@@ -4207,7 +4199,7 @@
         : RECIPES.filter(r => r.id !== prof.top5?.[0]?.recipeId).slice(0, 3);
 
       if (saved.length === 0) {
-        container.innerHTML = `<div class="bg-[#15182e] border border-white/5 rounded-2xl p-6 text-center text-xs text-gray-400">Tap the bookmark icon on any recipe to save it to your Want-to-Cook queue.</div>`;
+        container.innerHTML = `<div class="bg-[#15182e] border border-white/5 rounded-2xl p-6 text-center text-xs text-gray-400">Tap the bookmark icon on any dish to save it to your Want-to-Cook queue.</div>`;
         return;
       }
       container.innerHTML = saved.map(r => `
@@ -4361,6 +4353,10 @@
 /* ===== Good Eats social layer: profiles, shared posts/likes/comments/follows ===== */
 (async function(){
 const $=id=>document.getElementById(id);
+RECIPES.length=0;SOCIAL_REVIEWS.length=0;Object.keys(USER_PROFILES).forEach(k=>delete USER_PROFILES[k]);
+const _rmp=renderMealPlanner;renderMealPlanner=function(){if(!RECIPES.length){const c=$('meal-planner-slots');if(c)c.innerHTML='<p class="text-xs text-gray-400 text-center py-4">Your meal plan fills in once dishes are posted. Be the first to post one! 🍽️</p>';const tc=$('planner-total-cost');if(tc)tc.innerText='$0.00 / 5 meals';return}_rmp.apply(this,arguments)};
+const _rf=renderFeed;renderFeed=function(){_rf.apply(this,arguments);if(!RECIPES.length){const c=$('feed-stream');if(c)c.innerHTML='<div class="text-center py-16 px-6"><div class="text-5xl mb-3">🍽️</div><h3 class="text-base font-extrabold">No dishes yet</h3><p class="text-xs text-gray-400 mt-1">Be the first to share a dish — tap the ＋ button below.</p></div>'}};
+const _qlr=quickLogRecipeDirectly;quickLogRecipeDirectly=function(id,e){if(!RECIPES.some(r=>r.id===id)){if(e)e.stopPropagation();return}_qlr.apply(this,arguments)};
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let db=null,uid=null,online=false,likeSet=new Set(),likeCount={},remoteComments={},myProfile=null,editing=false;
@@ -4372,18 +4368,19 @@ function refresh(){document.querySelectorAll('.me-name').forEach(e=>e.textConten
 function applyProfile(p){ME=p.username;myProfile=p;
  if(USER_PROFILES.HoldenBM&&ME!=='HoldenBM')USER_PROFILES.HoldenBM.isSelf=false;
  const base=USER_PROFILES[ME]||getOrCreateProfileData(ME);
- USER_PROFILES[ME]=Object.assign({},base,{username:ME,handle:'@'+ME,initials:p.emoji||ME.slice(0,2).toUpperCase(),isSelf:true,bio:p.bio||'New on Good Eats 🍽️',school:p.school,locationBadge:p.school&&p.school!=='Home Cook'?'🎓 '+p.school:'🌎 Home Cook',followers:base.followers>200?0:(base.followers||0),followingCount:0,avatarGrad:'from-[#3843d0] to-[#7ed957]'});
+ USER_PROFILES[ME]=Object.assign({},base,{username:ME,handle:'@'+ME,initials:p.emoji||ME.slice(0,2).toUpperCase(),isSelf:true,top5:mapT(p.top5),bio:p.bio||'New on Good Eats 🍽️',school:p.school,locationBadge:p.school&&p.school!=='Home Cook'?'🎓 '+p.school:'🌎 Home Cook',followers:base.followers>200?0:(base.followers||0),followingCount:0,avatarGrad:'from-[#3843d0] to-[#7ed957]'});
  APP_STATE.viewedProfileUser=ME;APP_STATE.isStudent=!!p.school&&p.school!=='Home Cook';
  // own posts in local mode
  if(!online)(ls.get('ge_posts')||[]).forEach(ingestRecipe);
  refresh();}
-function ingestRecipe(r){if(!r||!r.id||RECIPES.some(q=>q.id===r.id))return false;
+const deepEsc=o=>typeof o==='string'?esc(o):Array.isArray(o)?o.map(deepEsc):o&&typeof o==='object'?Object.fromEntries(Object.entries(o).map(([k,v])=>[k,deepEsc(v)])):o;
+function ingestRecipe(r){r=deepEsc(r);if(!r||!r.id||RECIPES.some(q=>q.id===r.id))return false;
  r.liked=false;r.bookmarked=r.author===ME;r.isFollowing=r.author===ME;r._shared=true;r.comments=r.comments||[];RECIPES.unshift(r);
  if(!USER_PROFILES[r.author])USER_PROFILES[r.author]=getOrCreateProfileData(r.author);return true;}
 // ---------- onboarding / edit profile modal ----------
 function modal(){let m=$('ge-onboard');if(m)return m;m=document.createElement('div');m.id='ge-onboard';
  m.className='absolute inset-0 z-[120] hidden flex-col justify-center royal-app-bg p-6 overflow-y-auto';
- m.innerHTML=`<div class="space-y-4"><div class="text-center"><div class="text-4xl mb-1">🍽️</div><h1 id="ob-title" class="text-2xl font-extrabold">Create your profile</h1><p class="text-xs text-gray-400 mt-1">Join the Good Eats community to post recipes, rank meals and follow other cooks.</p></div>
+ m.innerHTML=`<div class="space-y-4"><div class="text-center"><div class="text-4xl mb-1">🍽️</div><h1 id="ob-title" class="text-2xl font-extrabold">Create your profile</h1><p class="text-xs text-gray-400 mt-1">Join the Good Eats community to post dishes, rank meals and follow other cooks.</p></div>
  <div class="flex flex-wrap gap-2 justify-center" id="ob-emoji"></div>
  <div><label class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Username</label><input id="ob-user" maxlength="20" autocomplete="off" placeholder="e.g. Maya.eats" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400"></div>
  <div><label class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Bio</label><textarea id="ob-bio" maxlength="120" rows="2" placeholder="What do you like to cook?" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400"></textarea></div>
@@ -4428,6 +4425,41 @@ const _fol=toggleFollowCreator;toggleFollowCreator=function(a,e){_fol(a,e);if(a=
  if(online){const d=db.doc('follows/'+uid+'__'+lname(a));(on?d.set({uid,target:a}):d.delete()).catch(()=>{})}else{const f=new Set(ls.get('ge_follows')||[]);on?f.add(a):f.delete(a);ls.set('ge_follows',[...f])}};
 // ---------- settings entry ----------
 const st=$('tab-settings');if(st){const b=document.createElement('button');b.className='w-full py-3 rounded-2xl bg-white/[0.06] border border-white/10 text-sm font-bold';b.textContent='✏️ Edit my profile';b.onclick=()=>openOnboard(true);st.prepend(b);}
+// ---------- Top 5 favorite dishes ----------
+const CATALOG='Chicken Alfredo|🍝;Spaghetti Bolognese|🍝;Mac and Cheese|🧀;Chicken Parmesan|🍗;Pepperoni Pizza|🍕;Margherita Pizza|🍕;Cheeseburger|🍔;Smash Burger|🍔;Chicken Tenders|🍗;Buffalo Wings|🍗;Chicken Caesar Wrap|🌯;Chicken Burrito Bowl|🌯;Beef Tacos|🌮;Chicken Quesadilla|🧀;Steak and Rice|🥩;Grilled Chicken Salad|🥗;Greek Salad|🥗;Chicken Fried Rice|🍚;Teriyaki Chicken Bowl|🍱;Pad Thai|🍜;Chicken Ramen|🍜;Pho|🍜;Sushi Rolls|🍣;Salmon and Rice|🍣;Shrimp Scampi|🍤;Fish Tacos|🌮;BBQ Ribs|🍖;Pulled Pork Sandwich|🥪;Grilled Cheese|🥪;Turkey Club Sandwich|🥪;BLT|🥪;Chicken Biscuit|🍗;Breakfast Burrito|🌯;Pancakes|🥞;Waffles|🧇;French Toast|🍞;Scrambled Eggs and Toast|🍳;Omelet|🍳;Avocado Toast|🥑;Overnight Oats|🥣;Greek Yogurt Parfait|🥣;Protein Smoothie|🥤;Protein Shake|🥤;Acai Bowl|🥣;Chicken and Waffles|🍗;Loaded Nachos|🧀;Chicken Pesto Pasta|🍝;Lasagna|🍝;Meatballs|🍝;Beef Stew|🍲;Chili|🍲;Chicken Noodle Soup|🍲;Tomato Soup|🍲;Stuffed Peppers|🫑;Baked Potato|🥔;French Fries|🍟;Mashed Potatoes|🥔;Garlic Bread|🍞;Tuna Salad Sandwich|🥪;Chickpea Salad|🥗;Veggie Stir Fry|🥦;Falafel Wrap|🌯;Gyro|🥙;Chicken Shawarma|🥙;Hot Dog|🌭;Corn Dog|🌭;Chocolate Chip Cookies|🍪;Brownies|🍫;Ice Cream Sundae|🍨;Cheesecake|🍰;Banana Bread|🍞'.split(';').map(s=>s.split('|'));
+let top=[];
+const mapT=a=>(Array.isArray(a)?a:[]).slice(0,5).map(d=>({recipeId:d.recipeId||null,title:esc(d.title||''),subtitle:d.recipeId?'Posted dish':'Favorite dish',score:null,emoji:esc(d.emoji||'🍽️')}));
+const myTop=()=>(myProfile&&myProfile.top5)||[];
+function decorateTop5(){const list=$('profile-top5-list'),head=$('profile-top5-heading');if(!list||!head)return;
+ const self=(APP_STATE.viewedProfileUser||ME)===ME;const old=$('ge-edit-top5');if(old)old.remove();
+ if(!list.children.length)list.innerHTML='<p class="text-xs text-gray-400 text-center py-4">'+(self?'Pick the 5 dishes you love most 🍽️':'No favorite dishes picked yet.')+'</p>';
+ if(self){const b=document.createElement('button');b.id='ge-edit-top5';b.textContent=(myTop().length?'✏️ Edit':'＋ Add')+' my top 5';b.className='text-[11px] font-bold text-emerald-400 mt-1';b.onclick=openTop5;head.insertAdjacentElement('afterend',b)}}
+const _rpv=renderProfileView;renderProfileView=function(){_rpv.apply(this,arguments);decorateTop5()};
+function sugg(q){const s=q.trim().toLowerCase(),toks=s.split(/\s+/).filter(Boolean),have=new Set(top.map(d=>d.title.toLowerCase()));
+ const pool=[...RECIPES.map(r=>({title:r.title,emoji:r.emoji,recipeId:r.id,by:r.handle})),...CATALOG.map(([t,e])=>({title:t,emoji:e}))],seen=new Set(),out=[];
+ pool.forEach(d=>{const k=d.title.toLowerCase();if(seen.has(k)||have.has(k))return;seen.add(k);let sc=0;
+  if(!s)sc=1;else if(k.startsWith(s))sc=5;else if(k.split(/\s+/).some(w=>w.startsWith(s)))sc=4;else if(toks.every(t=>k.includes(t)))sc=3;else if(s.length>=3){let i=0;for(const c of k)if(c===s[i])i++;if(i===s.length)sc=1}
+  if(sc)out.push({d,sc:sc+(d.recipeId?.5:0)})});
+ out.sort((a,b)=>b.sc-a.sc);return out.slice(0,8).map(o=>o.d)}
+function hl(t,q){const i=q?t.toLowerCase().indexOf(q.trim().toLowerCase()):-1;return i<0||!q.trim()?esc(t):esc(t.slice(0,i))+'<b class="text-emerald-300">'+esc(t.slice(i,i+q.trim().length))+'</b>'+esc(t.slice(i+q.trim().length))}
+function top5Modal(){let m=$('ge-top5');if(m)return m;m=document.createElement('div');m.id='ge-top5';m.className='absolute inset-0 z-[115] hidden flex-col royal-app-bg';
+ m.innerHTML='<div class="flex items-center justify-between px-4 pt-4 pb-2"><h2 class="text-lg font-extrabold">My Top 5 Dishes</h2><button id="t5-done" class="text-sm font-extrabold text-emerald-400">Done</button></div><div id="t5-picked" class="px-4 space-y-2"></div><div class="px-4 pt-3"><input id="t5-q" autocomplete="off" placeholder="Search a dish, e.g. chicken alf…" class="w-full bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400"></div><div id="t5-sug" class="flex-1 overflow-y-auto px-4 py-2 space-y-1.5"></div>';
+ $('phone-container').appendChild(m);$('t5-done').onclick=closeTop5;
+ $('t5-q').addEventListener('input',renderT5);$('t5-q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const f=$('t5-sug').querySelector('[data-i]');if(f)f.click()}});
+ m.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const i=+b.dataset.i,a=b.dataset.a;
+  if(a==='add'){if(top.length>=5){showToast('Top 5 is full — remove one first');return}const d=window.__t5s[i];top.push({title:d.title.slice(0,40),emoji:d.emoji||'🍽️',recipeId:d.recipeId||null});$('t5-q').value='';}
+  if(a==='del')top.splice(i,1);if(a==='up'&&i>0)[top[i-1],top[i]]=[top[i],top[i-1]];if(a==='dn'&&i<top.length-1)[top[i+1],top[i]]=[top[i],top[i+1]];renderT5()});return m}
+function renderT5(){const q=$('t5-q').value;$('t5-picked').innerHTML=top.length?top.map((d,i)=>'<div class="flex items-center gap-2 bg-[#1c203d] rounded-xl px-3 py-2"><span class="text-xs font-black text-gray-400 w-5">#'+(i+1)+'</span><span class="text-lg">'+esc(d.emoji)+'</span><span class="flex-1 text-sm font-bold truncate">'+esc(d.title)+'</span><button data-a="up" data-i="'+i+'" class="w-8 h-8 text-gray-300">↑</button><button data-a="dn" data-i="'+i+'" class="w-8 h-8 text-gray-300">↓</button><button data-a="del" data-i="'+i+'" class="w-8 h-8 text-rose-400">✕</button></div>').join(''):'<p class="text-xs text-gray-400">Nothing yet — search below to add your first dish.</p>';
+ const full=top.length>=5;let list=full?[]:sugg(q);const s=q.trim();
+ if(!full&&s.length>=2&&!list.some(d=>d.title.toLowerCase()===s.toLowerCase())){const t=s.replace(/\b\w/g,c=>c.toUpperCase()).slice(0,40);list=[...list,{title:t,emoji:'🍽️',custom:1}]}
+ window.__t5s=list;$('t5-sug').innerHTML=full?'<p class="text-xs text-emerald-300 text-center py-3">Top 5 complete! Reorder with ↑↓ or tap Done.</p>':(s?'':'<p class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400 pb-1">Popular dishes</p>')+list.map((d,i)=>'<button data-a="add" data-i="'+i+'" class="w-full text-left flex items-center gap-3 bg-white/[0.04] active:bg-white/[0.1] rounded-xl px-3 py-3"><span class="text-xl">'+esc(d.emoji)+'</span><span class="flex-1 min-w-0"><span class="block text-sm font-bold truncate">'+(d.custom?'Add “'+esc(d.title)+'”':hl(d.title,q))+'</span>'+(d.by?'<span class="block text-[10px] text-gray-400">Posted by '+esc(d.by)+'</span>':d.custom?'<span class="block text-[10px] text-gray-400">Custom dish</span>':'')+'</span><span class="text-emerald-400 text-lg">＋</span></button>').join('')}
+function openTop5(){top=myTop().map(d=>({title:d.title,emoji:d.emoji,recipeId:d.recipeId}));const m=top5Modal();$('t5-q').value='';renderT5();m.classList.remove('hidden');m.classList.add('flex')}
+async function closeTop5(){const m=$('ge-top5');m.classList.add('hidden');m.classList.remove('flex');
+ myProfile=Object.assign({},myProfile,{top5:top.map(d=>({title:d.title,emoji:d.emoji,recipeId:d.recipeId||null}))});ls.set('ge_profile',myProfile);
+ if(USER_PROFILES[ME])USER_PROFILES[ME].top5=mapT(myProfile.top5);
+ try{if(online)await db.doc('profiles/u_'+lname(ME)).set(Object.assign({uid},myProfile));showToast('Top 5 saved!')}catch(e){showToast('Saved on this device — sync failed')}
+ refresh();}
+
 // ---------- boot ----------
 let profile=ls.get('ge_profile');
 const to=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
@@ -4435,13 +4467,13 @@ try{if(window.firebase&&window.FB_CFG){firebase.initializeApp(FB_CFG);const c=aw
 if(!online){try{const U=await to(claude.use('user'),4000);const D=await to(claude.use('db'),4000);if(U&&D&&U.id){uid=await U.id();if(uid){db=D;online=true}}}catch(e){}}
 if(online){
  try{const q=await db.collection('profiles').where('uid','==',uid).limit(1).get();if(!q.empty)profile=q.docs[0].data();else if(profile&&!ls.get('ge_synced_'+uid)){await db.doc('profiles/u_'+lname(profile.username)).set(Object.assign({uid},profile));}}catch(e){}
- db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid||USER_PROFILES[x.username])return;
-   USER_PROFILES[x.username]=Object.assign(getOrCreateProfileData(x.username),{initials:x.emoji||x.username.slice(0,2).toUpperCase(),bio:x.bio||'',school:x.school,locationBadge:x.school&&x.school!=='Home Cook'?'🎓 '+x.school:'🌎 Home Cook',followers:0,followingCount:0,isSelf:false});ch=true});if(ch)refresh()});
+ db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid)return;if(USER_PROFILES[x.username]){USER_PROFILES[x.username].top5=mapT(x.top5);USER_PROFILES[x.username].bio=esc(x.bio||'');ch=true;return}
+   USER_PROFILES[x.username]=Object.assign(getOrCreateProfileData(x.username),{initials:esc(x.emoji||x.username.slice(0,2).toUpperCase()),bio:esc(x.bio||''),school:esc(x.school||''),locationBadge:x.school&&x.school!=='Home Cook'?'🎓 '+x.school:'🌎 Home Cook',followers:0,followingCount:0,isSelf:false,top5:mapT(x.top5)});ch=true});if(ch)refresh()});
  db.collection('posts').orderBy('ts','desc').limit(60).onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();try{if(ingestRecipe(JSON.parse(x.json)))ch=true}catch(e){}});if(ch)refresh()});
  db.collection('likes').onSnapshot(s=>{likeCount={};likeSet=new Set();s.docs.forEach(d=>{const x=d.data();likeCount[x.post]=(likeCount[x.post]||0)+1;if(x.uid===uid)likeSet.add(x.post)});
   RECIPES.forEach(r=>{if(r._shared){r.likes=likeCount[r.id]||0;r.liked=likeSet.has(r.id)}});refresh()});
  db.collection('comments').orderBy('ts','asc').limit(500).onSnapshot(s=>{s.docs.forEach(d=>{const x=d.data(),r=RECIPES.find(q=>q.id===x.post);if(!r||r.comments.some(c=>c.id===d.id))return;
-   r.comments.push({id:d.id,user:x.user,badge:x.badge,time:'recently',text:x.text,isTweak:!!x.isTweak,likes:0,liked:false})});refresh();try{if(!$('comments-modal').classList.contains('hidden'))renderCommentsList()}catch(e){}});
+   r.comments.push({id:d.id,user:esc(x.user||''),badge:esc(x.badge||''),time:'recently',text:esc(x.text||''),isTweak:!!x.isTweak,likes:0,liked:false})});refresh();try{if(!$('comments-modal').classList.contains('hidden'))renderCommentsList()}catch(e){}});
  db.collection('follows').where('uid','==',uid).onSnapshot(s=>{const t=new Set(s.docs.map(d=>d.data().target));RECIPES.forEach(r=>{if(r.author!==ME)r.isFollowing=t.has(r.author)});refresh()});
 }else{const f=new Set(ls.get('ge_follows')||[]);RECIPES.forEach(r=>{if(f.has(r.author))r.isFollowing=true})}
 if(profile&&profile.username)applyProfile(profile);else openOnboard(false);
