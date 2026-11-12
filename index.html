@@ -941,7 +941,7 @@
           </button>
           <div onclick="toggleRateDrawer()" class="cursor-pointer">
             <p class="text-xs text-gray-300"><span id="rm-ratings-count">58</span> ratings. <span class="text-[#7ed957] font-semibold underline">Tap the score to add yours.</span></p>
-            <p id="rm-location-tag" class="text-[11px] text-gray-500 mt-0.5">Verified Recipe • Live Store Prices</p>
+            <p id="rm-location-tag" class="text-[11px] text-gray-500 mt-0.5">Verified Recipe • Estimated Store Prices</p>
           </div>
         </div>
 
@@ -3375,7 +3375,7 @@
       if (locTag) {
         locTag.innerText = allDining
           ? '🎓 Elon Dining Hall Recipe • Covered by Meal Plan'
-          : (useSwaps ? '💡 Smart Budget Swaps Applied • Lowest Local Price' : 'Verified Recipe • Live Store & Campus Prices');
+          : (useSwaps ? '💡 Smart Budget Swaps Applied • Lowest Estimated Price' : 'Verified Recipe • Estimated Store & Campus Prices');
       }
 
       if (totalBatchCost === 0 && allDining) {
@@ -4387,7 +4387,7 @@ function applyProfile(p){ME=p.username;myProfile=p;
  if(!online)(ls.get('ge_posts')||[]).forEach(ingestRecipe);
  refresh();}
 const deepEsc=o=>typeof o==='string'?esc(o):Array.isArray(o)?o.map(deepEsc):o&&typeof o==='object'?Object.fromEntries(Object.entries(o).map(([k,v])=>[k,deepEsc(v)])):o;
-function ingestRecipe(r){r=deepEsc(r);if(!r||!r.id||RECIPES.some(q=>q.id===r.id))return false;
+function ingestRecipe(r){r=deepEsc(r);if(!r||!r.id||blocked.has(r.author)||hiddenIds.has(r.id)||RECIPES.some(q=>q.id===r.id))return false;
  r.liked=false;r.bookmarked=r.author===ME;r.isFollowing=r.author===ME;r._shared=true;r.comments=r.comments||[];RECIPES.unshift(r);
  if(!USER_PROFILES[r.author])USER_PROFILES[r.author]=getOrCreateProfileData(r.author);return true;}
 // ---------- onboarding / edit profile modal ----------
@@ -4398,6 +4398,7 @@ function modal(){let m=$('ge-onboard');if(m)return m;m=document.createElement('d
  <div><label class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Username</label><input id="ob-user" maxlength="20" autocomplete="off" placeholder="e.g. Maya.eats" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400"></div>
  <div><label class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Bio</label><textarea id="ob-bio" maxlength="120" rows="2" placeholder="What do you like to cook?" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400"></textarea></div>
  <div><label class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">I cook as</label><select id="ob-school" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none"><option>Elon University</option><option>Home Cook</option></select></div>
+ <label style="display:flex;gap:8px;align-items:flex-start;font-size:11px;color:#9ca3af"><input type="checkbox" id="ob-terms" style="margin-top:2px;width:18px;height:18px"><span>I agree to the <a id="ob-tl" style="color:#34d399;text-decoration:underline">Terms &amp; Community Guidelines</a> and <a id="ob-pl" style="color:#34d399;text-decoration:underline">Privacy Policy</a>. No hate, harassment, nudity or spam.</span></label>
  <p id="ob-err" class="text-xs text-rose-400 min-h-[16px]"></p>
  <button id="ob-go" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-[#0b0c18] font-extrabold text-sm active:scale-95 transition">Create profile</button>
  <button id="ob-cancel" class="hidden w-full text-xs text-gray-400">Cancel</button>
@@ -4405,18 +4406,20 @@ function modal(){let m=$('ge-onboard');if(m)return m;m=document.createElement('d
  $('phone-container').appendChild(m);
  const em=m.querySelector('#ob-emoji');EMOJIS.forEach((e,i)=>{const b=document.createElement('button');b.textContent=e;b.dataset.e=e;b.className='w-11 h-11 rounded-full bg-[#15182e] border border-white/10 text-xl';b.onclick=()=>{em.querySelectorAll('button').forEach(x=>x.style.outline='');b.style.outline='2px solid #22c55e';m.dataset.emoji=e};em.appendChild(b)});
  m.querySelector('#ob-cancel').onclick=()=>{m.classList.add('hidden');m.classList.remove('flex')};
- m.querySelector('#ob-go').onclick=saveProfile;return m;}
+ m.querySelector('#ob-go').onclick=saveProfile;m.querySelector('#ob-tl').onclick=()=>openLegal('terms');m.querySelector('#ob-pl').onclick=()=>openLegal('privacy');return m;}
 function openOnboard(edit){editing=!!edit;const m=modal();
  $('ob-title').textContent=edit?'Edit your profile':'Create your profile';$('ob-go').textContent=edit?'Save changes':'Create profile';
  $('ob-user').value=edit?ME:'';$('ob-user').disabled=!!edit;$('ob-bio').value=edit?(myProfile.bio||''):'';
  $('ob-school').value=edit&&myProfile.school?myProfile.school:'Elon University';$('ob-err').textContent='';
- $('ob-cancel').classList.toggle('hidden',!edit);
+ $('ob-cancel').classList.toggle('hidden',!edit);$('ob-terms').checked=!!edit;$('ob-terms').parentElement.style.display=edit?'none':'flex';
  $('ob-mode').textContent=online?'🟢 Online — your posts are shared with other users':'⚪ Offline mode — data saved on this device only';
  m.dataset.emoji=(edit&&myProfile.emoji)||EMOJIS[0];m.querySelectorAll('#ob-emoji button').forEach(b=>b.style.outline=b.dataset.e===m.dataset.emoji?'2px solid #22c55e':'');
  m.classList.remove('hidden');m.classList.add('flex');}
 async function saveProfile(){const m=$('ob-onboard')||modal(),err=$('ob-err');
  const username=$('ob-user').value.trim();
  if(!/^[A-Za-z0-9._]{3,20}$/.test(username)){err.textContent='Username: 3–20 letters, numbers, . or _';return}
+ if(isBad(username)||isBad($('ob-bio').value)){err.textContent='Please choose a username and bio without offensive language';return}
+ if(!editing&&!$('ob-terms').checked){err.textContent='Please agree to the Terms to continue';return}
  if(!editing&&Object.keys(USER_PROFILES).some(k=>lname(k)===lname(username))&&!(myProfile&&myProfile.username===username)){err.textContent='That username is taken';return}
  const p={username,bio:$('ob-bio').value.trim(),school:$('ob-school').value,emoji:$('ob-go').closest('#ge-onboard').dataset.emoji};
  $('ob-go').disabled=true;
@@ -4473,6 +4476,58 @@ async function closeTop5(){const m=$('ge-top5');m.classList.add('hidden');m.clas
  try{if(online)await db.doc('profiles/u_'+lname(ME)).set(Object.assign({uid},myProfile));showToast('Top 5 saved!')}catch(e){showToast('Saved on this device — sync failed')}
  refresh();}
 
+// ---------- Safety: filter, report, block, legal, delete ----------
+const SUPPORT_EMAIL='';
+const BAD=/\b(fuck\w*|shit(s|ty|head)?|bitch\w*|cunt\w*|nigg\w*|fagg?ot\w*|rape[sd]?|rapist|kill ?yourself|kys|porn\w*|nudes?|nsfw|whore|slut\w*|retard\w*|pedo\w*)\b/i;
+const isBad=s=>BAD.test(String(s||'').toLowerCase().replace(/0/g,'o').replace(/[1!]/g,'i').replace(/3/g,'e').replace(/[@4]/g,'a').replace(/\$/g,'s'));
+let blocked=new Set(ls.get('ge_blocked')||[]);const hiddenIds=new Set(ls.get('ge_hidden')||[]);
+function sheet(html){let s=$('ge-sheet');if(!s){s=document.createElement('div');s.id='ge-sheet';s.style.cssText='position:absolute;inset:0;z-index:130;display:none;align-items:flex-end;background:rgba(0,0,0,.6)';s.onclick=e=>{if(e.target===s)s.style.display='none'};$('phone-container').appendChild(s)}
+ s.innerHTML='<div style="width:100%;background:#15182e;color:#f3f4f6;border-radius:20px 20px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:85%;overflow:auto;font-size:13px;line-height:1.5">'+html+'</div>';s.style.display='flex';return s}
+const closeSheet=()=>{const s=$('ge-sheet');if(s)s.style.display='none'};
+const btn=(t,a,c)=>'<button data-s="'+a+'" style="display:block;width:100%;text-align:left;padding:13px 14px;margin:6px 0;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-weight:700;color:'+(c||'#f3f4f6')+'">'+t+'</button>';
+function purge(n){for(let i=RECIPES.length-1;i>=0;i--)if(RECIPES[i].author===n)RECIPES.splice(i,1);RECIPES.forEach(r=>r.comments=(r.comments||[]).filter(c=>c.user!==n));delete USER_PROFILES[n]}
+async function setBlock(n,on){on?blocked.add(n):blocked.delete(n);ls.set('ge_blocked',[...blocked]);if(on)purge(n);
+ try{if(online){const d=db.doc('blocks/'+uid+'__'+lname(n));await(on?d.set({uid,target:n}):d.delete())}}catch(e){}
+ closeSheet();try{closeCommentsModal()}catch(e){}if(on&&APP_STATE.viewedProfileUser===n){APP_STATE.viewedProfileUser=ME;try{switchTab('tab-feed')}catch(e){}}
+ refresh();showToast(on?'@'+n+' blocked — their content is hidden':'@'+n+' unblocked. Their posts return next time you open the app.')}
+async function sendReport(type,id,author,reason){const doc={uid,reporter:ME,type,target:id,author,reason,ts:Date.now()};
+ try{if(online)await db.doc('reports/'+uid+'_'+Date.now()).set(doc);else{const a=ls.get('ge_reports')||[];a.push(doc);ls.set('ge_reports',a)}}catch(e){}
+ if(type==='dish'){hiddenIds.add(id);ls.set('ge_hidden',[...hiddenIds]);const i=RECIPES.findIndex(r=>r.id===id);if(i>=0)RECIPES.splice(i,1)}
+ closeSheet();refresh();showToast('Thanks — report sent. We review every report.')}
+async function deleteDish(id){if(!confirm('Delete this dish? This cannot be undone.'))return;const i=RECIPES.findIndex(r=>r.id===id);if(i>=0)RECIPES.splice(i,1);
+ try{if(online)await db.doc('posts/'+id).delete();else ls.set('ge_posts',(ls.get('ge_posts')||[]).filter(r=>r.id!==id))}catch(e){}closeSheet();refresh();showToast('Dish deleted')}
+function openSafety(type,id,author){const self=author===ME;let h='<div style="font-weight:800;font-size:15px;margin-bottom:4px">'+(self?'Your dish':'@'+esc(author))+'</div>';
+ if(self&&type==='dish')h+=btn('🗑️ Delete my dish','del','#fb7185');
+ else if(!self)h+=btn('⚑ Report '+(type==='user'?'this user':'this '+type),'rep')+btn('🚫 Block @'+esc(author),'blk','#fb7185');
+ const s=sheet(h);s.onclick=e=>{const a=e.target.closest('[data-s]');if(!a){if(e.target===s)closeSheet();return}const k=a.dataset.s;
+  if(k==='del')deleteDish(id);if(k==='blk'){if(confirm('Block @'+author+'? You will no longer see their dishes, comments or profile.'))setBlock(author,true)}
+  if(k==='rep'){sheet('<div style="font-weight:800;font-size:15px">Why are you reporting this?</div>'+['Spam','Nudity or sexual content','Harassment or hate','Dangerous or misleading','Something else'].map(r=>btn(r,'r:'+r)).join('')).onclick=ev=>{const b=ev.target.closest('[data-s]');if(b&&b.dataset.s.startsWith('r:'))sendReport(type,id,author,b.dataset.s.slice(2))}}}}
+function decorate(){document.querySelectorAll('[onclick^="openRecipeModal(\'"]').forEach(el=>{if(el.dataset.gs||!el.classList.contains('relative'))return;const m=el.getAttribute('onclick').match(/openRecipeModal\('([^']+)'/);const r=m&&RECIPES.find(x=>x.id===m[1]);if(!r||!r._shared)return;el.dataset.gs=1;
+  const b=document.createElement('button');b.textContent='⋯';b.setAttribute('aria-label','Report, block or delete');b.style.cssText='position:absolute;left:10px;top:10px;z-index:5;width:36px;height:36px;border-radius:50%;background:rgba(11,12,24,.75);color:#fff;font-size:20px;line-height:1;border:1px solid rgba(255,255,255,.15)';b.onclick=e=>{e.stopPropagation();openSafety('dish',r.id,r.author)};el.appendChild(b)})}
+['renderFeed','renderCatalogueRecipes'].forEach(n=>{const f=window[n];if(typeof f==='function')window[n]=function(){const r=f.apply(this,arguments);try{decorate()}catch(e){}return r}});
+const _rcl=renderCommentsList;renderCommentsList=function(){_rcl.apply(this,arguments);try{const o=getActiveCommentsObject();[...$('cmts-list').children].forEach((card,i)=>{const c=o&&o.comments[i];if(!c||card.dataset.gs||c.user===ME)return;card.dataset.gs=1;card.style.position='relative';
+ const b=document.createElement('button');b.textContent='⋯';b.setAttribute('aria-label','Report or block');b.style.cssText='position:absolute;right:6px;top:4px;width:32px;height:32px;color:#9ca3af;font-size:18px';b.onclick=e=>{e.stopPropagation();openSafety('comment',c.id,c.user)};card.appendChild(b)})}catch(e){}};
+const _rpv2=renderProfileView;renderProfileView=function(){_rpv2.apply(this,arguments);const o=$('ge-safe-prof');if(o)o.remove();const v=APP_STATE.viewedProfileUser,h=$('profile-top5-heading');
+ if(v&&v!==ME&&h){const b=document.createElement('button');b.id='ge-safe-prof';b.textContent='⚑ Report or block @'+v;b.style.cssText='display:block;margin-top:6px;font-size:11px;font-weight:700;color:#fb7185';b.onclick=()=>openSafety('user',v,v);h.insertAdjacentElement('afterend',b)}};
+// content filter on posting / commenting
+const _pub2=publishCustomRecipe;publishCustomRecipe=function(){if([...document.querySelectorAll('input[type=text],input:not([type]),textarea')].some(el=>el.offsetParent&&isBad(el.value))){showToast('That contains language that isn’t allowed on Good Eats');return}_pub2.apply(this,arguments)};
+const _cmt2=submitNewComment;submitNewComment=function(){const i=$('cmt-input-field');if(i&&isBad(i.value)){showToast('That contains language that isn’t allowed on Good Eats');return}_cmt2.apply(this,arguments)};
+// legal + account sheets
+const LEGAL={terms:'<b style="font-size:15px">Terms &amp; Community Guidelines</b><p>By using Good Eats you agree to these rules. There is zero tolerance for objectionable content or abusive users.</p><p>• No hate, harassment, bullying or threats.<br>• No nudity, sexual or violent content.<br>• No spam, scams or impersonation.<br>• Post only dishes, photos and text you have the right to share.<br>• Nutrition and price information is an estimate, not medical or financial advice. Always check allergens with the dining hall or product label.</p><p>You can report or block anyone at any time. We remove content that breaks these rules and may remove accounts that repeatedly do. You can delete your account in Settings.</p>',
+ privacy:'<b style="font-size:15px">Privacy Policy</b><p>We collect what you give us: your username, bio, campus, dishes, comments, likes, follows and blocks. An anonymous sign-in ID ties this to your device. Posts, comments and your public profile are visible to other users.</p><p>Your data is stored with Google Firebase. We do not sell your data or show ads. Deleting your account removes your profile, dishes, comments, likes and follows. Reports about content are kept for safety review.</p>'};
+const contact='<p style="margin-top:10px;color:#9ca3af">Contact: '+(SUPPORT_EMAIL?'<a href="mailto:'+SUPPORT_EMAIL+'" style="color:#34d399">'+SUPPORT_EMAIL+'</a>':'support email coming before launch')+'</p>';
+const openLegal=k=>sheet(LEGAL[k]+contact+btn('Close','x'));
+const sheetClick=e=>{if(e.target.closest('[data-s="x"]')||e.target===$('ge-sheet'))closeSheet()};
+function blockedList(){const s=sheet('<div style="font-weight:800;font-size:15px">Blocked users</div>'+([...blocked].map(n=>'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0"><span>@'+esc(n)+'</span><button data-s="u:'+esc(n)+'" style="color:#34d399;font-weight:700">Unblock</button></div>').join('')||'<p style="color:#9ca3af">You haven’t blocked anyone.</p>')+btn('Close','x'));
+ s.onclick=e=>{const u=e.target.closest('[data-s^="u:"]');if(u){setBlock(u.dataset.s.slice(2),false);return}sheetClick(e)}}
+async function deleteAccount(){if(!confirm('Delete your account permanently? This removes your profile, dishes, comments, likes and follows.'))return;
+ try{if(online){for(const c of ['posts','comments','likes','follows','blocks']){const q=await db.collection(c).where('uid','==',uid).get();await Promise.all(q.docs.map(d=>db.doc(c+'/'+d.id).delete()))}
+  await db.doc('profiles/u_'+lname(ME)).delete();if(window.firebase&&firebase.apps.length){try{await firebase.auth().currentUser.delete()}catch(e){await firebase.auth().signOut()}}}}catch(e){showToast('Could not finish deleting — please try again');return}
+ Object.keys(localStorage).filter(k=>k.indexOf('ge_')===0).forEach(k=>localStorage.removeItem(k));location.reload()}
+{const st2=$('tab-settings');if(st2){const g=document.createElement('div');g.style.cssText='margin-top:20px';g.innerHTML='<div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px">Safety &amp; legal</div>'+btn('Terms &amp; Community Guidelines','t')+btn('Privacy Policy','p')+btn('Blocked users','b')+btn('Delete my account','d','#fb7185');
+ g.onclick=e=>{const a=e.target.closest('[data-s]');if(!a)return;({t:()=>openLegal('terms'),p:()=>openLegal('privacy'),b:blockedList,d:deleteAccount})[a.dataset.s]()};st2.appendChild(g)}}
+
+window.geSafety={openSafety,deleteAccount,blockedList,openLegal};
 // ---------- boot ----------
 let profile=ls.get('ge_profile');
 const to=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
@@ -4480,13 +4535,14 @@ try{if(window.firebase&&window.FB_CFG){firebase.initializeApp(FB_CFG);const c=aw
 if(!online){try{const U=await to(claude.use('user'),4000);const D=await to(claude.use('db'),4000);if(U&&D&&U.id){uid=await U.id();if(uid){db=D;online=true}}}catch(e){}}
 if(online){
  try{const q=await db.collection('profiles').where('uid','==',uid).limit(1).get();profile=q.empty?null:q.docs[0].data()}catch(e){}
- db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid)return;if(USER_PROFILES[x.username]){USER_PROFILES[x.username].top5=mapT(x.top5);USER_PROFILES[x.username].bio=esc(x.bio||'');ch=true;return}
+ db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid||blocked.has(x.username))return;if(USER_PROFILES[x.username]){USER_PROFILES[x.username].top5=mapT(x.top5);USER_PROFILES[x.username].bio=esc(x.bio||'');ch=true;return}
    USER_PROFILES[x.username]=Object.assign(getOrCreateProfileData(x.username),{initials:esc(x.emoji||x.username.slice(0,2).toUpperCase()),bio:esc(x.bio||''),school:esc(x.school||''),locationBadge:x.school&&x.school!=='Home Cook'?'🎓 '+x.school:'🌎 Home Cook',followers:0,followingCount:0,isSelf:false,top5:mapT(x.top5)});ch=true});if(ch)refresh()});
  db.collection('posts').orderBy('ts','desc').limit(60).onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();try{if(ingestRecipe(JSON.parse(x.json)))ch=true}catch(e){}});if(ch)refresh()});
  db.collection('likes').onSnapshot(s=>{likeCount={};likeSet=new Set();s.docs.forEach(d=>{const x=d.data();likeCount[x.post]=(likeCount[x.post]||0)+1;if(x.uid===uid)likeSet.add(x.post)});
   RECIPES.forEach(r=>{if(r._shared){r.likes=likeCount[r.id]||0;r.liked=likeSet.has(r.id)}});refresh()});
- db.collection('comments').orderBy('ts','asc').limit(500).onSnapshot(s=>{s.docs.forEach(d=>{const x=d.data(),r=RECIPES.find(q=>q.id===x.post);if(!r||r.comments.some(c=>c.id===d.id))return;
+ db.collection('comments').orderBy('ts','asc').limit(500).onSnapshot(s=>{s.docs.forEach(d=>{const x=d.data(),r=RECIPES.find(q=>q.id===x.post);if(!r||blocked.has(x.user)||r.comments.some(c=>c.id===d.id))return;
    r.comments.push({id:d.id,user:esc(x.user||''),badge:esc(x.badge||''),time:'recently',text:esc(x.text||''),isTweak:!!x.isTweak,likes:0,liked:false})});refresh();try{if(!$('comments-modal').classList.contains('hidden'))renderCommentsList()}catch(e){}});
+ db.collection('blocks').where('uid','==',uid).onSnapshot(s=>{blocked=new Set(s.docs.map(d=>d.data().target));ls.set('ge_blocked',[...blocked]);blocked.forEach(purge);refresh()});
  db.collection('follows').where('uid','==',uid).onSnapshot(s=>{const t=new Set(s.docs.map(d=>d.data().target));RECIPES.forEach(r=>{if(r.author!==ME)r.isFollowing=t.has(r.author)});refresh()});
 }else{const f=new Set(ls.get('ge_follows')||[]);RECIPES.forEach(r=>{if(f.has(r.author))r.isFollowing=true})}
 if(profile&&profile.username)applyProfile(profile);else openOnboard(false);
