@@ -167,6 +167,100 @@ div:has(>#profile-top5-heading)>span,div:has(>div>#profile-top5-heading)>span{di
 #ge-pchip{order:3;margin:0!important}
 *{scrollbar-width:none}::-webkit-scrollbar{display:none}
 </style>
+<style id="ge-clean">
+/* ===== v12 clean layer: look + ease of use only (no feature or data changes) ===== */
+:root{--acc:#5bd17a;--bg:#0c0c0f;--s1:#151619;--s2:#1c1d21;--s3:#26282c;--line:rgba(255,255,255,.07);--mut:#9ca3af;--r:16px}
+body,button,input,textarea,select{font-family:'Plus Jakarta Sans',-apple-system,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"!important}
+.royal-app-bg,#app-screens{background:var(--bg)!important}
+
+/* one flat card style everywhere */
+#app-screens [class*="bg-[#17171a]"],#app-screens [class*="bg-[#19191c]"],#app-screens [class*="bg-[#1a1a1d]"],#app-screens [class*="bg-[#17181b]"]{background-color:var(--s1)!important;border-color:var(--line)!important;box-shadow:none!important}
+#app-screens .rounded-3xl{border-radius:var(--r)!important}
+#app-screens .shadow-lg,#app-screens .shadow-xl,#app-screens .shadow-2xl{box-shadow:none!important}
+
+/* sticky headers: calmer, consistent */
+#app-screens header.sticky{background:rgba(12,12,15,.92)!important;border-bottom:1px solid var(--line)!important}
+#vector-custom-logo-svg,#uploaded-custom-logo-img{height:40px!important;width:40px!important}
+#uploaded-custom-logo-img{width:auto!important}
+#tab-feed header [onclick^="openGroceryCartTab"],#tab-feed header .ge-streak-chip{height:36px!important;border-radius:12px!important;background:var(--s1)!important;border:1px solid var(--line)!important}
+
+/* segmented controls (For You / Following / School, Today / Progress / Plan) */
+#tab-feed header .grid,#tab-feed header [class*="rounded-2xl"][class*="p-1"]{background:var(--s1)!important;border-color:var(--line)!important}
+[onclick^="setFeedFilter"]{font-size:13px!important;padding-top:7px!important;padding-bottom:7px!important}
+
+/* ---------- Home feed ---------- */
+#feed-stream{gap:12px}
+#feed-stream>article,#feed-stream>div>article{padding:14px!important;border-radius:var(--r)!important;background:var(--s1)!important;border:1px solid var(--line)!important;box-shadow:none!important}
+#feed-stream article [class*="bg-gradient-to-tr"]{background:var(--s3)!important;color:#e5e7eb!important;width:34px!important;height:34px!important}
+#feed-stream article button[onclick^="toggleFollowCreator"]{background:transparent!important;border:1px solid rgba(255,255,255,.16)!important;color:#e5e7eb!important;padding:4px 12px!important;border-radius:99px!important;font-size:12px!important}
+#feed-stream article>p{font-size:13px!important;color:#d1d5db!important}
+/* no-photo dish block: remove the empty left gap */
+#feed-stream div[class*="aspect-"]:has(>img[src^="data:image/svg+xml"]){padding:14px 64px 14px 14px!important;border-radius:12px!important;background:var(--s2)!important}
+#feed-stream div[class*="aspect-"] h3{font-size:16px!important;font-weight:700!important}
+#feed-stream article button[onclick^="quickLogRecipeDirectly"]{padding:7px 16px!important;border-radius:99px!important;font-weight:700!important}
+
+/* ---------- Explore ---------- */
+#catalogue-recipes-grid>*{border-radius:var(--r)!important;background:var(--s1)!important;border-color:var(--line)!important}
+#tab-catalogue header .overflow-x-auto{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+
+/* ---------- Dining (compact controls) ---------- */
+#pp-l1-halls,#pp-l1-retail,#pp-l1-ideas{font-size:13px!important}
+#ge-hc>div:first-child{background:transparent!important;border:0!important;padding:0!important;gap:18px!important;border-bottom:1px solid var(--line)!important;border-radius:0!important}
+#ge-hc>div:first-child>button{flex:0 0 auto!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;padding:8px 0 10px!important;font-size:14px!important;border-bottom:2px solid transparent!important;margin-bottom:-1px}
+#ge-hc>div:first-child>button[style*="#121317"]{border-bottom-color:var(--acc)!important;color:#fff!important}
+#ge-hc button[data-p],#ge-hc button[data-f]{padding:6px 12px!important;font-size:12px!important}
+#ge-hc button[data-f]{background:transparent!important;border:1px solid var(--line)!important;color:#d1d5db!important}
+#ge-hc button[data-f][style*="#f4f4f5"]{background:rgba(91,209,122,.14)!important;border-color:rgba(91,209,122,.5)!important;color:var(--acc)!important}
+#ge-hq,#ge-rq{background:var(--s1)!important;border-color:var(--line)!important;border-radius:12px!important;font-size:14px!important}
+#ge-hl>div{background:var(--s1)!important;border-color:var(--line)!important;border-radius:14px!important}
+
+/* ---------- Health / Today: what matters first ---------- */
+#health-view-today{display:flex!important;flex-direction:column;gap:12px}
+#health-view-today>*{margin:0!important}
+#health-view-today>#ge-coach{order:4}
+#health-view-today>div:has(.w-36){order:1}
+#health-view-today>.grid.grid-cols-3{order:2}
+#health-view-today>div.divide-y{order:3}
+#health-view-today>.grid.grid-cols-1{order:5}
+#health-view-today>*:not(#ge-coach):not(:has(.w-36)):not(.grid-cols-3):not(.divide-y):not(.grid-cols-1){order:6}
+#health-view-today [class*="bg-gradient-to-r"]{background:var(--s1)!important;border-color:var(--line)!important}
+#ge-coach>div{background:var(--s1)!important;border:1px solid var(--line)!important;box-shadow:none!important}
+#hlth-btn-today,#hlth-btn-progress,#hlth-btn-planner{font-size:12px!important;padding:6px 10px!important}
+
+/* ---------- Profile ---------- */
+#tab-profile>div{border-color:var(--line)!important}
+
+/* ---------- Dish sheet ---------- */
+#ge-sheet,[id*="recipe-modal"]>div{border-top-left-radius:22px!important;border-top-right-radius:22px!important}
+
+/* toast: bottom, above the nav, never covering titles */
+#toast{top:auto!important;bottom:calc(150px + env(safe-area-inset-bottom,0px))!important;border-color:var(--line)!important;background:rgba(32,33,37,.97)!important;font-weight:600!important;max-width:calc(100% - 32px);white-space:normal!important;text-align:center}
+#toast .animate-ping{animation:none!important;background:var(--acc)!important}
+
+/* bottom nav + add button */
+.ge-nav{background:rgba(12,12,15,.98)!important}
+.ge-nav .nav-item{font-size:11px!important}
+.ge-nav .nav-item.active-nav{color:var(--acc)!important}
+#app-screens{padding-bottom:calc(9rem + env(safe-area-inset-bottom,0px))!important}
+
+/* tap targets + focus */
+#app-screens button{min-height:28px}
+input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!important;outline:none}
+
+/* ---------- Dish sheet: keep "Log it today" in reach ---------- */
+#recipe-detail-modal>div{background:#111114!important;border-top-left-radius:22px!important;border-top-right-radius:22px!important}
+#rm-title{font-size:20px!important;line-height:1.2!important}
+#recipe-detail-modal div:has(>div>#rm-log-btn-Lunch){position:sticky;bottom:-32px;z-index:5;background:linear-gradient(180deg,rgba(17,17,20,.9),#111114 30%);margin:0 -20px!important;padding:14px 20px 18px!important;border-top:1px solid var(--line)!important}
+#recipe-detail-modal .rm-meal-btn{padding-top:11px!important;padding-bottom:11px!important;font-size:13px!important}
+#recipe-detail-modal [class*="bg-[#1d1d20]"]{background:var(--s1)!important;border-color:var(--line)!important}
+.rm-scale-btn{white-space:nowrap!important;padding:5px 8px!important}
+#recipe-detail-modal div:has(>div>#rm-log-btn-Lunch) h3{font-size:13px!important;color:#9ca3af!important;font-weight:600!important}
+
+/* Dining top switch: flatter */
+#catalogue-view-dining{background:var(--bg)!important}
+#catalogue-view-dining>.grid.grid-cols-3{background:var(--s1)!important;border-color:var(--line)!important}
+#catalogue-view-dining>.grid.grid-cols-3>button[class*="bg-[#121317]"]{background:var(--s3)!important;box-shadow:none!important}
+</style>
 </head>
 <body class="min-h-screen flex justify-center items-center antialiased selection:bg-indigo-500 selection:text-white">
 
@@ -4241,7 +4335,7 @@ div:has(>#profile-top5-heading)>span,div:has(>div>#profile-top5-heading)>span{di
       if (subTab === 'recipes') {
         const authored = RECIPES.filter(r => r.author === prof.username);
         if (authored.length === 0) {
-          container.innerHTML = `<div class="bg-[#1a1a1d] border border-white/5 rounded-2xl p-6 text-center text-xs text-gray-400">${prof.handle} hasn't published a full recipe card yet—check out their Top 5 Favorites above or their Reviews tab!</div>`;
+          container.innerHTML = `<div class="bg-[#1a1a1d] border border-white/5 rounded-2xl p-6 text-center text-sm text-gray-400">${(prof.isSelf||prof.username===ME)?'No dishes yet. Tap + to post your first one.':prof.handle+' hasn’t posted any dishes yet.'}</div>`;
           return;
         }
         container.innerHTML = authored.map(r => `
