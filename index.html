@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>try{var _t=JSON.parse(localStorage.getItem("ge_theme")||'"dark"');if(_t==="light"||(_t==="auto"&&matchMedia("(prefers-color-scheme: light)").matches))document.documentElement.classList.add("ge-light")}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Good Eats — Social Dishes, Grocery Prices & Macro Tracker</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -101,6 +102,18 @@
     }
     @keyframes geSpin { to { transform: rotate(360deg); } }
     @keyframes geFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .ge-nav{position:absolute;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(12,13,26,.94);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.08)}
+    .ge-nav .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:46px;color:#8b90a7;font-size:10px;font-weight:700;position:relative;background:none;border:0}
+    .ge-nav .nav-item span{line-height:1}
+    .ge-nav .nav-item.active-nav{color:#fff!important}
+    .ge-nav .nav-item.active-nav::before{content:'';position:absolute;top:-9px;width:24px;height:3px;border-radius:3px;background:#22c55e}
+    .ge-nav-mid{display:flex;justify-content:center}
+    .ge-nav-plus{width:54px;height:54px;margin-top:-26px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#4ade80);color:#06210f;display:flex;align-items:center;justify-content:center;border:4px solid #0b0c18;box-shadow:0 6px 20px rgba(34,197,94,.45);transition:transform .15s}
+    .ge-nav-plus:active{transform:scale(.92)}
+    #ge-add button,#ge-auth button,#ge-sheet button,#ge-settings button,#ge-lists button,#ge-top5 button{color:inherit;font-family:inherit;background:none;border:0;cursor:pointer}
+    #ge-add input,#ge-add textarea,#ge-auth input,#ge-auth textarea,#ge-auth select{font-family:inherit}
+    html.ge-light{filter:invert(1) hue-rotate(180deg)}
+    html.ge-light img,html.ge-light video,html.ge-light canvas,html.ge-light #ge-splash svg{filter:invert(1) hue-rotate(180deg)}
   </style>
 </head>
 <body class="min-h-screen flex justify-center items-center antialiased selection:bg-indigo-500 selection:text-white">
@@ -367,7 +380,7 @@
         <div id="catalogue-view-dining" class="bg-[#0d0d0f] min-h-screen px-4 pt-3 pb-28 space-y-3.5 hidden">
           <!-- Phoenix Plate Header -->
           <div>
-            <p class="text-xs text-gray-400 font-medium">Today's menus</p>
+            <p class="text-xs text-gray-400 font-medium">Elon Dining · hours and typical dishes</p>
             <div class="flex items-center justify-between">
               <h1 id="pp-main-heading" class="text-2xl font-extrabold text-white tracking-tight">Dining halls</h1>
               <button onclick="openCreateModal('recipe')" class="text-[11px] font-bold text-[#c5a64e] hover:underline flex items-center gap-1">
@@ -1457,39 +1470,12 @@
     <!-- =======================================================================
          6-ITEM BOTTOM NAVIGATION BAR (HOME, CATALOGUE, +, HEALTH, PROFILE, SETTINGS)
          ======================================================================= -->
-    <nav class="absolute bottom-0 inset-x-0 z-40 bg-gradient-to-t from-[#080912] via-[#101223]/95 to-[#15182e]/90 backdrop-blur-xl border-t border-white/10 px-3 py-2 flex items-center justify-between safe-bottom">
-      
-      <button onclick="switchTab('tab-feed')" class="nav-item flex flex-col items-center gap-1 active-nav text-gray-400 transition relative">
-        <i data-lucide="home" class="w-5 h-5"></i>
-        <span class="text-[10px] font-bold">Home</span>
-      </button>
-
-      <button onclick="switchTab('tab-catalogue')" class="nav-item flex flex-col items-center gap-1 text-gray-400 transition relative">
-        <i data-lucide="book-open" class="w-5 h-5"></i>
-        <span class="text-[10px] font-bold">Catalogue</span>
-      </button>
-
-      <button onclick="switchTab('tab-health')" class="nav-item flex flex-col items-center gap-1 text-gray-400 transition relative">
-        <i data-lucide="dumbbell" class="w-5 h-5"></i>
-        <span class="text-[10px] font-bold">Health</span>
-      </button>
-
-      <!-- Floating '+' Action Button -->
-      <div class="-mt-5">
-        <button onclick="openCreateModal()" class="w-11 h-11 rounded-full bg-white text-[#0b0c18] hover:scale-105 active:scale-95 transition flex items-center justify-center shadow-[0_0_25px_rgba(255,255,255,0.4)] border-4 border-[#0d0e1c]" title="Post, Rank or Log">
-          <i data-lucide="plus" class="w-5 h-5 stroke-[3]"></i>
-        </button>
-      </div>
-
-      <button onclick="openUserProfile(ME)" class="nav-item flex flex-col items-center gap-1 text-gray-400 transition relative">
-        <i data-lucide="user" class="w-5 h-5"></i>
-        <span class="text-[10px] font-bold">Profile</span>
-      </button>
-
-      <button onclick="switchTab('tab-settings')" class="nav-item flex flex-col items-center gap-1 text-gray-400 transition relative">
-        <i data-lucide="settings" class="w-5 h-5"></i>
-        <span class="text-[10px] font-bold">Settings</span>
-      </button>
+    <nav class="ge-nav">
+      <button onclick="switchTab('tab-feed')" class="nav-item active-nav" aria-label="Home"><i data-lucide="home" class="w-5 h-5"></i><span>Home</span></button>
+      <button onclick="switchTab('tab-catalogue')" class="nav-item" aria-label="Explore"><i data-lucide="compass" class="w-5 h-5"></i><span>Explore</span></button>
+      <div class="ge-nav-mid"><button onclick="geAdd()" class="ge-nav-plus" aria-label="Add a dish"><i data-lucide="plus" class="w-6 h-6" style="stroke-width:3"></i></button></div>
+      <button onclick="switchTab('tab-health')" class="nav-item" aria-label="Health"><i data-lucide="activity" class="w-5 h-5"></i><span>Health</span></button>
+      <button onclick="openUserProfile(ME)" class="nav-item" aria-label="Profile"><i data-lucide="user" class="w-5 h-5"></i><span>Profile</span></button>
     </nav>
 
   </div>
@@ -4030,21 +4016,16 @@
         bio: 'Good Eats Community Cook & Reviewer 🍽️',
         school: 'Elon University',
         locationBadge: '🎓 Elon Community',
-        followers: 118 + authored.length * 25 + userRevs.length * 12,
-        followingCount: 94,
-        avgScore: 9.1,
+        followers: 0,
+        followingCount: 0,
+        avgScore: 0,
         avatarGrad: 'from-indigo-500 to-emerald-400',
         top5: []
       };
     }
 
     function isFollowingUser(username) {
-      const clean = (username || '').replace(/^@/, '').trim();
-      const recMatch = RECIPES.find(r => r.author === clean);
-      if (recMatch) return !!recMatch.isFollowing;
-      const revMatch = SOCIAL_REVIEWS.find(rev => rev.user.trim() === clean);
-      if (revMatch) return !!revMatch.isFollowing;
-      return false;
+      return window.GE_FOLLOWS ? window.GE_FOLLOWS.has((username || '').replace(/^@/, '').trim()) : false;
     }
 
     function openUserProfile(username, event) {
@@ -4081,14 +4062,14 @@
       if (backBtn) backBtn.classList.toggle('hidden', isSelf);
 
       if (switcherEl) {
-        const allUsers = Object.keys(USER_PROFILES);
+        const allUsers = Object.keys(USER_PROFILES).filter(k => USER_PROFILES[k].isSelf ? USER_PROFILES[k].username === ME : (k !== ME && k !== 'Guest'));
         switcherEl.innerHTML = allUsers.map(uKey => {
           const u = USER_PROFILES[uKey];
           const isSelected = u.username === prof.username;
           return `
             <button onclick="openUserProfile('${u.username}')" class="px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 border ${isSelected ? 'bg-[#4f46e5] text-white border-indigo-400 shadow-md' : 'bg-[#15182e] text-gray-300 border-white/10 hover:text-white'}">
               <span class="w-4 h-4 rounded-full bg-gradient-to-tr ${u.avatarGrad} text-[9px] font-black text-white flex items-center justify-center">${u.initials}</span>
-              <span>${u.isSelf ? 'Me (@${ME})' : u.handle}</span>
+              <span>${u.isSelf ? 'Me (@'+ME+')' : u.handle}</span>
             </button>
           `;
         }).join('');
@@ -4420,19 +4401,20 @@ let db=null,uid=null,online=false,likeSet=new Set(),likeCount={},remoteComments=
 const EMOJIS=['🍳','🥑','🍕','🌮','🍜','🥗','🍔','🍣'];
 const lname=n=>n.toLowerCase();
 function refresh(){document.querySelectorAll('.me-name').forEach(e=>e.textContent=ME);
+ try{drawChips()}catch(e){}
  try{renderFeed();renderCatalogueRecipes();renderProfileSavedList();if(!$('tab-profile').classList.contains('hidden'))renderProfileView();}catch(e){console.warn(e)}
  try{lucide.createIcons()}catch(e){}}
 function applyProfile(p){ME=p.username;myProfile=p;
  if(USER_PROFILES.HoldenBM&&ME!=='HoldenBM')USER_PROFILES.HoldenBM.isSelf=false;
  const base=USER_PROFILES[ME]||getOrCreateProfileData(ME);
  USER_PROFILES[ME]=Object.assign({},base,{username:ME,handle:'@'+ME,initials:avatarHtml(Object.assign({username:ME},p)),isSelf:true,top5:mapT(p.top5),bio:p.bio||'New on Good Eats 🍽️',school:p.school,locationBadge:p.school&&p.school!=='Home Cook'?'🎓 '+p.school:'🌎 Home Cook',followers:base.followers>200?0:(base.followers||0),followingCount:0,avatarGrad:'from-[#3843d0] to-[#7ed957]'});
- APP_STATE.viewedProfileUser=ME;APP_STATE.isStudent=!!p.school&&p.school!=='Home Cook';applyPrefs(p);
+ APP_STATE.viewedProfileUser=ME;APP_STATE.isStudent=!!p.school&&p.school!=='Home Cook';resetIfNewOwner();applyPrefs(p);campusMode();
  // own posts in local mode
  if(!online)(ls.get('ge_posts')||[]).forEach(ingestRecipe);
  refresh();}
 const deepEsc=o=>typeof o==='string'?esc(o):Array.isArray(o)?o.map(deepEsc):o&&typeof o==='object'?Object.fromEntries(Object.entries(o).map(([k,v])=>[k,deepEsc(v)])):o;
 function ingestRecipe(r){r=deepEsc(r);if(!r||!r.id||blocked.has(r.author)||hiddenIds.has(r.id)||RECIPES.some(q=>q.id===r.id))return false;
- r.liked=false;r.bookmarked=r.author===ME;r.isFollowing=r.author===ME;r._shared=true;r.comments=r.comments||[];RECIPES.unshift(r);
+ if(!r.image)r.image=phImg(r.emoji);r.liked=false;r.bookmarked=r.author===ME;r.isFollowing=GE_FOLLOWS.has(r.author);r._shared=true;r.comments=r.comments||[];RECIPES.unshift(r);
  if(!USER_PROFILES[r.author])USER_PROFILES[r.author]=getOrCreateProfileData(r.author);return true;}
 // ---------- onboarding / edit profile modal ----------
 function modal(){let m=$('ge-onboard');if(m)return m;m=document.createElement('div');m.id='ge-onboard';
@@ -4474,7 +4456,7 @@ async function saveProfile(){const m=$('ob-onboard')||modal(),err=$('ob-err');
  $('ob-go').disabled=false;const was=editing;applyProfile(p);const mm=$('ge-onboard');mm.classList.add('hidden');mm.classList.remove('flex');
  showToast(was?'Profile updated':'Welcome to Good Eats, @'+ME+'!');if(!was)switchTab('tab-feed');}
 // ---------- wrap app actions so they sync ----------
-const _pub=publishCustomRecipe;publishCustomRecipe=function(){const n=RECIPES.length;_pub();if(RECIPES.length>n){const r=RECIPES[0];r._shared=true;r.likes=0;r.liked=false;const clean=Object.assign({},r);
+const _pub=publishCustomRecipe;publishCustomRecipe=function(){const n=RECIPES.length;_pub();if(RECIPES.length>n){const r=RECIPES[0];if(!r.image)r.image=phImg(r.emoji);r._shared=true;r.likes=0;r.liked=false;const clean=Object.assign({},r);
   if(online)db.doc('posts/'+r.id).set({uid,author:ME,ts:Date.now(),json:JSON.stringify(clean)}).catch(()=>showToast('Post saved locally — sync failed'));
   else{const a=ls.get('ge_posts')||[];a.unshift(clean);ls.set('ge_posts',a.slice(0,50))}renderFeed();}};
 const _like=toggleRecipeLike;toggleRecipeLike=function(id){const r=RECIPES.find(x=>x.id===id);_like(id);if(online&&r&&r._shared){const d=db.doc('likes/'+id+'__'+uid);(r.liked?d.set({post:id,uid}):d.delete()).catch(()=>{})}};
@@ -4589,15 +4571,15 @@ const INTENTS=[['track','🥗','Eat healthier & track macros'],['share','🍽️
 const ACT=[[1.2,'Mostly sitting'],[1.375,'Light (1–3 workouts/wk)'],[1.55,'Active (3–5/wk)'],[1.725,'Very active (6+/wk)']];
 function calc(d){const kg=(+d.wt||0)*0.453592,cm=(((+d.ft||0)*12)+(+d.inch||0))*2.54;if(!kg||!cm||!d.age)return null;const bmr=10*kg+6.25*cm-5*d.age+(d.sex==='f'?-161:5);const md=d.mode||'cut';let t=bmr*(d.act||1.375);if(md==='cut')t-=500;if(md==='bulk')t+=350;
  const cal=Math.round(t/50)*50,p=Math.round(+d.wt*(md==='bulk'?1.0:0.9)),f=Math.round(cal*0.27/9),c=Math.max(60,Math.round((cal-p*4-f*9)/4));return{mode:md,pace:1,split:'balanced',calories:cal,protein:p,carbs:c,fat:f}}
-function authShell(inner,prog,back){return '<div style="min-height:100%;display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top,0px)) 22px calc(22px + env(safe-area-inset-bottom,0px))">'+(prog!=null?'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'+(back?'<button data-a="back" aria-label="Back" style="font-size:20px;color:#9ca3af;width:32px;height:32px">‹</button>':'<span style="width:32px"></span>')+'<div style="flex:1;height:5px;border-radius:9px;background:rgba(255,255,255,.1)"><div style="height:100%;width:'+Math.round(prog*100)+'%;border-radius:9px;background:#22c55e;transition:width .3s"></div></div></div>':(back?'<button data-a="back" style="font-size:20px;color:#9ca3af;width:32px;height:32px;margin-bottom:8px">‹</button>':''))+inner+'</div>'}
-function steps(){return AU.edit&&AU.edit!=='goals'?['profile']:['profile','goals',...AU.queue,'done']}
+function authShell(inner,prog,back){return '<div style="min-height:100%;display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top,0px)) 22px calc(22px + env(safe-area-inset-bottom,0px))">'+(prog!=null&&isFinite(prog)?'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'+(back?'<button data-a="back" aria-label="Back" style="font-size:20px;color:#9ca3af;width:32px;height:32px">‹</button>':'<span style="width:32px"></span>')+'<div style="flex:1;height:5px;border-radius:9px;background:rgba(255,255,255,.1)"><div style="height:100%;width:'+Math.round(prog*100)+'%;border-radius:9px;background:#22c55e;transition:width .3s"></div></div></div>':(back?'<button data-a="back" style="font-size:20px;color:#9ca3af;width:32px;height:32px;margin-bottom:8px">‹</button>':''))+inner+'</div>'}
+function steps(){return AU.edit==='one'?[AU.step]:AU.edit&&AU.edit!=='goals'?['profile']:['profile','goals',...AU.queue,'done']}
 function view(){const s=AU.step,d=AU.d,err='<p id="au-err" class="text-xs text-rose-400 min-h-[18px]" role="alert"></p>';
  if(s==='welcome')return authShell('<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding-top:30px">'+logo(150)+'<p style="font-size:14px;color:#cbd5e1;max-width:260px">Rank the dishes you love, track your macros and eat smarter on a student budget.</p></div><div style="display:grid;gap:10px">'+B1('go-signup','Create account')+B2('go-login','Log in')+'<p style="font-size:10px;text-align:center;color:#6b7280;margin-top:4px">By continuing you agree to our <a data-a="terms" style="text-decoration:underline">Terms</a> and <a data-a="privacy" style="text-decoration:underline">Privacy Policy</a>.</p></div>');
  if(s==='login')return authShell('<div style="text-align:center;margin:4px 0 18px">'+logo(70)+'<h1 class="text-xl font-extrabold mt-2">Welcome back</h1></div><div style="display:grid;gap:12px">'+F('au-email','Email','email','you@email.com','autocomplete="email" autocapitalize="none"')+F('au-pw','Password','password','Your password','autocomplete="current-password"')+err+B1('login','Log in')+'<div style="display:flex;justify-content:space-between">'+LK('forgot','Forgot password?')+LK('go-signup','Create account')+'</div></div>',null,true);
  if(s==='forgot')return authShell('<h1 class="text-xl font-extrabold mb-1">Reset your password</h1><p class="text-xs text-gray-400 mb-4">Enter your email and we’ll send you a link to choose a new password.</p><div style="display:grid;gap:12px">'+F('au-email','Email','email','you@email.com','autocomplete="email"')+err+B1('reset','Send reset link')+'</div>',null,true);
  if(s==='signup')return authShell('<h1 class="text-2xl font-extrabold">Create your account</h1><p class="text-xs text-gray-400 mt-1 mb-4">Your dishes, goals and favorites are saved to your account, so you can log in from any device.</p><div style="display:grid;gap:12px">'+F('au-email','Email','email','you@email.com','autocomplete="email" autocapitalize="none"')+F('au-pw','Password (8+ characters)','password','Create a password','autocomplete="new-password"')+'<div style="height:5px;border-radius:9px;background:rgba(255,255,255,.1)"><div id="au-meter" style="height:100%;width:0;border-radius:9px;transition:all .2s"></div></div><label style="display:flex;gap:8px;align-items:flex-start;font-size:11px;color:#9ca3af"><input type="checkbox" id="au-terms" style="margin-top:2px;width:18px;height:18px"><span>I agree to the <a data-a="terms" style="color:#34d399;text-decoration:underline">Terms &amp; Community Guidelines</a> and <a data-a="privacy" style="color:#34d399;text-decoration:underline">Privacy Policy</a>. No hate, harassment, nudity or spam.</span></label>'+err+B1('signup','Continue')+'<div style="text-align:center">'+LK('go-login','I already have an account')+'</div></div>',null,true);
- if(s==='profile'){const i=steps().indexOf('profile'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">'+(AU.edit?'Edit profile':'Set up your profile')+'</h1><p class="text-xs text-gray-400 mt-1 mb-4">This is how other cooks will see you.</p><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:14px"><div id="au-av" style="width:96px;height:96px;border-radius:50%;overflow:hidden;background:#1c203d;border:2px solid #22c55e;display:flex;align-items:center;justify-content:center;font-size:42px">'+avatarHtml({photo:d.photo,emoji:d.emoji||EMOJIS[0]})+'</div><div style="display:flex;gap:14px">'+LK('pick-photo','Upload photo')+(d.photo?LK('rm-photo','Remove'):'')+'</div><input id="au-file" type="file" accept="image/*" style="display:none"><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+EMOJIS.map(e=>'<button data-a="emoji" data-e="'+e+'" aria-label="Avatar '+e+'" style="width:38px;height:38px;border-radius:50%;font-size:19px;background:#15182e;border:1px solid '+(!d.photo&&(d.emoji||EMOJIS[0])===e?'#22c55e':'rgba(255,255,255,.1)')+'">'+e+'</button>').join('')+'</div></div><div style="display:grid;gap:12px">'+F('au-user','Username','text','e.g. Maya.eats','maxlength="20" autocomplete="off" autocapitalize="none"'+(AU.edit?' disabled':''))+'<p id="au-av-msg" class="text-[11px] min-h-[14px]" style="margin-top:-6px"></p>'+'<label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Bio (optional)</span><textarea id="au-bio" maxlength="120" rows="2" placeholder="What do you like to cook?" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400" style="font-size:16px"></textarea></label><label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">I cook as</span><select id="au-school" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none" style="font-size:16px"><option>Elon University</option><option>Home Cook</option></select></label>'+err+B1('profile-next',AU.edit?'Save changes':'Continue')+(AU.edit?'<div style="text-align:center">'+LK('close','Cancel')+'</div>':'')+'</div>',AU.edit?null:i/(n-1),false)}
- if(s==='goals'){const i=steps().indexOf('goals'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">What brings you to Good Eats?</h1><p class="text-xs text-gray-400 mt-1 mb-4">Pick everything that fits. We’ll set the app up around it.</p><div style="display:grid;gap:8px">'+INTENTS.map(([k,e,t])=>'<button data-g="intent" data-v="'+k+'" class="text-left px-4 py-3.5 rounded-2xl border font-bold text-sm '+((d.intents||[]).includes(k)?'bg-emerald-500/20 border-emerald-400 text-emerald-100':'bg-white/[0.05] border-white/10')+'">'+e+'  '+t+'</button>').join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('goals-next','Continue')+'<div style="text-align:center">'+LK('skip','Skip for now')+'</div></div>',i/(n-1),!AU.edit)}
+ if(s==='profile'){const i=steps().indexOf('profile'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">'+(AU.edit?'Edit profile':'Set up your profile')+'</h1><p class="text-xs text-gray-400 mt-1 mb-4">This is how other cooks will see you.</p><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:14px"><div id="au-av" style="width:96px;height:96px;border-radius:50%;overflow:hidden;background:#1c203d;border:2px solid #22c55e;display:flex;align-items:center;justify-content:center;font-size:42px">'+avatarHtml({photo:d.photo,emoji:d.emoji||EMOJIS[0]})+'</div><div style="display:flex;gap:14px">'+LK('pick-photo','Upload photo')+(d.photo?LK('rm-photo','Remove'):'')+'</div><input id="au-file" type="file" accept="image/*" style="display:none"><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+EMOJIS.map(e=>'<button data-a="emoji" data-e="'+e+'" aria-label="Avatar '+e+'" style="width:38px;height:38px;border-radius:50%;font-size:19px;background:#15182e;border:1px solid '+(!d.photo&&(d.emoji||EMOJIS[0])===e?'#22c55e':'rgba(255,255,255,.1)')+'">'+e+'</button>').join('')+'</div></div><div style="display:grid;gap:12px">'+F('au-user','Username','text','e.g. Maya.eats','maxlength="20" autocomplete="off" autocapitalize="none"'+(AU.edit?' disabled':''))+'<p id="au-av-msg" class="text-[11px] min-h-[14px]" style="margin-top:-6px"></p>'+'<label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Bio (optional)</span><textarea id="au-bio" maxlength="120" rows="2" placeholder="What do you like to cook?" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400" style="font-size:16px"></textarea></label><label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Are you an Elon student?</span><select id="au-school" class="w-full mt-1 bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none" style="font-size:16px"><option value="Elon University">Yes, I’m an Elon student</option><option value="Home Cook">No, I’m not</option></select></label>'+err+B1('profile-next',AU.edit?'Save changes':'Continue')+(AU.edit?'<div style="text-align:center">'+LK('close','Cancel')+'</div>':'')+'</div>',AU.edit?null:i/(n-1),false)}
+ if(s==='goals'){const i=steps().indexOf('goals'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">What brings you to Good Eats?</h1><p class="text-xs text-gray-400 mt-1 mb-4">Pick everything that fits. We’ll set the app up around it.</p><div style="display:grid;gap:8px">'+INTENTS.filter(x=>x[0]!=='campus'||(AU.d.school||'Elon University')==='Elon University').map(([k,e,t])=>'<button data-g="intent" data-v="'+k+'" class="text-left px-4 py-3.5 rounded-2xl border font-bold text-sm '+((d.intents||[]).includes(k)?'bg-emerald-500/20 border-emerald-400 text-emerald-100':'bg-white/[0.05] border-white/10')+'">'+e+'  '+t+'</button>').join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('goals-next','Continue')+'<div style="text-align:center">'+LK('skip','Skip for now')+'</div></div>',i/(n-1),!AU.edit)}
  if(s==='macros'){const i=steps().indexOf('macros'),n=steps().length,g=calc(d);return authShell('<h1 class="text-2xl font-extrabold">Set your daily targets</h1><p class="text-xs text-gray-400 mt-1 mb-3">We’ll calculate calories and macros for you. You can change them any time.</p><div style="display:grid;gap:12px"><div style="display:flex;gap:8px;flex-wrap:wrap">'+[['cut','Lose weight'],['maintain','Maintain'],['bulk','Build muscle']].map(([v,t])=>CH('mode',v,t,(d.mode||'cut')===v)).join('')+'</div><div style="display:flex;gap:8px">'+[['m','Male'],['f','Female']].map(([v,t])=>CH('sex',v,t,(d.sex||'m')===v)).join('')+'</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">'+F('m-age','Age','number','20','inputmode="numeric"')+F('m-ft','Ft','number','5','inputmode="numeric"')+F('m-in','In','number','10','inputmode="numeric"')+F('m-wt','Lbs','number','160','inputmode="numeric"')+'</div><select id="m-act" class="bg-[#15182e] border border-white/10 rounded-xl px-3 py-3 outline-none" style="font-size:16px">'+ACT.map(([v,t])=>'<option value="'+v+'"'+((d.act||1.375)==v?' selected':'')+'>'+t+'</option>').join('')+'</select><div id="m-prev" style="padding:14px;border-radius:16px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35);text-align:center;font-weight:800">'+(g?g.calories.toLocaleString()+' cal · '+g.protein+'g protein':'Enter your details to see your targets')+'</div>'+err+B1('macros-next','Save my targets')+'<div style="text-align:center">'+LK('skip','I’ll do this later')+'</div></div>',i/(n-1),true)}
  if(s==='budget'){const i=steps().indexOf('budget'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">What’s your meal budget?</h1><p class="text-xs text-gray-400 mt-1 mb-4">Roughly how much do you want to spend per serving? We’ll highlight dishes that fit.</p><div style="display:flex;flex-wrap:wrap;gap:8px">'+[[4,'Under $4'],[6,'$4–6'],[8,'$6–8'],[12,'$8+']].map(([v,t])=>CH('budget',v,t,(d.budget||6)==v)).join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('next','Continue')+'<div style="text-align:center">'+LK('skip','Skip for now')+'</div></div>',i/(n-1),true)}
  if(s==='diet'){const i=steps().indexOf('diet'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">Any dietary needs?</h1><p class="text-xs text-gray-400 mt-1 mb-4">We’ll filter dining hall items and dishes for you. Always double-check allergens with the dining hall.</p><div style="display:flex;flex-wrap:wrap;gap:8px">'+[['vegetarian','Vegetarian'],['vegan','Vegan'],['gluten-free','Gluten-free'],['dairy-free','Dairy-free'],['nut-free','Nut-free']].map(([v,t])=>CH('diet',v,t,(d.diets||[]).includes(v))).join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('next','Continue')+'<div style="text-align:center">'+LK('skip','None / skip')+'</div></div>',i/(n-1),true)}
@@ -4620,7 +4602,7 @@ async function authClick(e){const g=e.target.closest('[data-g]');if(g){const k=g
  try{
  if(a==='terms'||a==='privacy'){openLegal(a);return}
  if(a==='go-login')return openAuth('login');if(a==='go-signup')return openAuth('signup');if(a==='forgot')return openAuth('forgot');
- if(a==='back'){if(['login','signup','forgot'].includes(AU.step))return openAuth('welcome');const s=steps(),i=s.indexOf(AU.step);if(i>0){AU.step=s[i-1];paint()}return}
+ if(a==='back'){if(AU.edit==='one'){authEl().style.display='none';return}if(['login','signup','forgot'].includes(AU.step))return openAuth('welcome');const s=steps(),i=s.indexOf(AU.step);if(i>0){AU.step=s[i-1];paint()}return}
  if(a==='close'){authEl().style.display='none';return}
  if(a==='login'){const em=$('au-email').value.trim(),pw=$('au-pw').value;if(!em||!pw)return say('Enter your email and password.');b.disabled=true;say('');
   try{const c=await auth.signInWithEmailAndPassword(em,pw);uid=c.user.uid;const q=await db.collection('profiles').where('uid','==',uid).limit(1).get();
@@ -4632,20 +4614,559 @@ async function authClick(e){const g=e.target.closest('[data-g]');if(g){const k=g
  if(a==='rm-photo'){d.photo=null;paintKeep();return}
  if(a==='emoji'){d.emoji=b.dataset.e;d.photo=null;paintKeep();return}
  if(a==='profile-next'){const u=AU.edit?myProfile.username:$('au-user').value.trim(),bio=$('au-bio').value.trim();
-  if(!/^[A-Za-z0-9._]{3,20}$/.test(u))return say('Username: 3–20 letters, numbers, . or _');if(isBad(u)||isBad(bio))return say('Please keep your username and bio free of offensive language.');b.disabled=true;say('');
+  if(!/^[A-Za-z0-9._]{3,20}$/.test(u))return say('Username: 3–20 letters, numbers, . or _');if(RESERVED.has(lname(u)))return say('That username is reserved.');if(isBad(u)||isBad(bio))return say('Please keep your username and bio free of offensive language.');b.disabled=true;say('');
   try{if(!AU.edit){const s=await db.doc('profiles/u_'+lname(u)).get();if(s.exists&&s.data().uid!==uid){b.disabled=false;return say('That username is taken')}}
    Object.assign(d,{username:u,bio,school:$('au-school').value,emoji:d.emoji||EMOJIS[0]});
    if(AU.edit){await saveDoc({bio,school:d.school,emoji:d.emoji,photo:d.photo||null});applyProfile(myProfile);authEl().style.display='none';showToast('Profile updated');return}
-   const p={username:u,bio,school:d.school,emoji:d.emoji,photo:d.photo||null,email:d.email};myProfile=p;await saveDoc({});applyProfile(p);startSync();AU.d={intents:[]};nextStep()}catch(er){b.disabled=false;say(er&&er.code==='permission-denied'?'Could not save — check the Firestore rules.':'Could not save — try again.')}return}
- if(a==='goals-next'||a==='skip'&&AU.step==='goals'){AU.queue=a==='skip'?[]:[['track','macros'],['budget','budget'],['campus','diet']].filter(([k])=>(d.intents||[]).includes(k)).map(x=>x[1]);if(a==='skip')d.intents=[];nextStep();return}
- if(a==='macros-next'){const g=calc(d);if(!g)return say('Fill in your age, height and weight, or tap “I’ll do this later”.');d.goals=g;nextStep();return}
- if(a==='next'){if(AU.step==='budget'&&!d.budget)d.budget=6;if(AU.step==='budget')d.prefs=Object.assign(d.prefs||{},{budget:d.budget});if(AU.step==='diet')d.prefs=Object.assign(d.prefs||{},{diets:d.diets||[]});nextStep();return}
- if(a==='skip'){nextStep();return}
+   const p={username:u,bio,school:d.school,emoji:d.emoji,photo:d.photo||null,email:d.email};myProfile=p;await saveDoc({});applyProfile(p);startSync();AU.d={intents:[],school:d.school};nextStep()}catch(er){b.disabled=false;say(er&&er.code==='permission-denied'?'Could not save — check the Firestore rules.':'Could not save — try again.')}return}
+ if(a==='goals-next'||a==='skip'&&AU.step==='goals'){{const I=d.intents||[];AU.queue=a==='skip'?[]:[...(I.includes('track')?['macros']:[]),...(I.includes('budget')?['budget']:[]),...((I.includes('campus')||I.includes('track'))?['diet']:[])]}if(a==='skip')d.intents=[];nextStep();return}
+ if(a==='macros-next'){const g=calc(d);if(!g)return say('Fill in your age, height and weight, or tap “I’ll do this later”.');d.goals=g;if(AU.edit==='one')return finishOne();nextStep();return}
+ if(a==='next'){if(AU.step==='budget'&&!d.budget)d.budget=6;if(AU.step==='budget')d.prefs=Object.assign(d.prefs||{},{budget:d.budget});if(AU.step==='diet')d.prefs=Object.assign(d.prefs||{},{diets:d.diets||[]});if(AU.edit==='one')return finishOne();nextStep();return}
+ if(a==='skip'){if(AU.edit==='one'){authEl().style.display='none';return}nextStep();return}
  if(a==='finish'){b.disabled=true;const extra={intents:d.intents||[]};if(d.goals)extra.goals=d.goals;if(d.prefs)extra.prefs=d.prefs;try{await saveDoc(extra)}catch(er){}applyPrefs(extra);authEl().style.display='none';if(AU.edit){showToast('Goals updated');try{renderHealthTracker()}catch(x){}}else{landTab(extra.intents)}refresh();return}
  }catch(er){console.warn(er);say('Something went wrong. Please try again.')}}
 function paintKeep(){const u=$('au-user')?$('au-user').value:'',bio=$('au-bio')?$('au-bio').value:'',sc=$('au-school')?$('au-school').value:'';const d=AU.d;d.username=u;d.bio=bio;d.school=sc;paint()}
 function landTab(i){const t=i.includes('track')?'tab-health':i.includes('plan')||i.includes('budget')?'tab-health':i.includes('campus')?'tab-catalogue':'tab-feed';try{switchTab(t)}catch(e){}}
 async function askPassword(){return new Promise(r=>{const s=sheet('<div style="font-weight:800;font-size:15px">Confirm your password</div><p style="color:#9ca3af;margin:6px 0 10px">For your security, enter your password to continue.</p><input id="ap-pw" type="password" autocomplete="current-password" style="width:100%;background:#0b0c18;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:12px;font-size:16px;color:#fff">'+btn('Confirm','ok','#34d399')+btn('Cancel','no'));s.onclick=e=>{const a=e.target.closest('[data-s]');if(a&&a.dataset.s==='ok'){const v=$('ap-pw').value;closeSheet();r(v)}else if(a||e.target===s){closeSheet();r(null)}}})}
+
+function phImg(e){const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2042"/><stop offset="1" stop-color="#0f3d2e"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><text x="200" y="185" font-size="120" text-anchor="middle">'+(e||'🍽️')+'</text></svg>';return 'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg)))}
+// ---------- v3: follows, seeds, per-account reset, settings page, goals sheet ----------
+const GE_FOLLOWS=new Set(ls.get('ge_follows')||[]);window.GE_FOLLOWS=GE_FOLLOWS;
+const RESERVED=new Set(['goodeats','good.eats','good_eats','admin','support','moderator','staff','official']);
+function applyFollows(){RECIPES.forEach(r=>{if(r.author!==ME)r.isFollowing=GE_FOLLOWS.has(r.author)});SOCIAL_REVIEWS.forEach(v=>{v.isFollowing=GE_FOLLOWS.has((v.user||'').trim())})}
+toggleFollowCreator=function(a,e){if(e)e.stopPropagation();if(!a||a===ME)return;const on=!GE_FOLLOWS.has(a);on?GE_FOLLOWS.add(a):GE_FOLLOWS.delete(a);applyFollows();ls.set('ge_follows',[...GE_FOLLOWS]);
+ if(online){const d=db.doc('follows/'+uid+'__'+lname(a));(on?d.set({uid,target:a}):d.delete()).catch(()=>showToast('Could not sync follow'))}
+ renderFeed();renderProfileView();showToast(on?'Following @'+a+'!':'Unfollowed @'+a)};
+function resetIfNewOwner(){const k=(uid||'local')+':'+ME;if(sessionStorage.getItem('ge_owner')===k)return;APP_STATE.cart.length=0;['Breakfast','Lunch','Dinner','Snack'].forEach(m=>{APP_STATE.logs[m]=[]});try{sessionStorage.setItem('ge_owner',k)}catch(e){}try{updateCartBadges();renderGroceryCart()}catch(e){}}
+function hideMoney(){['daily-spend-total','water-oz-val'].forEach(id=>{const e=$(id),c=e&&e.closest('.rounded-2xl');if(c)c.style.display='none'});const pc=$('planner-total-cost');if(pc)pc.style.display='none';
+ const ms=$('macro-match-suggestion');if(ms)ms.querySelectorAll('*').forEach(e=>{if(!e.children.length&&/^\$\d/.test(e.textContent.trim()))e.style.display='none'})}
+const _rht=renderHealthTracker;renderHealthTracker=function(){_rht.apply(this,arguments);try{hideMoney()}catch(e){}};
+{const wk=Object.values(APP_STATE).find(v=>Array.isArray(v)&&v.length&&v[0]&&v[0].dateNum!==undefined);if(wk)wk.forEach(d=>{d.cal=0;d.p=0;d.c=0;d.f=0;d.spend=0})}
+// Verified @GoodEats editorial account
+const GE_SEED=[['Chicken Burrito Bowl','🌯',520,42,55,14,'20 min','Meal-prep classic: grilled chicken, rice and beans.',[['Chicken breast','6 oz','Walmart',1.70],['Rice','¾ cup cooked','Aldi',0.25],['Black beans','½ can','Aldi',0.45],['Salsa and corn','¼ cup each','Aldi',0.60]],['Season and grill the chicken, then slice it.','Warm the rice and beans.','Build the bowl and top with salsa and corn.'],['recommended','high-protein','budget']],
+['Greek Yogurt Parfait','🥣',300,22,38,6,'5 min','Quick breakfast with real protein.',[['Greek yogurt','1 cup','Aldi',0.90],['Granola','¼ cup','Aldi',0.40],['Berries','½ cup','Aldi',0.70]],['Spoon yogurt into a bowl or cup.','Layer berries and granola on top.'],['recommended','quick','budget']],
+['Veggie Egg Scramble','🍳',280,24,8,16,'10 min','Eggs, spinach and peppers in one pan.',[['Eggs','3','Aldi',0.55],['Spinach','1 handful','Aldi',0.30],['Bell pepper','½','Aldi',0.50]],['Chop the veggies and cook in a little oil for 2 minutes.','Pour in whisked eggs and stir until set.'],['recommended','high-protein','quick']],
+['Turkey Chili','🍲',410,35,38,12,'35 min','One-pot comfort food that reheats well.',[['Ground turkey','4 oz','Walmart',1.20],['Kidney beans','½ can','Aldi',0.45],['Diced tomatoes','½ can','Aldi',0.50],['Chili spices and onion','1 serving','Walmart',0.40]],['Brown the turkey with onion.','Add beans, tomatoes and spices.','Simmer 25 minutes, stirring now and then.'],['recommended','high-protein','budget']],
+['Salmon and Roasted Veggies','🐟',480,38,20,27,'25 min','Sheet-pan dinner with minimal cleanup.',[['Salmon fillet','5 oz','Walmart',3.20],['Broccoli','1 cup','Aldi',0.60],['Sweet potato','½','Aldi',0.50]],['Heat the oven to 400°F.','Toss veggies in oil and roast 10 minutes.','Add the salmon and roast 12 more minutes.'],['recommended','high-protein']],
+['Overnight Oats','🥣',350,18,52,9,'5 min','Prep tonight, grab it in the morning.',[['Rolled oats','½ cup','Aldi',0.20],['Milk or soy milk','¾ cup','Aldi',0.30],['Peanut butter and banana','1 serving','Aldi',0.55]],['Mix oats and milk in a jar.','Refrigerate overnight.','Top with banana and peanut butter.'],['recommended','quick','budget']],
+['Chicken Caesar Wrap','🌯',430,36,34,16,'10 min','Lunch-break favorite, no cooking needed.',[['Cooked chicken','4 oz','Walmart',1.30],['Tortilla','1 large','Aldi',0.30],['Romaine and Caesar dressing','1 serving','Aldi',0.55]],['Toss chicken, romaine and a little dressing.','Wrap it in the tortilla and slice in half.'],['recommended','quick','high-protein']],
+['Beef and Broccoli Stir-Fry','🥦',450,34,40,16,'20 min','Takeout flavor for a fraction of the price.',[['Sliced beef','4 oz','Walmart',1.90],['Broccoli','1½ cups','Aldi',0.80],['Rice','¾ cup cooked','Aldi',0.25],['Soy sauce, garlic, ginger','1 serving','Walmart',0.35]],['Sear the beef in a hot pan, then set aside.','Stir-fry the broccoli with garlic and ginger.','Return the beef, add soy sauce and serve over rice.'],['recommended','high-protein']],
+['Black Bean Tacos','🌮',380,16,52,12,'15 min','Plant-powered tacos that cost almost nothing.',[['Black beans','½ can','Aldi',0.45],['Corn tortillas','3','Aldi',0.35],['Cabbage, salsa and lime','1 serving','Aldi',0.50]],['Warm and lightly mash the beans.','Fill the tortillas and top with cabbage, salsa and lime.'],['recommended','budget','quick']],
+['Banana Protein Smoothie','🥤',320,30,42,5,'5 min','Post-workout smoothie in under five minutes.',[['Banana','1','Aldi',0.25],['Protein powder','1 scoop','Walmart',0.90],['Milk','1 cup','Aldi',0.40]],['Blend everything with a handful of ice until smooth.'],['recommended','high-protein','quick','shakes']]];
+GE_SEED.forEach((s,i)=>RECIPES.push({id:'ge-'+(i+1),emoji:s[1],title:s[0],author:'GoodEats',handle:'@GoodEats',isFollowing:false,authorSchool:null,authorBadge:'✓ Verified',isTrending:true,prepTime:s[6],rating:8.2+((i*7)%9)/10,ratingsCount:1,category:s[10],caption:s[7],image:phImg(s[1]),macros:{cal:s[2],p:s[3],c:s[4],f:s[5]},ingredients:s[8].map(g=>({name:g[0],qty:g[1],store:g[2],price:g[3]})),steps:s[9],likes:0,liked:false,bookmarked:false,comments:[],_seed:true}));
+USER_PROFILES.GoodEats=Object.assign(getOrCreateProfileData('GoodEats'),{username:'GoodEats',handle:'@GoodEats',initials:'🍽️',bio:'Official Good Eats picks: popular, healthy, budget-friendly classics. New dishes added often.',school:'',locationBadge:'✓ Verified',followers:0,followingCount:0,isSelf:false,top5:mapT(GE_SEED.slice(0,5).map((s,i)=>({title:s[0],emoji:s[1],recipeId:'ge-'+(i+1)})))});
+// ----- Settings page -----
+function drawSettings(){const st=$('tab-settings');if(!st)return;let w=$('ge-settings');if(!w){[...st.children].forEach(c=>c.style.display='none');w=document.createElement('div');w.id='ge-settings';w.style.cssText='padding:18px 16px 120px';st.appendChild(w);
+ w.onclick=async e=>{const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;({theme:cycleTheme,edit:()=>authMode?openAuth('profile',true):openOnboard(true),pw:async()=>{try{await auth.sendPasswordResetEmail(auth.currentUser.email);showToast('Password reset link sent to '+auth.currentUser.email)}catch(x){showToast('Could not send reset email')}},verify:async()=>{try{await auth.currentUser.sendEmailVerification();showToast('Verification email sent')}catch(x){showToast('Try again in a minute')}},campus:async()=>{const on=myProfile.school==='Elon University';try{await saveDoc({school:on?'Home Cook':'Elon University'})}catch(x){}applyProfile(myProfile);drawSettings()},blocked:blockedList,terms:()=>openLegal('terms'),privacy:()=>openLegal('privacy'),out:doLogout,del:deleteAccount})[k]()}}
+ const u=authMode&&auth.currentUser,row=(k,t,s,c)=>'<button data-k="'+k+'" style="display:flex;width:100%;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin-bottom:8px;text-align:left"><span><b style="font-size:14px;color:'+(c||'#f3f4f6')+'">'+t+'</b>'+(s?'<br><span style="font-size:11px;color:#9ca3af">'+s+'</span>':'')+'</span><span style="color:#6b7280;font-size:18px">›</span></button>',
+ hd=t=>'<div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;margin:18px 4px 8px">'+t+'</div>',on=myProfile&&myProfile.school==='Elon University';
+ w.innerHTML='<h1 style="font-size:22px;font-weight:900;margin-bottom:2px">Settings</h1>'+hd('Account')+(u?'<div style="padding:12px 14px;margin-bottom:8px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)"><div style="font-size:11px;color:#9ca3af">Signed in as</div><div style="font-size:14px;font-weight:700;word-break:break-all">'+esc(u.email)+'</div><div style="font-size:11px;margin-top:2px;color:'+(u.emailVerified?'#34d399':'#fbbf24')+'">'+(u.emailVerified?'✓ Email verified':'Email not verified')+'</div></div>':'')+row('edit','Edit profile','Photo, username, bio')+(u?row('pw','Change password','We’ll email you a reset link'):'')+(u&&!u.emailVerified?row('verify','Resend verification email',''):'')
+ +hd('Preferences')+row('theme','Appearance',themeLabel())+row('campus','I’m an Elon student',on?'On — campus dining features are shown':'Off — campus features are hidden')+hd('Privacy &amp; safety')+row('blocked','Blocked users','')+row('terms','Community Guidelines &amp; Terms','')+row('privacy','Privacy Policy','')
+ +hd('About')+'<div style="padding:12px 14px;font-size:12px;color:#9ca3af">Good Eats · beta v0.9<br>Nutrition and price info are estimates. Always check allergens on the label or with dining staff.</div>'+hd('Account actions')+row('out','Log out','')+row('del','Delete my account','Permanently removes your profile and posts','#fb7185')}
+async function doLogout(){if(!confirm('Log out of Good Eats? You can log back in any time with your email and password.'))return;['ge_profile','ge_posts','ge_follows','ge_blocked','ge_hidden'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});try{sessionStorage.clear()}catch(e){}try{if(window.firebase&&firebase.apps.length)await firebase.auth().signOut()}catch(e){}location.reload()}
+const _st=switchTab;switchTab=function(id){_st.apply(this,arguments);if(id==='tab-settings')try{drawSettings()}catch(e){console.warn(e)}};
+// ----- Goals & budget sheet on the profile -----
+function planRow(k,t,s){return '<button data-p="'+k+'" style="display:flex;width:100%;justify-content:space-between;align-items:center;padding:14px;margin:6px 0;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);text-align:left"><span><b style="font-size:14px">'+t+'</b><br><span style="font-size:11px;color:#9ca3af">'+s+'</span></span><span style="color:#34d399;font-weight:800;font-size:12px">'+(s==='Not set'?'Set up':'Edit')+'</span></button>'}
+function openPlan(){const p=myProfile||{},g=p.goals,pr=p.prefs||{};const s=sheet('<div style="font-weight:900;font-size:17px">Goals &amp; budget</div><p style="color:#9ca3af;margin:2px 0 8px">These shape your health tab and which dishes we highlight.</p>'+planRow('macros','🎯 Daily targets',g?g.calories.toLocaleString()+' cal · '+g.protein+'g protein':'Not set')+planRow('budget','💸 Meal budget',pr.budget?'About $'+pr.budget+' per serving':'Not set')+planRow('diet','🥗 Dietary needs',(pr.diets||[]).length?pr.diets.join(', '):'Not set')+btn('Close','x'));
+ s.onclick=e=>{const r=e.target.closest('[data-p]');if(r){closeSheet();openGoalStep(r.dataset.p);return}sheetClick(e)}}
+function openGoalStep(step){const p=myProfile||{};AU.edit='one';AU.step=step;AU.d={mode:p.goals&&p.goals.mode,budget:p.prefs&&p.prefs.budget,diets:((p.prefs&&p.prefs.diets)||[]).slice(),prefs:Object.assign({},p.prefs)};paint();authEl().style.display='block'}
+async function finishOne(){const d=AU.d,extra={};if(d.goals)extra.goals=d.goals;extra.prefs=Object.assign({},myProfile.prefs,d.prefs);try{await saveDoc(extra)}catch(e){showToast('Could not save — try again');return}applyPrefs(extra);authEl().style.display='none';AU.edit=false;try{renderHealthTracker()}catch(e){}showToast('Saved!')}
+
+// ---------- v4: dish library, search, add/rank/log/post flow, theme, campus mode ----------
+const DBTXT=`Chicken Curry|🍛|450|32|30|22|curry chicken,indian chicken curry
+Butter Chicken|🍛|490|34|22|30|murgh makhani
+Chicken Tikka Masala|🍛|480|35|20|28|tikka masala
+Chana Masala|🍛|380|15|52|12|chickpea curry
+Dal|🍲|300|16|42|8|lentil curry,daal
+Palak Paneer|🥬|420|20|15|30|saag paneer
+Chicken Biryani|🍚|550|30|65|18|biryani
+Samosa|🥟|260|5|30|14|
+Naan|🫓|260|8|45|5|garlic naan
+Sushi Rolls|🍣|350|14|60|6|maki,california roll
+Salmon Nigiri|🍣|280|18|38|5|
+Chicken Ramen|🍜|550|25|65|20|ramen
+Tonkotsu Ramen|🍜|650|28|68|28|
+Chicken Teriyaki|🍱|520|35|60|14|teriyaki chicken
+Chicken Katsu|🍛|650|32|60|30|katsu curry
+Udon Noodle Soup|🍜|420|16|75|6|
+Miso Soup|🍲|60|4|6|2|
+Shrimp Tempura|🍤|350|14|30|20|tempura
+Fried Rice|🍚|480|14|70|16|chicken fried rice
+Kung Pao Chicken|🌶️|470|32|28|26|
+Orange Chicken|🍊|510|24|55|22|
+General Tso's Chicken|🍗|560|26|52|28|general tao
+Lo Mein|🍜|520|18|70|18|chow mein
+Pork Dumplings|🥟|320|14|36|12|potstickers,gyoza
+Beef and Broccoli|🥦|430|30|30|20|
+Hot and Sour Soup|🍲|150|9|14|6|
+Sweet and Sour Chicken|🍗|540|24|62|20|
+Mapo Tofu|🌶️|380|18|16|26|
+Pad Thai|🍜|600|24|78|22|
+Thai Green Curry|🍛|520|26|30|34|green curry
+Tom Yum Soup|🍲|180|16|12|7|
+Pad See Ew|🍜|580|22|78|20|
+Pho|🍜|450|28|55|10|beef pho
+Banh Mi|🥖|520|24|58|20|vietnamese sandwich
+Spring Rolls|🥬|240|8|34|8|summer rolls
+Bibimbap|🍚|560|24|78|16|
+Bulgogi|🥩|480|34|30|24|korean beef
+Kimchi Fried Rice|🍚|520|16|72|18|
+Beef Tacos|🌮|420|22|36|20|tacos
+Chicken Burrito|🌯|650|36|75|20|burrito
+Burrito Bowl|🥗|580|38|62|18|chipotle bowl
+Chicken Quesadilla|🧀|580|34|42|30|quesadilla
+Chicken Enchiladas|🌮|560|32|44|28|enchiladas
+Nachos|🧀|700|24|68|36|loaded nachos
+Chicken Fajitas|🌶️|480|36|34|20|fajitas
+Guacamole and Chips|🥑|380|5|40|24|guac
+Chilaquiles|🍳|520|20|48|28|
+Fish Tacos|🌮|400|24|38|16|
+Elote|🌽|230|6|32|10|street corn
+Carne Asada|🥩|450|38|10|28|steak tacos
+Spaghetti Bolognese|🍝|620|30|74|22|spaghetti and meat sauce
+Spaghetti Carbonara|🍝|720|28|70|36|carbonara
+Fettuccine Alfredo|🍝|800|25|75|45|alfredo,chicken alfredo
+Lasagna|🍝|650|34|52|34|
+Margherita Pizza|🍕|700|28|85|26|cheese pizza
+Pepperoni Pizza|🍕|780|32|84|34|pizza
+Chicken Parmesan|🍗|720|46|52|32|chicken parm
+Mushroom Risotto|🍚|520|12|72|18|risotto
+Gnocchi|🥔|450|12|78|10|
+Caprese Salad|🍅|320|18|8|24|
+Minestrone Soup|🍲|240|10|36|6|
+Meatballs and Marinara|🍝|540|28|50|24|spaghetti and meatballs
+Garlic Bread|🍞|280|6|36|12|
+Tiramisu|🍰|450|7|48|26|
+Falafel Wrap|🌯|560|18|70|22|falafel
+Hummus and Pita|🫓|380|12|48|16|
+Chicken Shawarma|🥙|580|38|45|26|shawarma
+Gyro|🥙|620|30|50|32|
+Greek Salad|🥗|330|10|14|26|
+Shakshuka|🍳|340|18|18|22|
+Tabbouleh|🥗|220|5|24|12|
+Lamb Kebab|🍢|450|32|8|32|kabob,shish kebab
+Cheeseburger|🍔|750|38|52|40|burger,hamburger
+Smash Burger|🍔|680|34|40|38|
+Mac and Cheese|🧀|620|22|65|28|macaroni and cheese
+Fried Chicken|🍗|580|38|20|36|
+Chicken Tenders|🍗|520|28|34|28|chicken fingers,chicken nuggets
+Buffalo Wings|🍗|640|42|8|46|chicken wings,wings
+BBQ Ribs|🍖|780|48|24|52|ribs
+Pulled Pork Sandwich|🥪|620|36|56|26|
+Grilled Cheese|🥪|480|18|34|28|
+Club Sandwich|🥪|620|36|44|30|
+BLT|🥪|470|18|34|28|bacon lettuce tomato
+Philly Cheesesteak|🥪|760|40|58|38|cheesesteak
+Hot Dog|🌭|420|16|34|24|
+Meatloaf|🍖|480|30|22|28|
+Pot Roast|🍲|520|42|24|26|
+Clam Chowder|🍲|420|16|32|24|
+Chicken Noodle Soup|🍲|260|18|28|7|
+Tomato Soup|🍲|190|4|26|8|
+Chili|🍲|420|28|36|18|beef chili
+Caesar Salad|🥗|440|18|20|32|chicken caesar salad
+Cobb Salad|🥗|520|36|12|36|
+Baked Potato|🥔|300|8|60|4|loaded baked potato
+Mashed Potatoes|🥔|240|4|36|9|
+French Fries|🍟|370|4|48|18|fries
+Onion Rings|🧅|410|5|44|24|
+Corn Dog|🌭|330|10|34|17|
+Biscuits and Gravy|🍳|560|14|50|34|
+Chicken and Waffles|🧇|880|38|88|40|
+Pancakes|🥞|520|12|82|16|
+French Toast|🍞|450|14|58|18|
+Waffles|🧇|420|9|58|16|
+Omelet|🍳|340|24|4|25|cheese omelette
+Scrambled Eggs|🍳|280|19|3|21|eggs
+Avocado Toast|🥑|360|10|32|22|
+Bagel with Cream Cheese|🥯|420|13|58|15|bagel
+Breakfast Burrito|🌯|600|28|52|30|
+Oatmeal|🥣|250|9|44|5|oats
+Smoothie Bowl|🥣|400|12|70|9|acai bowl
+Protein Shake|🥤|250|30|14|6|
+PB&J Sandwich|🥪|400|13|50|17|peanut butter and jelly
+Turkey Sandwich|🥪|420|28|44|14|
+Tuna Salad Sandwich|🥪|450|28|36|22|
+Chicken Salad|🥗|380|30|10|24|
+Fish and Chips|🐟|880|34|78|46|
+Shrimp Scampi|🍤|520|30|50|22|
+Grilled Salmon|🐟|420|40|2|28|salmon
+Lobster Roll|🦞|480|22|36|28|
+Ceviche|🐟|180|22|10|4|
+Poke Bowl|🍣|560|32|70|16|
+Crab Cakes|🦀|360|20|16|24|
+Fried Shrimp|🍤|420|22|30|24|
+Tuna Melt|🥪|520|30|36|28|
+Jerk Chicken|🍗|420|38|10|24|
+Jollof Rice|🍚|480|10|78|14|
+Rice and Beans|🍚|420|14|72|7|
+Fried Plantains|🍌|230|2|58|0|
+Gumbo|🍲|450|28|30|24|
+Jambalaya|🍚|520|30|58|18|
+Shrimp and Grits|🍤|560|32|50|26|
+Cheesecake|🍰|470|8|40|32|
+Brownie|🍫|380|4|50|20|
+Chocolate Chip Cookies|🍪|220|2|30|11|cookie
+Ice Cream Sundae|🍨|420|6|58|18|ice cream
+Apple Pie|🥧|410|3|58|19|
+Banana Pudding|🍌|350|4|52|14|
+Chocolate Cake|🎂|450|5|62|20|
+Donut|🍩|300|4|34|16|doughnut`;
+const norm=s=>String(s||'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9 ]+/g,' ').replace(/\b(and|n|with|the|a|of)\b/g,' ').replace(/\s+/g,' ').trim();
+const DISHES=DBTXT.split('\n').map(l=>{const a=l.split('|'),al=(a[6]||'').split(',').filter(Boolean);return{t:a[0],e:a[1],cal:+a[2],p:+a[3],c:+a[4],f:+a[5],n:norm(a[0]),al:al.map(norm)}});
+const lev=(a,b)=>{const m=a.length,n=b.length,d=[];for(let i=0;i<=m;i++){d[i]=[i];for(let j=1;j<=n;j++)d[i][j]=i?0:j}for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]};
+function scoreD(q,qt,n,al){const names=[n,...al];let best=0;for(const s of names){const st=s.split(' ');let sc=0;
+  if(s===q)sc=100;else if(s.startsWith(q))sc=85;else if(qt.every(t=>st.some(w=>w.startsWith(t))))sc=70+(s.indexOf(qt[0])===0?5:0);else if(qt.every(t=>s.includes(t)))sc=55;
+  else if(qt.every(t=>st.some(w=>w.length>=4&&t.length>=4&&lev(w,t)<=(t.length>=7?2:1))))sc=35;best=Math.max(best,sc)}return best}
+function searchDishes(q,limit){const s=norm(q);if(!s)return[];const qt=s.split(' ');const out=[],seen=new Set();
+ DISHES.forEach(d=>{const sc=scoreD(s,qt,d.n,d.al);if(sc){seen.add(d.n);out.push({d,sc:sc+1})}});
+ RECIPES.forEach(r=>{const n=norm(r.title);if(seen.has(n))return;const sc=scoreD(s,qt,n,[]);if(sc){seen.add(n);out.push({d:{t:r.title,e:r.emoji,cal:r.macros.cal,p:r.macros.p,c:r.macros.c,f:r.macros.f,n,al:[],recipeId:r.id,by:r.handle},sc:sc+2})}});
+ out.sort((a,b)=>b.sc-a.sc||a.d.t.length-b.d.t.length);return out.slice(0,limit||8).map(o=>o.d)}
+function sugg(q){const have=new Set(top.map(d=>d.title.toLowerCase()));const s=q.trim();let l=s?searchDishes(s,10):DISHES.slice(0,8);return l.filter(d=>!have.has(d.t.toLowerCase())).slice(0,8).map(d=>({title:d.t,emoji:d.e,recipeId:d.recipeId||null,by:d.by}))}
+const titleCase=s=>s.replace(/\b\w/g,c=>c.toUpperCase()).slice(0,40);
+const photoOk=p=>typeof p==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(p)&&p.length<400000?p:'';
+function shrink(file,max,q){return new Promise((res,rej)=>{if(!file||!/^image\//.test(file.type)||file.size>25e6)return rej();const im=new Image(),u=URL.createObjectURL(file);im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);let o=c.toDataURL('image/jpeg',q);if(o.length>180000)o=c.toDataURL('image/jpeg',0.5);res(o)};im.onerror=()=>rej();im.src=u})}
+function attachSuggest(inp,pick){if(!inp||inp.dataset.sg)return;inp.dataset.sg=1;inp.setAttribute('autocomplete','off');let dd=null;const kill=()=>{if(dd){dd.remove();dd=null}};
+ inp.addEventListener('input',()=>{const q=inp.value.trim();kill();if(q.length<2)return;const r=searchDishes(q,6);if(!r.length)return;const pc=$('phone-container').getBoundingClientRect(),ir=inp.getBoundingClientRect();dd=document.createElement('div');dd.style.cssText='position:absolute;z-index:70;left:'+(ir.left-pc.left)+'px;top:'+(ir.bottom-pc.top+4)+'px;width:'+ir.width+'px;background:#15182e;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.5)';
+  dd.innerHTML=r.map((d,i)=>'<button data-i="'+i+'" style="display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.06)"><span style="font-size:18px">'+esc(d.e)+'</span><span style="font-size:13px;font-weight:700">'+hl(d.t,q)+'</span></button>').join('');
+  dd.onmousedown=dd.ontouchstart=e=>{const b=e.target.closest('[data-i]');if(!b)return;e.preventDefault();const d=r[+b.dataset.i];inp.value=d.t;kill();pick(d)};$('phone-container').appendChild(dd)});
+ inp.addEventListener('blur',()=>setTimeout(kill,150))}
+const _rcr=renderCatalogueRecipes;renderCatalogueRecipes=function(){_rcr.apply(this,arguments);try{libSection()}catch(e){console.warn(e)}};
+function libSection(){const grid=$('catalogue-recipes-grid'),qi=$('recipe-search-input');if(!grid||!qi)return;const q=qi.value.trim();const res=q?searchDishes(q,24).filter(d=>!d.recipeId):DISHES.slice(0,12);if(!res.length)return;if(grid.textContent.includes('No dishes match'))grid.innerHTML='';window.__lib=res;
+ grid.insertAdjacentHTML('beforeend','<div style="margin:10px 2px 6px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#9ca3af">'+(q?'More dishes':'Dish library')+' · tap to rank, log or post</div>'+res.map((d,i)=>'<button onclick="geLib('+i+')" style="display:flex;width:100%;align-items:center;gap:12px;text-align:left;padding:12px;margin-bottom:6px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)"><span style="font-size:24px">'+esc(d.e)+'</span><span style="flex:1;min-width:0"><b style="font-size:14px">'+esc(d.t)+'</b><br><span style="font-size:11px;color:#9ca3af">~'+d.cal+' cal · '+d.p+'g protein</span></span><span style="color:#6b7280">›</span></button>').join(''))}
+window.geLib=i=>openAdd(window.__lib[i]);window.geAdd=()=>openAdd();
+let AD={};const scoreOf=(l,i)=>{const T=l[i].tier,seg=l.filter(x=>x.tier===T),j=seg.indexOf(l[i]),[lo,hi]={1:[7,10],2:[4,7],3:[0,4]}[T];return Math.round((hi-(hi-lo)*(j+.5)/seg.length)*10)/10};
+const rankIdx=d=>((myProfile&&myProfile.rankings)||[]).findIndex(x=>norm(x.t)===norm(d.t));
+const AB=(a,t,x)=>'<button data-a="'+a+'" '+(x||'')+' style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:16px 8px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-weight:800;font-size:13px">'+t+'</button>';
+function addEl(){let m=$('ge-add');if(!m){m=document.createElement('div');m.id='ge-add';m.style.cssText='position:absolute;inset:0;z-index:118;background:linear-gradient(180deg,#13162c,#0b0c18);overflow-y:auto;display:none;color:#f3f4f6';$('phone-container').appendChild(m);m.addEventListener('click',addClick);m.addEventListener('input',addInput)}return m}
+function openAdd(d,mode){if(!myProfile||!myProfile.username){showToast('Create your profile first');return}AD={step:d?'dish':mode?'search':'mode',d:d||null,mode:mode||null,hub:!!d,manCal:'',manP:'',q:'',meal:['Breakfast','Lunch','Lunch','Dinner'][Math.floor(new Date().getHours()/6)]||'Lunch',serv:1,stars:0,addMacros:true};if(d)pushRecent(d);paintAdd();addEl().style.display='block';if(!d&&mode)setTimeout(()=>{const i=$('add-q');if(i)i.focus()},50)}
+function pushRecent(d){const a=(ls.get('ge_recent')||[]).filter(x=>norm(x.t)!==norm(d.t));a.unshift({t:d.t,e:d.e});ls.set('ge_recent',a.slice(0,6))}
+const shell=(t,inner,back)=>'<div style="min-height:100%;display:flex;flex-direction:column;padding:calc(14px + env(safe-area-inset-top,0px)) 18px calc(20px + env(safe-area-inset-bottom,0px))"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><button data-a="'+(back||'close')+'" aria-label="Back" style="width:34px;height:34px;font-size:22px;color:#9ca3af">'+(back?'‹':'✕')+'</button><div style="flex:1;text-align:center;font-weight:800;font-size:15px">'+t+'</div><span style="width:34px"></span></div>'+inner+'</div>';
+const TA='width:100%;background:#15182e;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px;font-size:16px;color:#fff';
+const SB='width:100%;padding:14px;border-radius:14px;background:#22c55e;color:#06210f;font-weight:900';
+const MODES={rank:['⭐','Rank it','Add it to your personal ranking'],log:['📓','Log it','Track a meal, get coach feedback and keep your streak'],post:['📸','Post it','Share a dish with the community, even one with your own name'],want:['🔖','Want to try','Save it to your list for later']};
+const SRCH={rank:['Which dish are you ranking?','Search a dish you’ve tried'],log:['What did you eat?','Search or type what you ate'],post:['What did you make?','Name your dish, e.g. Grandma’s Sunday Chili'],want:['What do you want to try?','Search any dish']};
+function paintAdd(){const m=addEl(),s=AD.step,d=AD.d;let h='';const BK=AD.hub?'dish':'search';
+ if(s==='mode')h=shell('Add','<p style="text-align:center;color:#9ca3af;font-size:13px;margin:-2px 0 14px">What would you like to do?</p><div style="display:grid;gap:10px">'+Object.entries(MODES).map(([k,v])=>'<button data-a="setmode" data-v="'+k+'" style="display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)"><span style="font-size:28px">'+v[0]+'</span><span style="flex:1"><b style="font-size:15px">'+v[1]+'</b><br><span style="font-size:11px;color:#9ca3af">'+v[2]+'</span></span><span style="color:#34d399;font-weight:800">›</span></button>').join('')+'</div>');
+ else if(s==='search'){const sm=SRCH[AD.mode]||SRCH.rank;h=shell(sm[0],'<input id="add-q" autocomplete="off" placeholder="'+esc(sm[1])+'" value="'+esc(AD.q)+'" style="'+TA+';padding:14px;outline:none">'+(AD.mode==='post'||AD.mode==='log'?'<p style="font-size:11px;color:#9ca3af;margin:6px 2px 0">Pick a suggestion, or just keep typing to use your own name.</p>':'')+'<div id="add-res" style="margin-top:12px"></div>','mode')}
+ else if(s==='dish'){const ri=rankIdx(d),r=ri>=0?scoreOf(myProfile.rankings,ri):null,want=(myProfile.wants||[]).some(x=>norm(x.t)===norm(d.t)),posts=RECIPES.filter(x=>norm(x.title)===norm(d.t)).slice(0,4);
+  h=shell('','<div style="text-align:center;margin-bottom:14px"><div style="font-size:64px">'+esc(d.e)+'</div><h1 style="font-size:22px;font-weight:900;margin:2px 0">'+esc(d.t)+'</h1>'+(d.cal?'<div style="font-size:11px;color:#9ca3af">~'+d.cal+' cal · '+d.p+'g P · '+d.c+'g C · '+d.f+'g F (estimate per serving)</div>':'')+(r!=null?'<div style="margin-top:8px;display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(34,197,94,.15);color:#6ee7b7;font-size:12px;font-weight:800">Your score '+r.toFixed(1)+' · #'+(ri+1)+'</div>':'')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+AB('rank','<span style="font-size:22px">⭐</span>'+(r!=null?'Re-rank':'Rank it'))+AB('log','<span style="font-size:22px">📓</span>Log it')+AB('post','<span style="font-size:22px">📸</span>Post it')+AB('want','<span style="font-size:22px">'+(want?'✅':'🔖')+'</span>'+(want?'On your list':'Want to try'))+'</div><div style="margin-top:18px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af">Community posts</div>'+(posts.length?posts.map(x=>'<button data-a="open" data-id="'+esc(x.id)+'" style="display:flex;width:100%;gap:10px;align-items:center;text-align:left;padding:10px 12px;margin-top:6px;border-radius:12px;background:rgba(255,255,255,.04)"><span style="font-size:20px">'+esc(x.emoji)+'</span><span style="flex:1;font-size:13px"><b>'+esc(x.handle)+'</b><br><span style="color:#9ca3af;font-size:11px">'+esc((x.caption||'').slice(0,60))+'</span></span><b style="color:#6ee7b7">'+Number(x.rating).toFixed(1)+'</b></button>').join(''):'<p style="font-size:12px;color:#9ca3af;margin-top:6px">No one has posted this yet. Be the first!</p>'),AD.hub?'close':'search')}
+ else if(s==='rank'){if(!AD.tier)h=shell('How was it?','<p style="text-align:center;color:#9ca3af;font-size:12px;margin-bottom:12px">'+esc(d.e+' '+d.t)+'</p><div style="display:grid;gap:10px">'+[[1,'😍','I loved it'],[2,'🙂','It was good'],[3,'😕','Not for me']].map(([v,e,t])=>AB('tier','<span style="font-size:30px">'+e+'</span>'+t,'data-v="'+v+'" style="flex-direction:row;font-size:15px"')).join('')+'</div>',BK);
+  else if(AD.done!=null)h=shell('Ranked!','<div style="text-align:center;margin:30px 0"><div style="font-size:64px">'+esc(d.e)+'</div><h2 style="font-size:20px;font-weight:900">'+esc(d.t)+'</h2><div style="font-size:44px;font-weight:900;color:#34d399;margin:6px 0">'+AD.score.toFixed(1)+'</div><div style="color:#9ca3af;font-size:13px">#'+(AD.done+1)+' on your list of '+myProfile.rankings.length+'</div></div><button data-a="done" style="'+SB+'">Done</button>');
+  else{const o=AD.list[AD.mid];h=shell('Which do you like more?','<div style="display:grid;gap:12px;margin-top:6px">'+[['new',d],['old',o]].map(([k,x])=>'<button data-a="cmp" data-v="'+k+'" style="padding:22px 14px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);text-align:center"><div style="font-size:40px">'+esc(x.e)+'</div><b style="font-size:16px">'+esc(x.t)+'</b></button>').join('')+'<button data-a="cmp" data-v="same" style="font-size:12px;color:#9ca3af;padding:8px">About the same</button></div>',BK)}}
+ else if(s==='log'){const st=[1,2,3,4,5].map(i=>'<button data-a="star" data-v="'+i+'" style="font-size:30px;color:'+(i<=AD.stars?'#fbbf24':'#4b5563')+'">★</button>').join('');
+  h=shell('Log it','<div style="text-align:center;font-size:36px">'+esc(d.e)+'</div><div style="text-align:center;font-weight:800;margin-bottom:12px">'+esc(d.t)+'</div><div style="display:flex;gap:6px;justify-content:center;margin-bottom:12px">'+['Breakfast','Lunch','Dinner','Snack'].map(x=>'<button data-a="meal" data-v="'+x+'" style="padding:8px 12px;border-radius:12px;font-size:12px;font-weight:800;border:1px solid '+(AD.meal===x?'#22c55e':'rgba(255,255,255,.12)')+';background:'+(AD.meal===x?'rgba(34,197,94,.18)':'rgba(255,255,255,.04)')+'">'+x+'</button>').join('')+'</div><div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px"><button data-a="serv" data-v="-.5" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);font-size:20px">−</button><b>'+AD.serv+' serving'+(AD.serv===1?'':'s')+'</b><button data-a="serv" data-v=".5" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);font-size:20px">＋</button></div><div style="text-align:center">'+st+'</div><textarea id="add-note" maxlength="140" rows="2" placeholder="Add a note (optional)" style="'+TA+';margin-top:10px">'+esc(AD.note||'')+'</textarea>'+(!d.cal?'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><input id="add-mcal" type="number" inputmode="numeric" placeholder="Calories (optional)" value="'+esc(AD.manCal)+'" style="'+TA+'"><input id="add-mp" type="number" inputmode="numeric" placeholder="Protein g (optional)" value="'+esc(AD.manP)+'" style="'+TA+'"></div><p style="font-size:11px;color:#9ca3af;margin:4px 2px">Add numbers so your daily totals stay accurate.</p>':'')+(d.cal?'<label style="display:flex;gap:8px;align-items:center;margin:12px 2px;font-size:13px"><input type="checkbox" data-a="macros" '+(AD.addMacros?'checked':'')+' style="width:18px;height:18px"> Add ~'+Math.round(d.cal*AD.serv)+' cal to today’s macros</label>':'')+'<button data-a="dolog" style="'+SB+';margin-top:10px">Save to diary</button>',BK)}
+ else if(s==='post'){h=shell('Post it','<div style="text-align:center;font-weight:800;margin-bottom:10px">'+esc(d.e+' '+d.t)+'</div><button data-a="pickphoto" style="width:100%;height:190px;border-radius:18px;border:2px dashed rgba(255,255,255,.2);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:#9ca3af;background:rgba(255,255,255,.03)">'+(AD.photo?'<img alt="" src="'+AD.photo+'" style="width:100%;height:100%;object-fit:cover">':'<span style="font-size:34px">📷</span><b style="font-size:13px">Add a photo of the real thing</b><span style="font-size:11px">Tap to take or choose a photo</span>')+'</button><input id="add-file" type="file" accept="image/*" style="display:none"><textarea id="add-cap" maxlength="200" rows="2" placeholder="Write a caption…" style="'+TA+';margin-top:10px">'+esc(AD.caption||'')+'</textarea><div style="display:flex;gap:8px;margin:10px 0">'+[['love','😍 Loved it'],['ok','🙂 Good'],['no','😕 Meh']].map(([k,t])=>'<button data-a="sent" data-v="'+k+'" style="flex:1;padding:10px 4px;border-radius:12px;font-size:12px;font-weight:800;border:1px solid '+(AD.sent===k?'#22c55e':'rgba(255,255,255,.12)')+';background:'+(AD.sent===k?'rgba(34,197,94,.18)':'rgba(255,255,255,.04)')+'">'+t+'</button>').join('')+'</div><label style="display:flex;gap:8px;align-items:center;font-size:13px;margin:6px 2px"><input type="checkbox" data-a="rec" '+(AD.rec?'checked':'')+' style="width:18px;height:18px"> Include the recipe (ingredients &amp; steps)</label>'+(AD.rec?'<textarea id="add-ing" rows="4" placeholder="Ingredients, one per line" style="'+TA+';margin-top:8px">'+esc(AD.ing||'')+'</textarea><textarea id="add-stp" rows="4" placeholder="Steps, one per line" style="'+TA+';margin-top:8px">'+esc(AD.stp||'')+'</textarea>':'')+'<p id="add-err" style="font-size:12px;color:#fb7185;min-height:16px;margin-top:6px"></p><button data-a="dopost" style="'+SB+'">Post</button><p style="font-size:10px;color:#6b7280;text-align:center;margin-top:8px">Short videos are coming soon.</p>',BK)}
+ m.innerHTML=h;m.scrollTop=0;if(s==='search')addResults()}
+function addResults(){const q=AD.q.trim(),box=$('add-res');if(!box)return;let l,hd='';
+ if(!q){const rc=(ls.get('ge_recent')||[]).map(x=>Object.assign({},DISHES.find(d=>norm(d.t)===norm(x.t))||{t:x.t,e:x.e,cal:0,p:0,c:0,f:0}));l=rc.concat(DISHES.slice(0,10)).filter((d,i,a)=>a.findIndex(y=>norm(y.t)===norm(d.t))===i).slice(0,10);hd=rc.length?'Recent & popular':'Popular dishes'}
+ else{l=searchDishes(q,8);if(q.length>=2&&!l.some(d=>norm(d.t)===norm(q))){const cu={t:titleCase(q),e:'🍽️',cal:0,p:0,c:0,f:0,custom:1};const nq=norm(q),strong=l.some(d=>d.n&&(d.n.startsWith(nq)||(d.al||[]).includes(nq)));(AD.mode==='post'||(AD.mode==='log'&&!strong))?l.unshift(cu):l.push(cu)}hd=l.length?'Results':''}
+ AD.res=l;box.innerHTML=(hd?'<div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;margin:0 2px 6px">'+hd+'</div>':'')+l.map((d,i)=>'<button data-a="pick" data-i="'+i+'" style="display:flex;width:100%;align-items:center;gap:12px;text-align:left;padding:12px;margin-bottom:6px;border-radius:14px;background:rgba(255,255,255,.05)"><span style="font-size:24px">'+esc(d.e)+'</span><span style="flex:1;min-width:0"><b style="font-size:14px">'+(d.custom?(AD.mode==='post'||AD.mode==='log'?'Use “'+esc(d.t)+'”':'Add “'+esc(d.t)+'”'):hl(d.t,q))+'</b><br><span style="font-size:11px;color:#9ca3af">'+(d.custom?(AD.mode==='post'?'Your own dish name':AD.mode==='log'?'Log it as typed':'New dish'):d.by?'Posted by '+esc(d.by):d.cal?'~'+d.cal+' cal · '+d.p+'g protein':'')+'</span></span><span style="color:#34d399;font-weight:800">›</span></button>').join('')}
+function addInput(e){const t=e.target;if(t.id==='add-q'){AD.q=t.value;addResults()}if(t.id==='add-note')AD.note=t.value;if(t.id==='add-mcal')AD.manCal=t.value;if(t.id==='add-mp')AD.manP=t.value;if(t.id==='add-cap')AD.caption=t.value;if(t.id==='add-ing')AD.ing=t.value;if(t.id==='add-stp')AD.stp=t.value;if(t.dataset&&t.dataset.a==='macros')AD.addMacros=t.checked;if(t.dataset&&t.dataset.a==='rec'){AD.rec=t.checked;paintAdd()}}
+function stepRank(){const l=(myProfile.rankings||[]).filter(x=>norm(x.t)!==norm(AD.d.t));AD.list=l;const idx=l.map((x,i)=>x.tier===AD.tier?i:-1).filter(i=>i>=0);AD.lo=idx.length?idx[0]:l.findIndex(x=>x.tier>AD.tier);if(AD.lo<0)AD.lo=l.length;AD.hi=idx.length?idx[idx.length-1]+1:AD.lo;nextCmp()}
+function nextCmp(){if(AD.lo>=AD.hi)return finishRank(AD.lo);AD.mid=Math.floor((AD.lo+AD.hi)/2);paintAdd()}
+async function finishRank(pos){const l=AD.list.slice();l.splice(pos,0,{t:AD.d.t,e:AD.d.e,tier:AD.tier});myProfile.rankings=l.slice(0,200);AD.done=pos;AD.score=scoreOf(myProfile.rankings,pos);try{await saveDoc({rankings:myProfile.rankings})}catch(e){showToast('Saved on this device — sync failed')}paintAdd();refresh()}
+async function wantToggle(){const d=AD.d,w=(myProfile.wants||[]),i=w.findIndex(x=>norm(x.t)===norm(d.t));if(i>=0)w.splice(i,1);else w.unshift({t:d.t,e:d.e});myProfile.wants=w.slice(0,100);try{await saveDoc({wants:myProfile.wants})}catch(x){}refresh();showToast(i>=0?'Removed from your list':'Added to Want to try');if(AD.hub){paintAdd()}else addEl().style.display='none'}
+function goMode(v){if(v==='rank'){AD.step='rank';AD.tier=0;AD.done=null}else if(v==='log'){AD.step='log';AD.stars=0;AD.note='';AD.manCal='';AD.manP=''}else if(v==='post'){AD.step='post'}else if(v==='want')return wantToggle();paintAdd()}
+async function addClick(e){const b=e.target.closest('[data-a]');if(!b||b.tagName==='INPUT')return;const a=b.dataset.a,v=b.dataset.v,d=AD.d;
+ if(a==='close'){addEl().style.display='none';return}
+ if(a==='mode'){AD.step='mode';AD.mode=null;AD.q='';paintAdd();return}
+ if(a==='setmode'){AD.mode=v;if(AD.d)return goMode(v);AD.step='search';AD.q='';paintAdd();setTimeout(()=>{const i=$('add-q');if(i)i.focus()},50);return}
+ if(a==='done'){if(AD.hub){AD.step='dish';AD.tier=0;AD.done=null;paintAdd()}else addEl().style.display='none';return}
+ if(a==='pick'){AD.d=AD.res[+b.dataset.i];pushRecent(AD.d);if(AD.mode)return goMode(AD.mode);AD.step='dish';paintAdd();return}
+ if(a==='search'){AD.step='search';AD.tier=0;AD.done=null;paintAdd();return}
+ if(a==='dish'){AD.step='dish';AD.tier=0;AD.done=null;paintAdd();return}
+ if(a==='open'){addEl().style.display='none';try{openRecipeModal(b.dataset.id)}catch(x){}return}
+ if(a==='rank'){AD.step='rank';AD.tier=0;AD.done=null;paintAdd();return}
+ if(a==='tier'){AD.tier=+v;stepRank();return}
+ if(a==='cmp'){if(v==='new')AD.hi=AD.mid;else if(v==='old')AD.lo=AD.mid+1;else{AD.lo=AD.hi=AD.mid+1}nextCmp();return}
+ if(a==='log'){AD.step='log';AD.stars=0;AD.note='';paintAdd();return}
+ if(a==='post'){AD.step='post';paintAdd();return}
+ if(a==='meal'){AD.meal=v;paintAdd();return}if(a==='serv'){AD.serv=Math.max(.5,AD.serv+(+v));paintAdd();return}if(a==='star'){AD.stars=AD.stars===+v?0:+v;paintAdd();return}
+ if(a==='dolog'){if(isBad(AD.note)||isBad(AD.d.t)){showToast('That contains language that isn’t allowed');return}
+  if(!AD.d.cal){const mc=+AD.manCal||0,mp=+AD.manP||0;if(mc||mp){AD.d=Object.assign({},AD.d,{cal:mc,p:mp,c:0,f:0});AD.addMacros=true}}
+  const d=AD.d;if(!d.cal)APP_STATE.logs[AD.meal].push({title:d.e+' '+d.t,cal:0,p:0,c:0,f:0,cost:0});
+  if(d.cal&&AD.addMacros){APP_STATE.logs[AD.meal].push({title:d.e+' '+d.t+(AD.serv!==1?' ×'+AD.serv:''),cal:Math.round(d.cal*AD.serv),p:Math.round(d.p*AD.serv),c:Math.round(d.c*AD.serv),f:Math.round(d.f*AD.serv),cost:0});try{renderHealthTracker()}catch(x){}}
+  const dy=(myProfile.diary||[]);dy.unshift({t:d.t,e:d.e,r:AD.stars,n:(AD.note||'').trim(),m:AD.meal,d:Date.now()});myProfile.diary=dy.slice(0,100);try{await saveDoc({diary:myProfile.diary})}catch(x){}
+  try{renderHealthTracker()}catch(x){}refresh();logFeedback(AD.d,AD.serv);return}
+ if(a==='want')return wantToggle();
+ if(a==='pickphoto'){const f=$('add-file');f.onchange=async()=>{try{AD.photo=await shrink(f.files[0],640,.68);paintAdd()}catch(x){const r=$('add-err');if(r)r.textContent='Please choose an image under 25 MB.'}};f.click();return}
+ if(a==='sent'){AD.sent=v;paintAdd();return}
+ if(a==='dopost')return doPost(b)}
+async function doPost(b){const d=AD.d,err=$('add-err');const cap=($('add-cap')?$('add-cap').value:AD.caption||'').trim();AD.caption=cap;if(AD.rec){AD.ing=$('add-ing')?$('add-ing').value:AD.ing;AD.stp=$('add-stp')?$('add-stp').value:AD.stp}
+ if(isBad(cap+' '+d.t+' '+(AD.rec?AD.ing+' '+AD.stp:'')))return err.textContent='That contains language that isn’t allowed on Good Eats.';
+ const ri=rankIdx(d),rs=ri>=0?scoreOf(myProfile.rankings,ri):null,rating=AD.sent==='love'?9:AD.sent==='ok'?7:AD.sent==='no'?4.5:(rs||8),lines=s=>String(s||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,30),id='r-custom-'+Date.now();
+ const r={id,emoji:d.e,title:d.t,author:ME,handle:'@'+ME,isFollowing:true,authorSchool:APP_STATE.isStudent?'Elon':null,authorBadge:APP_STATE.isStudent?'🎓 Elon':'🌎 Home Cook',isTrending:false,prepTime:'—',rating:+(+rating).toFixed(1),ratingsCount:1,category:['recommended'],caption:cap||('My take on '+d.t),image:AD.photo||phImg(d.e),macros:{cal:d.cal||0,p:d.p||0,c:d.c||0,f:d.f||0},ingredients:AD.rec?lines(AD.ing).map(n=>({name:n,qty:'',store:'Home',price:0})):[],steps:AD.rec?lines(AD.stp):[],likes:0,liked:false,bookmarked:true,comments:[],_shared:true};
+ b.disabled=true;try{if(online)await db.doc('posts/'+id).set({uid,author:ME,ts:Date.now(),json:JSON.stringify(Object.assign({},r,{image:''})),photo:AD.photo||''});else{const a=ls.get('ge_posts')||[];a.unshift(r);ls.set('ge_posts',a.slice(0,20))}}catch(x){b.disabled=false;err.textContent='Could not post — check your connection and try again.';return}
+ RECIPES.unshift(r);addEl().style.display='none';try{switchTab('tab-feed')}catch(x){}refresh();showToast('Posted!')}
+const xClean=a=>(Array.isArray(a)?a:[]).slice(0,100).map(o=>({t:esc(o.t||''),e:esc(o.e||'🍽️'),tier:+o.tier||2,r:+o.r||0,n:esc(o.n||''),m:esc(o.m||''),d:+o.d||0}));
+const xData=x=>({rankings:xClean(x.rankings),wants:xClean(x.wants),diary:xClean(x.diary)});
+let LT='rank';
+function decorateLists(){const list=$('profile-top5-list');if(!list)return;const o=$('ge-lists');if(o)o.remove();const v=APP_STATE.viewedProfileUser||ME,self=v===ME,X=self?myProfile:((USER_PROFILES[v]||{})._x||{});if(!X)return;
+ const rk=X.rankings||[],wl=X.wants||[],dy=X.diary||[],box=document.createElement('div');box.id='ge-lists';box.style.cssText='margin:14px 0 4px';
+ const tab=(k,t,n)=>'<button data-lt="'+k+'" style="flex:1;padding:8px 2px;border-radius:10px;font-size:11px;font-weight:800;background:'+(LT===k?'rgba(34,197,94,.2)':'rgba(255,255,255,.05)')+';color:'+(LT===k?'#86efac':'#9ca3af')+'">'+t+' ('+n+')</button>';
+ const row=(i,e,t,r)=>'<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;margin-top:6px;border-radius:12px;background:rgba(255,255,255,.04)"><span style="width:18px;font-size:11px;color:#9ca3af;font-weight:800">'+(i||'')+'</span><span style="font-size:18px">'+e+'</span><span style="flex:1;font-size:13px;font-weight:700;min-width:0">'+t+'</span>'+(r||'')+'</div>';
+ let body='';if(LT==='rank')body=rk.slice(0,10).map((x,i)=>row('#'+(i+1),x.e,x.t,'<b style="color:#34d399">'+scoreOf(rk,i).toFixed(1)+'</b>')).join('');
+ else if(LT==='want')body=wl.map(x=>row('',x.e,x.t,'')).join('');
+ else body=dy.slice(0,10).map(x=>row('',x.e,x.t+(x.n?'<br><span style="font-weight:400;font-size:11px;color:#9ca3af">'+x.n+'</span>':''),x.r?'<span style="color:#fbbf24;font-size:12px">'+'★'.repeat(x.r)+'</span>':'')).join('');
+ if(!body)body='<p style="font-size:12px;color:#9ca3af;text-align:center;padding:14px 0">'+(self?'Nothing here yet. Tap the ＋ button to rank, log or save a dish.':'Nothing here yet.')+'</p>';
+ box.innerHTML='<div style="display:flex;gap:6px">'+tab('rank','Ranking',rk.length)+tab('want','Want to try',wl.length)+tab('diary','Diary',dy.length)+'</div>'+body;box.onclick=e=>{const b=e.target.closest('[data-lt]');if(b){LT=b.dataset.lt;decorateLists()}};list.insertAdjacentElement('afterend',box)}
+function placeGoals(){const tp=$('tab-profile'),sb=tp&&tp.querySelector('button[onclick*="tab-settings"]');if(!sb||(APP_STATE.viewedProfileUser||ME)!==ME)return;if(sb.parentElement.id==='ge-goals-wrap')return;const w=document.createElement('div');w.id='ge-goals-wrap';w.style.cssText='display:flex;flex-direction:column;gap:6px;align-items:stretch;flex-shrink:0';sb.parentNode.insertBefore(w,sb);const g=document.createElement('button');g.textContent='🎯 Goals';g.style.cssText='padding:6px 12px;border-radius:12px;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.4);color:#86efac;font-size:12px;font-weight:800;white-space:nowrap';g.onclick=openPlan;w.appendChild(g);w.appendChild(sb)}
+const _rpv4=renderProfileView;renderProfileView=function(){_rpv4.apply(this,arguments);try{decorateLists();placeGoals();profChip()}catch(e){console.warn(e)}};
+function profChip(){const o=$('ge-pchip');if(o)o.remove();if((APP_STATE.viewedProfileUser||ME)!==ME)return;const h=$('profile-top5-heading');if(!h||!h.parentElement)return;const b=document.createElement('button');b.id='ge-pchip';b.className='ge-streak-chip';b.setAttribute('style','display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:6px 12px;border-radius:99px;background:rgba(251,146,60,.14);border:1px solid rgba(251,146,60,.4);color:#fdba74;font-size:12px;font-weight:800');b.onclick=openStreak;b.innerHTML=chipHtml()+' <span>day streak</span>';h.parentElement.insertAdjacentElement('beforebegin',b)}
+function campusMode(){const on=!!APP_STATE.isStudent;document.querySelectorAll('[onclick*="setFeedFilter(\'school\'"]').forEach(e=>e.style.display=on?'':'none');['cat-mode-dining','catalogue-view-dining'].forEach(id=>{const e=$(id);if(e)e.style.display=on?'':'none'});
+ if(!on){try{const dv=$('catalogue-view-dining');if(dv&&!dv.classList.contains('hidden'))switchCatalogueMode('recipes');if(APP_STATE.feedFilter==='school'){const o=document.querySelector('[onclick*="setFeedFilter("]:not([onclick*="school"])');if(o)o.click()}}catch(e){}}}
+function applyTheme(){const t=ls.get('ge_theme')||'dark',light=t==='light'||(t==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.classList.toggle('ge-light',light)}
+function cycleTheme(){const o=['dark','light','auto'],t=ls.get('ge_theme')||'dark';ls.set('ge_theme',o[(o.indexOf(t)+1)%3]);applyTheme();drawSettings();showToast('Appearance: '+themeLabel())}
+const themeLabel=()=>({dark:'Dark',light:'Light (beta)',auto:'Match my phone'})[ls.get('ge_theme')||'dark'];
+applyTheme();attachSuggest($('recipe-search-input'),d=>{renderCatalogueRecipes()});
+
+// ---------- v5: streaks, coach feedback ----------
+const dstr=d=>d.toLocaleDateString('en-CA');
+const dayOff=n=>{const d=new Date();d.setDate(d.getDate()+n);return dstr(d)};
+function streakInfo(){const days=new Set((myProfile&&myProfile.logDays)||[]);const today=dayOff(0),has=n=>days.has(dayOff(n));let n=has(0)?0:has(-1)?-1:null,c=0;if(n!==null){while(has(n)){c++;n--}}
+ const best=Math.max(c,(myProfile&&myProfile.bestStreak)||0);return{count:c,today:has(0),alive:c>0,best,week:[-6,-5,-4,-3,-2,-1,0].map(o=>({d:dayOff(o),on:has(o)}))}}
+const TIERS=[[30,'Habit Pro','🏆'],[14,'Locked In','💎'],[7,'On a Roll','⚡'],[3,'Warming Up','🔥']];
+const tierOf=c=>TIERS.find(t=>c>=t[0]);const nextTier=c=>[...TIERS].reverse().find(t=>t[0]>c);
+function todayTotals(){const L=Object.values(APP_STATE.logs).flat();return{n:L.length,cal:L.reduce((a,x)=>a+(+x.cal||0),0),p:L.reduce((a,x)=>a+(+x.p||0),0),c:L.reduce((a,x)=>a+(+x.c||0),0),f:L.reduce((a,x)=>a+(+x.f||0),0)}}
+function coach(){const T=todayTotals(),G=APP_STATE.goals,hasGoal=!!(myProfile&&myProfile.goals);
+ if(!T.n)return{h:'Log your first meal',t:'Log what you eat today and see how it adds up against your goals.',tone:'n'};
+ if(!hasGoal)return{h:'You’re at '+T.cal.toLocaleString()+' cal so far',t:'Set your daily targets to see how you’re tracking and get tailored suggestions.',tone:'n',cta:'goals'};
+ const remC=G.calories-T.cal,remP=G.protein-T.p;
+ if(remC<-G.calories*0.1)return{h:Math.abs(remC).toLocaleString()+' cal over today',t:'No big deal. One day doesn’t define your progress. A lighter next meal, more protein and veggies, and a walk will balance it out.',tone:'w'};
+ if(remP>20&&remC>120){const c=DISHES.filter(d=>d.cal<=remC+60&&d.p>=Math.min(remP*.6,35)).sort((a,b)=>b.p/b.cal-a.p/a.cal)[0];return{h:remP+'g protein to go · '+remC.toLocaleString()+' cal left',t:c?'Try '+c.e+' '+c.t+' (about '+c.cal+' cal, '+c.p+'g protein) to close the gap.':'Choose something protein-rich like chicken, eggs, Greek yogurt or beans.',tone:'g',dish:c}}
+ if(remP<=10&&remC>=-G.calories*0.1)return{h:'Protein goal hit 💪',t:remC>150?'You still have '+remC.toLocaleString()+' cal available. Add produce or a snack if you’re hungry.':'You’re right on target today. Nice work.',tone:'g'};
+ return{h:remC.toLocaleString()+' cal left today',t:'You’re on track. Keep logging to stay in the zone.',tone:'g'}}
+const bar=(l,v,g,col)=>{const pct=Math.min(100,g?v/g*100:0);return '<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700"><span>'+l+'</span><span style="color:#9ca3af">'+Math.round(v).toLocaleString()+' / '+Math.round(g).toLocaleString()+'</span></div><div style="height:8px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:4px"><div style="height:100%;width:'+pct+'%;background:'+col+';border-radius:9px"></div></div></div>'};
+function chipHtml(){const s=streakInfo();return '<span style="font-size:15px">'+(s.alive?'🔥':'🕯️')+'</span><b style="font-size:13px">'+s.count+'</b>'}
+function weekDots(s){const L=['S','M','T','W','T','F','S'];return '<div style="display:flex;gap:6px;justify-content:center;margin:10px 0">'+s.week.map(w=>{const dn=new Date(w.d+'T12:00:00').getDay();return '<div style="text-align:center"><div style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:'+(w.on?'rgba(251,146,60,.25)':'rgba(255,255,255,.06)')+';border:1px solid '+(w.on?'#fb923c':'rgba(255,255,255,.1)')+'">'+(w.on?'🔥':'')+'</div><div style="font-size:9px;color:#9ca3af;margin-top:2px">'+L[dn]+'</div></div>'}).join('')+'</div>'}
+function streakMsg(s){const t=tierOf(s.count),nx=nextTier(s.count);if(!s.alive)return 'Log a meal today to start a new streak.';return (t?t[2]+' '+t[1]+' · ':'')+(s.today?'You’ve logged today.':'Log today to keep it alive!')+(nx?' '+(nx[0]-s.count)+' more day'+(nx[0]-s.count===1?'':'s')+' to '+nx[2]+' '+nx[1]+'.':'')}
+function openStreak(){const s=streakInfo();const sh=sheet('<div style="text-align:center"><div style="font-size:48px">'+(s.alive?'🔥':'🕯️')+'</div><div style="font-size:30px;font-weight:900">'+s.count+' day streak</div><div style="font-size:12px;color:#9ca3af">Best: '+s.best+' day'+(s.best===1?'':'s')+'</div></div>'+weekDots(s)+'<p style="text-align:center;color:#d1d5db">'+streakMsg(s)+'</p><div style="display:flex;justify-content:center;gap:10px;margin:8px 0 14px;font-size:11px;color:#9ca3af">'+TIERS.slice().reverse().map(t=>'<span style="opacity:'+(s.best>=t[0]?1:.35)+'">'+t[2]+' '+t[0]+'d</span>').join('')+'</div>'+btn('Log a meal','log','#34d399')+btn('Close','x'));
+ sh.onclick=e=>{const a=e.target.closest('[data-s]');if(a&&a.dataset.s==='log'){closeSheet();openAdd(null,'log');return}if(a||e.target===sh)closeSheet()}}
+async function markToday(){if(!myProfile||!myProfile.username||todayTotals().n===0)return;const t=dayOff(0),days=myProfile.logDays||[];if(days.includes(t))return;
+ const nd=[t,...days].slice(0,120);myProfile.logDays=nd;const s=streakInfo();myProfile.bestStreak=Math.max(myProfile.bestStreak||0,s.count);try{await saveDoc({logDays:nd,bestStreak:myProfile.bestStreak})}catch(e){}
+ const mt=TIERS.find(x=>x[0]===s.count);showToast(mt?mt[2]+' '+s.count+'-day streak: '+mt[1]+'!':'🔥 '+s.count+'-day streak!');drawChips()}
+function drawChips(){document.querySelectorAll('.ge-streak-chip').forEach(c=>c.innerHTML=chipHtml())}
+function coachCard(){const T=$('health-view-today');if(!T)return;let c=$('ge-coach');if(!c){c=document.createElement('div');c.id='ge-coach';T.insertBefore(c,T.firstChild);c.onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;({streak:openStreak,goals:openPlan,add:()=>openAdd(null,'log'),dish:()=>{const d=coach().dish;if(d)openAdd(d)}})[b.dataset.c]()}}
+ const s=streakInfo(),k=coach(),col={n:'#9ca3af',w:'#fbbf24',g:'#34d399'}[k.tone];
+ c.innerHTML='<div style="border-radius:20px;padding:14px 16px;background:linear-gradient(135deg,#1c2042,#15182e);border:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:'+col+'">Daily coach</div><button data-c="streak" class="ge-streak-chip" style="display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;background:rgba(251,146,60,.15);border:1px solid rgba(251,146,60,.4);color:#fdba74">'+chipHtml()+'</button></div><div style="font-size:16px;font-weight:900;margin:6px 0 2px">'+esc(k.h)+'</div><div style="font-size:12px;color:#cbd5e1;line-height:1.45">'+esc(k.t)+'</div>'
+  +'<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button data-c="add" style="padding:8px 14px;border-radius:12px;background:#22c55e;color:#06210f;font-size:12px;font-weight:900">＋ Log a meal</button>'+(k.cta==='goals'?'<button data-c="goals" style="padding:8px 14px;border-radius:12px;background:rgba(255,255,255,.08);font-size:12px;font-weight:800">Set targets</button>':'')+(k.dish?'<button data-c="dish" style="padding:8px 14px;border-radius:12px;background:rgba(255,255,255,.08);font-size:12px;font-weight:800">View '+esc(k.dish.t)+'</button>':'')+'</div></div>'}
+const _rht5=renderHealthTracker;renderHealthTracker=function(){_rht5.apply(this,arguments);try{coachCard();markToday();drawChips()}catch(e){console.warn(e)}};
+// header streak chip replaces the old duplicate "+" button
+{const hb=document.querySelector('header button[onclick*="openCreateModal"]');if(hb){hb.removeAttribute('onclick');hb.className='ge-streak-chip';hb.title='Your logging streak';hb.setAttribute('style','display:flex;align-items:center;gap:4px;padding:0 10px;height:36px;border-radius:12px;background:rgba(251,146,60,.14);border:1px solid rgba(251,146,60,.4);color:#fdba74');hb.onclick=openStreak;hb.innerHTML=chipHtml()}}
+// feedback sheet after logging
+function logFeedback(d,serv){const T=todayTotals(),G=APP_STATE.goals,s=streakInfo(),k=coach(),has=!!(myProfile&&myProfile.goals);
+ const sh=sheet('<div style="text-align:center;font-size:30px">✅</div><div style="text-align:center;font-weight:900;font-size:17px">Logged '+esc(d.e+' '+d.t)+'</div>'
+  +(d.cal?'<div style="text-align:center;font-size:12px;color:#9ca3af;margin-bottom:4px">'+Math.round(d.cal*serv)+' cal · '+Math.round(d.p*serv)+'g protein</div>':'')
+  +'<div style="margin:10px 0;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.05)"><div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af">Today so far</div>'+bar('Calories',T.cal,G.calories,'#22c55e')+bar('Protein (g)',T.p,G.protein,'#60a5fa')+(has?'':'<div style="font-size:11px;color:#9ca3af">Using default targets. <a data-s="goals" style="color:#34d399;text-decoration:underline">Set yours</a></div>')+'</div>'
+  +'<div style="padding:12px 14px;border-radius:16px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)"><b>'+esc(k.h)+'</b><div style="font-size:12px;color:#d1d5db;margin-top:2px">'+esc(k.t)+'</div></div>'
+  +'<div style="text-align:center;margin:12px 0 4px;font-size:13px;font-weight:800;color:#fdba74">🔥 '+s.count+'-day streak</div><div style="text-align:center;font-size:11px;color:#9ca3af">'+streakMsg(s)+'</div>'
+  +btn('Log another','again','#34d399')+btn('See today’s log','view')+btn('Done','x'));
+ sh.onclick=e=>{const a=e.target.closest('[data-s]');if(!a){if(e.target===sh)closeSheet();return}const v=a.dataset.s;closeSheet();if(v==='again')openAdd(null,'log');else if(v==='view'){addEl().style.display='none';switchTab('tab-health')}else if(v==='goals')openPlan();else addEl().style.display='none'}}
+
+// ---------- v6: real history, real stats, honest empty states ----------
+const todayS=()=>dstr(new Date());
+const OWNK=()=>'ge_day:'+(uid||'local')+':'+ME;
+const EMPTYLOGS=()=>({Breakfast:[],Lunch:[],Dinner:[],Snack:[]});
+const cnt=L=>Object.values(L||{}).flat().length;
+const totOf=L=>{const a=Object.values(L||{}).flat();return{cal:a.reduce((s,x)=>s+(+x.cal||0),0),p:a.reduce((s,x)=>s+(+x.p||0),0),c:a.reduce((s,x)=>s+(+x.c||0),0),f:a.reduce((s,x)=>s+(+x.f||0),0)}};
+let lastDay=todayS(),cloudT=null;
+function pruneHist(h){const ks=Object.keys(h).sort();while(ks.length>45)delete h[ks.shift()];return h}
+function saveDay(){try{if(!myProfile||!myProfile.username)return;const k=todayS(),L=APP_STATE.logs,t=totOf(L),h=Object.assign({},myProfile.hist||{});
+ if(cnt(L)>0)h[k]={cal:t.cal,p:t.p,c:t.c,f:t.f};else delete h[k];
+ myProfile.hist=pruneHist(h);try{localStorage.setItem(OWNK(),JSON.stringify({d:k,logs:L}))}catch(e){}
+ clearTimeout(cloudT);if(!(cnt(L)>0||Object.keys(myProfile.hist).length||myProfile.todayLogs))return;cloudT=setTimeout(()=>{if(db&&uid)saveDoc({hist:myProfile.hist,todayLogs:{d:k,logs:APP_STATE.logs}}).catch(()=>{})},1500)}catch(e){console.warn(e)}}
+const _sss6=saveStateToStorage;saveStateToStorage=function(){_sss6.apply(this,arguments);saveDay()};
+function loadDay(){try{const k=todayS();let s=null;try{s=JSON.parse(localStorage.getItem(OWNK()))}catch(e){}
+ const c=myProfile&&myProfile.todayLogs;if(c&&c.d&&(!s||cnt(c.logs)>cnt(s.logs)&&c.d===s.d||c.d>s.d))s=c;
+ if(s&&s.d===k&&s.logs){APP_STATE.logs=Object.assign(EMPTYLOGS(),s.logs)}
+ else{APP_STATE.logs=EMPTYLOGS();if(s&&s.d&&s.logs&&cnt(s.logs)>0&&myProfile){const h=Object.assign({},myProfile.hist||{});if(!h[s.d]){h[s.d]=totOf(s.logs);myProfile.hist=pruneHist(h)}}}
+ lastDay=k;renderHealthTracker();drawWeek();drawProgress()}catch(e){console.warn(e)}}
+const _ap6=applyProfile;applyProfile=function(){_ap6.apply(this,arguments);loadDay()};
+function rollover(){if(todayS()!==lastDay&&myProfile){const old=lastDay;if(cnt(APP_STATE.logs)>0){const h=Object.assign({},myProfile.hist||{});h[old]=totOf(APP_STATE.logs);myProfile.hist=pruneHist(h)}
+ APP_STATE.logs=EMPTYLOGS();lastDay=todayS();try{renderHealthTracker();drawWeek();drawProgress();drawChips()}catch(e){}}}
+setInterval(rollover,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)rollover()});
+
+// real date + week strip
+const hdate=d=>d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+function logged(d){const h=(myProfile&&myProfile.hist)||{};return d===todayS()?cnt(APP_STATE.logs)>0:!!h[d]}
+function drawWeek(){const hd=document.querySelector('#tab-health header p');if(hd)hd.textContent=hdate(new Date());
+ const strip=document.querySelector('#tab-health header .flex.items-center.justify-between.text-center');if(!strip)return;
+ strip.innerHTML=[-6,-5,-4,-3,-2,-1,0].map(o=>{const d=new Date();d.setDate(d.getDate()+o);const s=dstr(d),on=logged(s),t=o===0;
+  const dot=t?'background:#dc3545;color:#fff;font-weight:800;box-shadow:0 4px 12px rgba(220,53,69,.4)':on?'background:rgba(126,217,87,.18);border:1px solid #7ed957;color:#7ed957;font-weight:800':'border:1px dashed #4b5563;color:#9ca3af;font-weight:700';
+  return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:32px;height:32px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:11px;'+dot+'">'+d.toLocaleDateString('en-US',{weekday:'narrow'})+'</div><span style="font-size:10px;color:'+(t?'#dc3545':'#9ca3af')+'">'+d.getDate()+'</span></div>'}).join('')}
+
+// real progress tab
+function drawProgress(){try{const box=$('ge-bars')||document.querySelector('#health-view-progress .h-44');if(!box)return;box.id='ge-bars';
+ const h=(myProfile&&myProfile.hist)||{},g=+APP_STATE.goals.calories||2000,t=todayTotals(),ds=[-6,-5,-4,-3,-2,-1,0].map(o=>{const d=new Date();d.setDate(d.getDate()+o);const s=dstr(d);const v=o===0?t:(h[s]||null);return{s,w:d.toLocaleDateString('en-US',{weekday:'narrow'}),v:v&&(v.cal||v.n)?v:null,today:o===0,d}});
+ const mx=Math.max(g*1.3,...ds.map(x=>x.v?x.v.cal:0)),H=110;
+ box.className='';box.style.cssText='position:relative;padding-top:6px';
+ box.innerHTML='<div style="position:relative;height:'+H+'px;display:flex;align-items:flex-end;gap:10px"><div style="position:absolute;left:0;right:0;top:'+(H-g/mx*H)+'px;border-top:1px dashed rgba(251,191,36,.55)"></div>'+ds.map(x=>{const hh=x.v?Math.max(6,x.v.cal/mx*H):4,col=x.v?(x.today?'#dc3545':x.v.cal>g*1.1?'#f59e0b':'#7ed957'):'#2a2c38';
+  return '<div data-day="'+x.s+'" style="flex:1;height:'+hh+'px;background:'+col+';border-radius:99px;cursor:pointer;z-index:1"></div>'}).join('')+'</div><div style="display:flex;gap:10px;margin-top:6px">'+ds.map(x=>'<span style="flex:1;text-align:center;font-size:11px;color:'+(x.today?'#fff':'#9ca3af')+'">'+x.w+'</span>').join('')+'</div>'+(ds.every(x=>!x.v)?'<p style="text-align:center;font-size:11px;color:#9ca3af;margin-top:10px">Log a meal and your week fills in here.</p>':'');
+ box.onclick=e=>{const b=e.target.closest('[data-day]');if(!b)return;const x=ds.find(y=>y.s===b.dataset.day);showToast(hdate(x.d)+': '+(x.v?Math.round(x.v.cal)+' cal · '+Math.round(x.v.p)+'g protein':'nothing logged'))};
+ const used=ds.filter(x=>x.v),avg=k=>used.length?Math.round(used.reduce((a,x)=>a+x.v[k],0)/used.length):null,st=streakInfo();
+ const cards=[...document.querySelectorAll('#health-view-progress .grid.grid-cols-2 > div')];
+ const set=(i,label,val,sub)=>{const c=cards[i];if(!c)return;const sp=c.querySelectorAll('span'),p=c.querySelector('p');sp[0].textContent=label;p.textContent=val;sp[1].textContent=sub;sp[1].className='text-xs text-gray-500'};
+ set(0,'Daily average',avg('cal')===null?'–':avg('cal').toLocaleString()+' cal',used.length?'Past 7 days · '+used.length+' logged':'Nothing logged yet');
+ set(1,'Logging streak',st.count+' day'+(st.count===1?'':'s'),st.alive?(st.today?'Done for today ✓':'Log today to keep it'):'Log a meal to start');
+ set(2,'Average protein',avg('p')===null?'–':avg('p')+'g','Goal '+(APP_STATE.goals.protein||'–')+'g');
+ set(3,'Best streak',st.best+' day'+(st.best===1?'':'s'),'All time');
+ if(cards[3]){const p=cards[3].querySelector('p');p.className='text-xl font-black text-[#c5a64e] mt-1'}}catch(e){console.warn(e)}}
+const _rht6=renderHealthTracker;renderHealthTracker=function(){_rht6.apply(this,arguments);try{drawWeek();drawProgress()}catch(e){}};
+
+// meal planner: starts empty, real picker, no prices
+APP_STATE.mealPlan=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(d=>({day:d,recipeId:null}));
+renderMealPlanner=function(){const c=$('meal-planner-slots');if(!c)return;let cal=0,p=0,n=0;
+ c.innerHTML=APP_STATE.mealPlan.map((s,i)=>{const r=RECIPES.find(x=>x.id===s.recipeId);
+  if(!r)return '<div style="background:#181920;border:1px dashed rgba(255,255,255,.15);border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between"><div><span style="font-size:10px;font-weight:800;text-transform:uppercase;color:#818cf8">'+s.day+'</span><div style="font-size:12px;color:#9ca3af;margin-top:2px">Nothing planned</div></div><button data-plan="'+i+'" style="padding:6px 12px;border-radius:12px;background:rgba(126,217,87,.18);color:#7ed957;font-size:11px;font-weight:700">+ Add dish</button></div>';
+  n++;cal+=r.macros.cal;p+=r.macros.p;
+  return '<div style="background:#181920;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:8px"><div style="min-width:0"><span style="font-size:10px;font-weight:800;text-transform:uppercase;color:#818cf8">'+s.day+'</span><h4 onclick="openRecipeModal(\''+r.id+'\')" style="font-size:12px;font-weight:800;color:#fff;cursor:pointer;margin-top:2px">'+r.emoji+' '+esc(r.title)+'</h4><p style="font-size:11px;color:#9ca3af">'+r.macros.cal+' cal · '+r.macros.p+'g protein</p></div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="quickLogRecipeDirectly(\''+r.id+'\',event)" style="padding:6px 10px;border-radius:12px;background:rgba(126,217,87,.18);color:#7ed957;font-size:11px;font-weight:700">+ Log</button><button data-plan="'+i+'" style="padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#d1d5db;font-size:11px;font-weight:600">Change</button><button data-clear="'+i+'" aria-label="Remove" style="padding:6px 8px;border-radius:12px;color:#6b7280;font-size:13px">✕</button></div></div>'}).join('');
+ const t=$('planner-total-cost');if(t)t.innerText=n?Math.round(cal/n)+' cal avg · '+Math.round(p/n)+'g protein':'No dishes planned';
+ const hint=document.querySelector('#health-view-planner p');if(!RECIPES.length)c.innerHTML='<p class="text-xs text-gray-400 text-center py-4">Dishes show up here once they are posted.</p>'};
+function openPlanPick(i){const L=RECIPES.slice().sort((a,b)=>(b.rating||0)-(a.rating||0)).slice(0,40);
+ const sh=sheet('<div style="font-weight:900;font-size:15px;margin-bottom:8px">Plan '+APP_STATE.mealPlan[i].day+'</div>'+L.map(r=>'<button data-set="'+r.id+'" style="display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;color:#f3f4f6"><span>'+r.emoji+' '+esc(r.title)+'</span><span style="font-size:11px;color:#9ca3af;flex-shrink:0">'+r.macros.cal+' cal · '+r.macros.p+'g P</span></button>').join('')+'<button data-s="x" style="width:100%;margin-top:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.07);font-weight:700">Cancel</button>');
+ sh.onclick=e=>{if(e.target===sh||e.target.closest('[data-s=x]'))return closeSheet();const b=e.target.closest('[data-set]');if(b){APP_STATE.mealPlan[i].recipeId=b.dataset.set;saveStateToStorage();renderMealPlanner();closeSheet()}}}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-plan]');if(a)return openPlanPick(+a.dataset.plan);const c=e.target.closest('[data-clear]');if(c){APP_STATE.mealPlan[+c.dataset.clear].recipeId=null;saveStateToStorage();renderMealPlanner()}});
+renderMealPlanner();
+
+// profile: honest counts, fix label
+function avgRank(l){const a=(l||[]);if(!a.length)return null;return a.reduce((s,_,i)=>s+scoreOf(a,i),0)/a.length}
+function fixStats(){try{const u=APP_STATE.viewedProfileUser||ME,self=u===ME,rk=self?(myProfile&&myProfile.rankings)||[]:((USER_PROFILES[u]||{})._x||{}).rankings||[];
+ const g=document.querySelectorAll('#profile-header-card .grid > div');if(g.length<4)return;const a=avgRank(rk);
+ g[1].querySelector('span').textContent=rk.length;g[2].querySelector('span').textContent=a===null?'–':a.toFixed(1)}catch(e){console.warn(e)}}
+const _rpv6=renderProfileView;renderProfileView=function(){_rpv6.apply(this,arguments);fixStats()};
+
+// ---------- v7: Elon Dining — real hours, honest dish lists ----------
+const EL='https://www.elondining.com';
+const t12=m=>{m=((m%1440)+1440)%1440;const h=Math.floor(m/60),mm=m%60;return (h%12||12)+(mm?':'+String(mm).padStart(2,'0'):':00')+' '+(h<12?'am':'pm')};
+const hm=(h,m=0)=>h*60+m;
+// Source: elondining.com/menu-hours (weekday hours). Periods: [name,start,end]
+const ONE=(s,e)=>[['',s,e]];
+const OUTLETS=[
+ {loc:'Lakeside Dining Hall',name:'Lakeside Dining Hall',hall:'Lakeside',link:EL+'/locations/lakeside-dining-hall/',per:[['Breakfast',hm(7),hm(10)],['Light Breakfast',hm(10,1),hm(10,59)],['Lunch',hm(11),hm(15)],['Light Lunch',hm(15,1),hm(16,59)],['Dinner',hm(17),hm(21)],['Late Night',hm(22),hm(25)]]},
+ {loc:'McEwen Dining Hall',name:'McEwen Food Hall',hall:'McEwen',link:EL+'/locations/mcewen-dining-hall/',per:[['Breakfast',hm(7,30),hm(10,30)],['Light Breakfast',hm(10,30),hm(11,30)],['Lunch',hm(11,30),hm(15)],['Light Lunch',hm(15,1),hm(17,29)],['Dinner',hm(17,30),hm(21)]]},
+ {loc:'McEwen Dining Hall',name:"Billy D's Fried Chicken",link:EL+'/locations/billy-ds/',per:ONE(hm(11),hm(20))},
+ {loc:'McEwen Dining Hall',name:'Village Juice & Kitchen',link:EL+'/menu_-elon-fall-2023/',per:ONE(hm(8),hm(15,30))},
+ {loc:'Clohan Hall',name:'Clohan Hall',hall:'Clohan',link:EL+'/locations/clohan-hall/',per:[['Lunch',hm(11),hm(16,30)],['Dinner',hm(17,30),hm(20)]]},
+ {loc:'Clohan Hall',name:'bb.q Chicken',link:'https://bbqchicken.com/about/',per:ONE(hm(11),hm(20))},
+ {loc:'Clohan Hall',name:'Fountain Market',link:EL+'/locations/fountain-market/',per:ONE(hm(11),hm(20))},
+ {loc:'Clohan Hall',name:"Boar's Head Deli",link:EL+'/locations/boars-head-deli-salads/',per:ONE(hm(11),hm(20))},
+ {loc:'Daniel Commons',name:'Qdoba Mexican Grill',link:'https://qdoba.com/menu-nutrition',per:ONE(hm(12),hm(25))},
+ {loc:'Daniel Commons',name:'Einstein Bros. Bagels',link:'https://einsteinbros.com/menu/bagels-and-shmear',per:ONE(hm(7),hm(14))},
+ {loc:'Sato Commons',name:'Global Rolls',link:EL+'/locations/global-rolls/',per:ONE(hm(11),hm(19))},
+ {loc:'Winter Garden Cafe',name:'Biscuitville',link:'https://biscuitville.com/menu/',per:ONE(hm(7),hm(25))},
+ {loc:'Winter Garden Cafe',name:'Freshii',link:'https://freshii.com',per:ONE(hm(11),hm(20))},
+ {loc:'Belk Library',name:'Acorn Coffee Shop',link:EL+'/locations/acorn-coffee-shop/',per:ONE(hm(7,30),hm(20))},
+ {loc:'Elon Law (Greensboro)',name:'Legal Grounds',link:EL+'/locations/legal-grounds/',per:ONE(hm(7,30),hm(14))}
+];
+function openStatus(o,now){let first=null,next=null;
+ for(const [n,s,e] of o.per){for(const sh of [0,-1440]){const S=s+sh,E=e+sh;if(now>=S&&now<E)return{open:true,period:n,until:E}}
+  if(s>now&&(next===null||s<next[1]))next=[n,s]}
+ return{open:false,next:next?next[1]:o.per[0][1],tomorrow:!next}}
+let hoursOnly=false;
+function hoursHtml(){const d=new Date(),now=d.getHours()*60+d.getMinutes();
+ const rows=OUTLETS.map(o=>({o,s:openStatus(o,now)})),nOpen=rows.filter(r=>r.s.open).length;
+ const locs=[...new Set(OUTLETS.map(o=>o.loc))];
+ let h='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div style="font-size:12px;color:#9ca3af"><b style="color:#7ed957">'+nOpen+' open</b> right now · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})+'</div><button data-hrs="toggle" style="padding:6px 12px;border-radius:99px;font-size:11px;font-weight:700;'+(hoursOnly?'background:#b8293d;color:#fff':'background:#18191f;color:#d1d5db')+'">Open now only</button></div>';
+ locs.forEach(l=>{const rs=rows.filter(r=>r.o.loc===l&&(!hoursOnly||r.s.open));if(!rs.length)return;
+  h+='<div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#c5a64e;margin:14px 2px 6px">'+l+'</div>';
+  rs.forEach(({o,s})=>{const pill=s.open?'<span style="background:rgba(126,217,87,.16);color:#7ed957;border:1px solid rgba(126,217,87,.4);padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700">Open'+(s.period?' · '+s.period:'')+' · until '+t12(s.until)+'</span>':'<span style="background:rgba(255,255,255,.06);color:#9ca3af;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700">Closed · opens '+(s.tomorrow?'tomorrow ':'')+t12(s.next)+'</span>';
+   const hrs=o.per.map(p=>(p[0]?p[0]+' ':'')+t12(p[1])+'–'+t12(p[2])).join(' · ');
+   h+='<div style="background:#16171d;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:12px 14px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap"><div style="font-size:14px;font-weight:800;color:#fff">'+o.name+'</div>'+pill+'</div><div style="font-size:11px;color:#9ca3af;margin-top:4px;line-height:1.5">'+hrs+'</div><div style="display:flex;gap:8px;margin-top:8px">'+(o.hall?'<button data-hrs="hall:'+o.hall+'" style="padding:6px 12px;border-radius:12px;background:rgba(126,217,87,.16);color:#7ed957;font-size:11px;font-weight:700">Typical dishes</button>':'')+'<a href="'+o.link+'" target="_blank" rel="noopener noreferrer" style="padding:6px 12px;border-radius:12px;background:rgba(255,255,255,.07);color:#e5e7eb;font-size:11px;font-weight:700;text-decoration:none">Official menu ↗</a></div></div>'})});
+ if(!rows.some(r=>!hoursOnly||r.s.open))h+='<p style="text-align:center;color:#9ca3af;font-size:12px;padding:24px 0">Nothing is open right now.</p>';
+ h+='<p style="font-size:10px;color:#6b7280;line-height:1.5;margin:14px 2px 0">Hours are the standard posted hours from <a href="'+EL+'/menu-hours/" target="_blank" rel="noopener noreferrer" style="color:#9ca3af;text-decoration:underline">elondining.com</a>. Weekends, breaks and holidays can differ — check the official page. Good Eats is not affiliated with Elon Dining.</p>';return h}
+// level-1 tabs: Hours | Halls | Retail | Ideas
+(function(){const g=$('pp-l1-halls').parentElement;g.className='grid grid-cols-3 bg-[#1d1e24] p-1 rounded-2xl border border-white/5 text-xs';
+  $('pp-l1-halls').textContent='Halls';$('pp-l1-retail').textContent='Retail';$('pp-l1-ideas').textContent='Ideas'})();
+setPhoenixLevel1=function(l1){APP_STATE.phoenix.level1=l1;
+ $('pp-main-heading').innerText={halls:'Hall dishes',retail:'Retail dining',ideas:'Plate ideas'}[l1];
+ ['halls','retail','ideas'].forEach(k=>{const b=$('pp-l1-'+k);b.className=k===l1?'py-2 rounded-xl font-bold bg-[#121317] text-white shadow transition':'py-2 rounded-xl font-medium text-gray-400 hover:text-white transition'});
+ $('pp-halls-controls').classList.toggle('hidden',l1!=='halls');renderPhoenixContent()};
+const _rpc7=renderPhoenixContent;
+renderPhoenixContent=function(){const l1=APP_STATE.phoenix.level1;
+ if(l1==='hours'){$('pp-dynamic-list').innerHTML=hoursHtml();return}
+ _rpc7.apply(this,arguments);
+ if(l1==='halls'){const o=OUTLETS.find(x=>x.hall===APP_STATE.phoenix.hall),d=new Date(),s=o&&openStatus(o,d.getHours()*60+d.getMinutes());
+  const lab=$('pp-time-window-label');if(lab&&o){lab.style.lineHeight='1.5';lab.innerHTML=(s.open?'<b style="color:#7ed957">Open now · '+s.period+' until '+t12(s.until)+'</b>':'<b>Closed · opens '+(s.tomorrow?'tomorrow ':'')+t12(s.next)+'</b>')+'<br>Typical dishes with estimated macros — not today’s menu. <a href="'+o.link+'" target="_blank" rel="noopener noreferrer" style="color:#c5a64e;text-decoration:underline">See official menu ↗</a>'}}
+ if(l1==='retail'||l1==='ideas'){const n=document.createElement('p');n.style.cssText='font-size:10px;color:#6b7280;margin:2px 2px 6px';n.textContent=l1==='retail'?'Estimated macros — check each restaurant’s official nutrition info.':'Plate combos built from typical hall items; macros are estimates.';$('pp-dynamic-list').prepend(n)}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-hrs]');if(!b)return;const v=b.dataset.hrs;
+ if(v==='toggle'){hoursOnly=!hoursOnly;renderPhoenixContent()}else if(v.startsWith('hall:')){const n=v.slice(5);setPhoenixLevel1('halls');const hb=[...document.querySelectorAll('.pp-hall-btn')].find(x=>x.textContent.trim()===n);if(hb)setPhoenixHall(n,hb)}});
+// remove the period pills that did nothing; fix default diet filters that hid meat dishes
+const pr=document.querySelector('.pp-period-btn');if(pr&&pr.parentElement)pr.parentElement.style.display='none';
+APP_STATE.phoenix.diets={vegetarian:false,vegan:false,glutenFree:false};
+['vegetarian','vegan','glutenFree'].forEach(k=>{const b=$('pp-diet-'+k);if(b)b.className='px-3.5 py-1 rounded-full text-xs font-medium bg-[#18191f] text-gray-200 transition'});
+const si=$('pp-search-input');if(si)si.placeholder='Search dishes';
+// honest data: correct venues, no invented prices or user handles
+PHOENIX_PLATE_DATA.retail=[
+ {venue:'Qdoba Mexican Grill (Daniel Commons)',name:'Chicken Burrito Bowl (est.)',cal:650,p:42,c:62,f:24},
+ {venue:'Village Juice & Kitchen (McEwen)',name:'Protein Bowl with Chicken (est.)',cal:540,p:38,c:46,f:21},
+ {venue:'Freshii (Winter Garden Cafe)',name:'Warm Bowl with Tofu (est.)',cal:510,p:22,c:64,f:18},
+ {venue:"Boar's Head Deli (Clohan)",name:'Turkey Sandwich on Wheat (est.)',cal:420,p:30,c:46,f:10},
+ {venue:'Einstein Bros. Bagels (Daniel Commons)',name:'Egg & Cheese Thin Bagel (est.)',cal:360,p:19,c:36,f:15},
+ {venue:'Biscuitville (Winter Garden Cafe)',name:'Chicken Biscuit (est.)',cal:520,p:22,c:46,f:28}];
+PHOENIX_PLATE_DATA.ideas.forEach(i=>{i.author='@GoodEats'});
+APP_STATE.phoenix.level1='halls';setPhoenixLevel1('halls');
+setInterval(()=>{if(APP_STATE.phoenix.level1==='hours'||APP_STATE.phoenix.level1==='halls'){const v=$('catalogue-view-dining');if(v&&!v.classList.contains('hidden')&&!v.contains(document.activeElement))renderPhoenixContent()}},60000);
+
+// ---------- v8: real daily Elon dining hall menus (data courtesy of Phoenix Plate) ----------
+const MENU_URL='https://rbonehoye.github.io/phoenix-plate/menus.json';
+let MENUS=null,menuLoading=true;
+try{const c=JSON.parse(localStorage.getItem('ge_menus'));if(c&&c.halls)MENUS=c}catch(e){}
+async function loadMenus(){try{const r=await fetch(MENU_URL,{cache:'no-cache'});if(!r.ok)throw 0;const j=await r.json();if(!j.halls||!j.halls.length)throw 0;MENUS=j;try{localStorage.setItem('ge_menus',JSON.stringify(j))}catch(e){}}catch(e){console.warn('Menu load failed',e)}
+ menuLoading=false;if($('ge-hc'))drawHalls(true)}
+const HS={hall:'lakeside',period:null,q:'',veg:false,vegan:false,gf:false,pro:false,open:{}};
+const tcase=s=>String(s||'').replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1));
+function fallbackHalls(){const nm={Lakeside:'lakeside',McEwen:'mcewen',Clohan:'clohan'};
+ return Object.keys(PHOENIX_PLATE_DATA.halls).map(k=>({id:nm[k]||k.toLowerCase(),name:k,url:EL+'/locations/'+({Lakeside:'lakeside-dining-hall',McEwen:'mcewen-dining-hall',Clohan:'clohan-hall'}[k]||'')+'/',periods:[{name:'Typical dishes',start:0,end:0,stations:PHOENIX_PLATE_DATA.halls[k].map(s=>({name:s.station,items:s.items.map(i=>({name:i.name,serving:i.serving,allergens:[],tags:[i.vegan?'Vegan':'',i.vegetarian?'Vegetarian':'',i.glutenFree?'Made without Gluten':''].filter(Boolean),calories:i.cal,protein:i.p,carbs:i.c,fat:i.f}))}))}]}))}
+function menuSrc(){if(MENUS)return{halls:MENUS.halls,date:MENUS.date,live:true};return{halls:fallbackHalls(),date:null,live:false}}
+const dLabel=s=>{try{return new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}catch(e){return s}};
+function curHall(S){return S.halls.find(h=>h.id===HS.hall)||S.halls[0]}
+function pickPeriod(h,live){const now=new Date().getHours()*60+new Date().getMinutes();
+ if(HS.period&&h.periods.some(p=>p.name===HS.period))return HS.period;
+ if(!live)return h.periods[0].name;
+ const cur=h.periods.find(p=>now>=p.start&&now<p.end)||h.periods.find(p=>p.start>now)||h.periods[h.periods.length-1];return cur.name}
+function drawHC(){const S=menuSrc(),h=curHall(S),per=pickPeriod(h,S.live);HS.hall=h.id;HS.period=per;
+ const now=new Date().getHours()*60+new Date().getMinutes(),P=h.periods.find(p=>p.name===per);
+ const btn=(on,t,a)=>'<button '+a+' style="padding:7px 13px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;'+(on?'background:#b8293d;color:#fff':'background:#18191f;color:#d1d5db')+'">'+t+'</button>';
+ let status='';
+ if(S.live){const open=h.periods.find(p=>now>=p.start&&now<p.end),nx=h.periods.find(p=>p.start>now);
+  status=open?'<b style="color:#7ed957">Open now · '+open.name+' until '+t12(open.end)+'</b>':'<b>Closed'+(nx?' · '+nx.name+' at '+t12(nx.start):' · opens tomorrow')+'</b>';
+  status+=' · '+(MENUS.date===todayS()?'Today’s menu':'<span style="color:#fbbf24">Menu from '+dLabel(MENUS.date)+' (today’s isn’t posted yet)</span>')}
+ else status=menuLoading?'Loading today’s menu…':'<span style="color:#fbbf24">Couldn’t load today’s menu. Showing a short typical-dishes list. Open Good Eats from its web link with internet on, then </span><button data-retry="1" style="color:#fff;text-decoration:underline;font-weight:700">retry</button>';
+ $('ge-hc').innerHTML='<div style="display:flex;gap:6px;background:#1d1e24;padding:4px;border-radius:16px;border:1px solid rgba(255,255,255,.05)">'+S.halls.map(x=>'<button data-h="'+x.id+'" style="flex:1;padding:8px;border-radius:12px;font-size:12px;font-weight:700;'+(x.id===h.id?'background:#121317;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4)':'color:#9ca3af')+'">'+esc(x.name)+'</button>').join('')+'</div>'+
+ (h.periods.length>1?'<div style="display:flex;gap:8px;overflow-x:auto;margin-top:10px;padding-bottom:2px">'+h.periods.map(p=>btn(p.name===per,esc(p.name)+(S.live&&now>=p.start&&now<p.end?' •':''),'data-p="'+esc(p.name)+'"')).join('')+'</div>':'')+
+ '<div style="font-size:11px;color:#9ca3af;margin:10px 2px 8px;line-height:1.5">'+status+'</div>'+
+ '<input id="ge-hq" value="'+esc(HS.q)+'" placeholder="Search '+esc(h.name)+' '+esc(per.toLowerCase())+'" style="width:100%;background:#18191f;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 14px;font-size:13px;color:#fff;outline:none">'+
+ '<div style="display:flex;gap:8px;overflow-x:auto;margin:10px 0 4px">'+btn(HS.pro,'20g+ protein','data-f="pro"')+btn(HS.veg,'Vegetarian','data-f="veg"')+btn(HS.vegan,'Vegan','data-f="vegan"')+btn(HS.gf,'Gluten-free','data-f="gf"')+'</div>'}
+let HLIST=[];
+function drawHL(){const S=menuSrc(),h=curHall(S),P=h.periods.find(p=>p.name===HS.period)||h.periods[0],q=HS.q.trim().toLowerCase();HLIST=[];let html='',total=0;
+ (P?P.stations:[]).forEach((st,si)=>{let items=st.items.filter(i=>{const t=i.tags||[];return(!q||i.name.toLowerCase().includes(q))&&(!HS.pro||i.protein>=20)&&(!HS.veg||t.includes('Vegetarian')||t.includes('Vegan'))&&(!HS.vegan||t.includes('Vegan'))&&(!HS.gf||t.includes('Made without Gluten'))});
+  if(!items.length)return;if(HS.pro)items=items.slice().sort((a,b)=>b.protein-a.protein);total+=items.length;
+  const key=h.id+'|'+P.name+'|'+si,open=!!(q||HS.pro||HS.veg||HS.vegan||HS.gf)||HS.open[key];
+  html+='<div style="background:#16171d;border-radius:16px;border:1px solid rgba(255,255,255,.04);margin-top:8px;overflow:hidden"><button data-st="'+key+'" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 14px;font-size:14px;font-weight:700;color:#fff;text-align:left"><span>'+esc(tcase(st.name))+'</span><span style="font-size:12px;color:#d4b86a;font-weight:600">'+items.length+' '+(open?'▾':'▸')+'</span></button>'+
+  (open?items.map(i=>{HLIST.push({i,st:st.name});const t=i.tags||[],tg=[t.includes('Vegan')?'Vegan':t.includes('Vegetarian')?'Veg':'',t.includes('Made without Gluten')?'GF':''].filter(Boolean).map(x=>'<span style="font-size:9px;font-weight:800;padding:1px 6px;border-radius:99px;background:rgba(126,217,87,.15);color:#7ed957;margin-left:6px">'+x+'</span>').join(''),al=(i.allergens||[]).length?'<div style="font-size:10px;color:#6b7280;margin-top:2px">Contains: '+i.allergens.map(esc).join(', ')+'</div>':'';
+   return '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06)"><div style="min-width:0"><div style="font-size:14px;font-weight:700;color:#fff;line-height:1.3">'+esc(i.name)+tg+'</div><div style="font-size:11px;color:#9ca3af;margin-top:2px">'+esc(i.serving||'')+' · <b style="color:#fff">'+i.calories+'</b> cal · P '+i.protein+' · C '+i.carbs+' · F '+i.fat+'</div>'+al+'</div><button data-log="'+(HLIST.length-1)+'" aria-label="Log" style="width:32px;height:32px;flex-shrink:0;border-radius:99px;border:1px solid rgba(126,217,87,.5);color:#7ed957;font-size:18px;line-height:1">+</button></div>'}).join(''):'')+'</div>'});
+ if(!html)html='<p style="text-align:center;color:#9ca3af;font-size:12px;padding:28px 8px">'+(menuLoading&&!MENUS?'Loading…':'Nothing matches. Try clearing a filter.')+'</p>';
+ else html+='<p style="font-size:10px;color:#6b7280;line-height:1.5;margin:14px 2px 0">'+(S.live?'Menu data from <a href="'+MENU_URL.replace('menus.json','')+'" target="_blank" rel="noopener noreferrer" style="color:#9ca3af;text-decoration:underline">Phoenix Plate</a>, taken from Elon Dining. Always check allergens with dining staff.':'Estimated macros. Check the official menu.')+' <a href="'+h.url+'" target="_blank" rel="noopener noreferrer" style="color:#9ca3af;text-decoration:underline">Official menu ↗</a></p>';
+ $('ge-hl').innerHTML=html}
+function drawHalls(force){const box=$('pp-dynamic-list');if(!box)return;if(force||!$('ge-hc')){box.innerHTML='<div id="ge-hc"></div><div id="ge-hl"></div>';drawHC()}drawHL()}
+// route Halls view to the new renderer; hide the old cluttered controls
+const _rpc8=renderPhoenixContent;
+renderPhoenixContent=function(){if(APP_STATE.phoenix.level1==='halls'){const c=$('pp-halls-controls');if(c)c.classList.add('hidden');drawHalls();return}_rpc8.apply(this,arguments)};
+const _spl8=setPhoenixLevel1;setPhoenixLevel1=function(l){_spl8.apply(this,arguments);const c=$('pp-halls-controls');if(c)c.classList.add('hidden')};
+const _sph8=setPhoenixHall;setPhoenixHall=function(n,b){HS.hall=String(n).toLowerCase();HS.period=null;HS.open={};try{_sph8.apply(this,arguments)}catch(e){}drawHalls(true)};
+document.addEventListener('input',e=>{if(e.target.id==='ge-hq'){HS.q=e.target.value;drawHL()}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-h],[data-p],[data-f],[data-st],[data-log],[data-retry]');if(!b||!$('ge-hc')||!$('ge-hc').isConnected)return;
+ if(b.dataset.retry){menuLoading=true;drawHC();loadMenus()}
+ else if(b.dataset.h){HS.hall=b.dataset.h;HS.period=null;HS.open={};drawHC();drawHL()}
+ else if(b.dataset.p!==undefined){HS.period=b.dataset.p;HS.open={};drawHC();drawHL()}
+ else if(b.dataset.f){HS[b.dataset.f]=!HS[b.dataset.f];drawHC();drawHL()}
+ else if(b.dataset.st){HS.open[b.dataset.st]=!HS.open[b.dataset.st];drawHL()}
+ else if(b.dataset.log!==undefined){const x=HLIST[+b.dataset.log];if(!x)return;const S=menuSrc(),h=curHall(S);APP_STATE.phoenix.period=/breakfast/i.test(HS.period)?'Breakfast':/dinner/i.test(HS.period)?'Dinner':'Lunch';
+  openDiningItemModal(x.i.name,x.i.calories,x.i.protein,x.i.carbs,x.i.fat,h.name+' · '+tcase(x.st),x.i.serving||'1 serving')}});
+// the old period buttons / filters are replaced; refresh status each minute
+setInterval(()=>{const v=$('catalogue-view-dining');if(APP_STATE.phoenix.level1==='halls'&&v&&!v.classList.contains('hidden')&&$('ge-hc')&&document.activeElement!==$('ge-hq')){drawHC()}},60000);
+loadMenus();
 
 // ---------- boot ----------
 let profile=ls.get('ge_profile');
@@ -4657,15 +5178,16 @@ try{if(window.firebase&&window.FB_CFG){firebase.initializeApp(FB_CFG);auth=fireb
 if(!online){try{const U=await to(claude.use('user'),4000);const D=await to(claude.use('db'),4000);if(U&&D&&U.id){uid=await U.id();if(uid){db=D;online=true}}}catch(e){}}
 let synced=false;
 function startSync(){if(synced)return;synced=true;
- db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid||blocked.has(x.username))return;if(USER_PROFILES[x.username]){USER_PROFILES[x.username].top5=mapT(x.top5);USER_PROFILES[x.username].bio=esc(x.bio||'');ch=true;return}
-   USER_PROFILES[x.username]=Object.assign(getOrCreateProfileData(x.username),{initials:avatarHtml(x),bio:esc(x.bio||''),school:esc(x.school||''),locationBadge:x.school&&x.school!=='Home Cook'?'🎓 '+x.school:'🌎 Home Cook',followers:0,followingCount:0,isSelf:false,top5:mapT(x.top5)});ch=true});if(ch)refresh()});
- db.collection('posts').orderBy('ts','desc').limit(60).onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();try{if(ingestRecipe(JSON.parse(x.json)))ch=true}catch(e){}});if(ch)refresh()});
+ db.collection('profiles').onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();if(x.uid===uid||blocked.has(x.username))return;if(USER_PROFILES[x.username]){USER_PROFILES[x.username].top5=mapT(x.top5);USER_PROFILES[x.username]._x=xData(x);USER_PROFILES[x.username].bio=esc(x.bio||'');ch=true;return}
+   USER_PROFILES[x.username]=Object.assign(getOrCreateProfileData(x.username),{initials:avatarHtml(x),bio:esc(x.bio||''),school:esc(x.school||''),locationBadge:x.school&&x.school!=='Home Cook'?'🎓 '+x.school:'🌎 Home Cook',followers:0,followingCount:0,isSelf:false,top5:mapT(x.top5),_x:xData(x)});ch=true});if(ch)refresh()});
+ db.collection('posts').orderBy('ts','desc').limit(60).onSnapshot(s=>{let ch=false;s.docs.forEach(d=>{const x=d.data();try{if(ingestRecipe(Object.assign(JSON.parse(x.json),{image:photoOk(x.photo)})))ch=true}catch(e){}});if(ch)refresh()});
  db.collection('likes').onSnapshot(s=>{likeCount={};likeSet=new Set();s.docs.forEach(d=>{const x=d.data();likeCount[x.post]=(likeCount[x.post]||0)+1;if(x.uid===uid)likeSet.add(x.post)});
   RECIPES.forEach(r=>{if(r._shared){r.likes=likeCount[r.id]||0;r.liked=likeSet.has(r.id)}});refresh()});
  db.collection('comments').orderBy('ts','asc').limit(500).onSnapshot(s=>{s.docs.forEach(d=>{const x=d.data(),r=RECIPES.find(q=>q.id===x.post);if(!r||blocked.has(x.user)||r.comments.some(c=>c.id===d.id))return;
    r.comments.push({id:d.id,user:esc(x.user||''),badge:esc(x.badge||''),time:'recently',text:esc(x.text||''),isTweak:!!x.isTweak,likes:0,liked:false})});refresh();try{if(!$('comments-modal').classList.contains('hidden'))renderCommentsList()}catch(e){}});
  db.collection('blocks').where('uid','==',uid).onSnapshot(s=>{blocked=new Set(s.docs.map(d=>d.data().target));ls.set('ge_blocked',[...blocked]);blocked.forEach(purge);refresh()});
- db.collection('follows').where('uid','==',uid).onSnapshot(s=>{const t=new Set(s.docs.map(d=>d.data().target));RECIPES.forEach(r=>{if(r.author!==ME)r.isFollowing=t.has(r.author)});refresh()});
+ db.collection('follows').where('uid','==',uid).onSnapshot(s=>{GE_FOLLOWS.clear();s.docs.forEach(d=>GE_FOLLOWS.add(d.data().target));ls.set('ge_follows',[...GE_FOLLOWS]);applyFollows();refresh()});
+ db.collection('follows').onSnapshot(s=>{const c={};s.docs.forEach(d=>{const x=d.data().target;c[x]=(c[x]||0)+1});Object.keys(USER_PROFILES).forEach(k=>{USER_PROFILES[k].followers=c[k]||0});const mine=s.docs.filter(d=>d.data().uid===uid).length;if(USER_PROFILES[ME])USER_PROFILES[ME].followingCount=mine;refresh()});
 }
 if(online&&uid){try{const q=await db.collection('profiles').where('uid','==',uid).limit(1).get();profile=q.empty?null:q.docs[0].data()}catch(e){}
  if(profile||!authMode)startSync()
@@ -4674,6 +5196,7 @@ if(authMode&&!uid)openAuth('welcome');
 else if(profile&&profile.username)applyProfile(profile);
 else if(authMode)openAuth('profile');
 else openOnboard(false);
+applyFollows();try{hideMoney()}catch(e){}
 hideSplash();
 })();
 </script>
