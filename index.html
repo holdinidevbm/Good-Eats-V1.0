@@ -5117,7 +5117,7 @@ function fixMenus(m){try{m.halls.forEach(h=>h.periods.forEach(p=>p.stations.forE
 let MENUS=null,menuLoading=true;
 try{const c=JSON.parse(localStorage.getItem('ge_menus'));if(c&&c.halls)MENUS=fixMenus(c)}catch(e){}
 async function loadMenus(){try{const r=await fetch(MENU_URL,{cache:'no-cache'});if(!r.ok)throw 0;const j=await r.json();if(!j.halls||!j.halls.length)throw 0;MENUS=fixMenus(j);try{localStorage.setItem('ge_menus',JSON.stringify(j))}catch(e){}}catch(e){console.warn('Menu load failed',e)}
- menuLoading=false;if($('ge-hc'))drawHalls(true)}
+ menuLoading=false;if($('ge-hc'))drawHalls(true);if(APP_STATE.phoenix.level1==='ideas')drawIdeas()}
 const HS={hall:'lakeside',period:null,q:'',veg:false,vegan:false,gf:false,pro:false,open:{}};
 const tcase=s=>String(s||'').replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1));
 function fallbackHalls(){const nm={Lakeside:'lakeside',McEwen:'mcewen',Clohan:'clohan'};
@@ -5202,6 +5202,67 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-ro],[data-
  else if(b.dataset.rs){HR.open[b.dataset.rs]=!HR.open[b.dataset.rs];drawRL()}
  else if(b.dataset.rl!==undefined){const x=RLIST[+b.dataset.rl];if(!x)return;const h=new Date().getHours();APP_STATE.phoenix.period=h<11?'Breakfast':h>=17?'Dinner':'Lunch';
   openDiningItemModal(x.i[0],x.i[1],x.i[2],x.i[3],x.i[4],x.o.n+' · '+x.c.n,x.i[5]||'1 serving')}});
+
+const X_COND=/sauce|dressing|condiment|spread|syrup|jam\b|jelly|butter\b|mayo|ketchup|mustard|salsa|seasoning|spice|topping|garnish|cream cheese|\boil\b|vinaigrette|gravy|\bdip\b|creamer|sweetener|sugar|\bsalt\b|relish|pickle|crumbles|shredded|grated|croutons|sprinkles|honey|dried |raisins/i;
+const X_BEV=/beverage|drink|soda|juice|coffee|\btea\b|water\b|lemonade|arnold|smoothie|shake|milk\b/i;
+const X_SWT=/dessert|bakery|cookie|cake|brownie|pie\b|ice cream|donut|doughnut|pastry|candy|chocolate|muffin|pudding|sweet|cobbler|cheesecake|frosting|waffle|pancake|french toast|cocoa|puff|krisp|marshmallow|treat|froot|loops/i;
+const X_VEG=/broccoli|spinach|kale|carrot|green bean|salad|lettuce|veg|cauliflower|asparagus|zucchini|squash|pepper|tomato|cucumber|brussels|cabbage|mushroom|beet|greens|slaw|edamame|peas\b|corn\b/i;
+const X_BKF=/cereal|froot|loops|granola|bagel|cinnamon|oat|muffin|toast|biscuit|yogurt|raisin|grits|fruit|berr|banana|apple|melon|orange|hash|potato/i;
+const X_NOFILL=/egg roll|spring roll|wonton|dumpling|nugget/i;
+const X_SNACK=/yogurt|fruit|apple|banana|berr|grapes|melon|edamame|hummus|\bnuts?\b|almond|peanut|trail|cheese|\begg|granola|\bbar\b|popcorn|pretzel|jerky|cottage|tofu|chickpea|orange|pear|peach|pineapple/i;
+const X_FRUIT=/yogurt|fruit|berr|banana|apple|melon|orange|oats|oatmeal|granola|grapes|pineapple|peach|pear/i;
+function ideaItems(period){const seen=new Map();(period.stations||[]).forEach(s=>(s.items||[]).forEach(i=>{if(!(i.calories>0)||seen.has(i.name))return;seen.set(i.name,Object.assign({},i,{station:s.name}))}));return[...seen.values()]}
+function ideaClass(i,meal){const nm=i.name,st=i.station||'',all=st+' '+nm;
+ if(X_COND.test(nm)||X_BEV.test(all)||X_SWT.test(all))return{};
+ const veg=X_VEG.test(nm)&&i.calories<=150,fruit=X_FRUIT.test(nm)&&i.calories<=300&&(meal==='Breakfast'||meal==='Snacks');
+ const bkf=X_BKF.test(nm);return{main:meal==='Snacks'?(i.protein>=4&&i.calories>=60&&i.calories<=300&&X_SNACK.test(nm)&&!/pizza|burger|sandwich|\bmac\b|pasta|quesadilla|wrap|bake|nugget|wing|fries|cheesesteak/i.test(nm)):(i.protein>=12&&i.calories>=80&&i.calories<=500&&!veg&&!fruit),veg:veg&&meal!=='Snacks',fruit:fruit,carb:i.carbs>=15&&i.protein<12&&i.calories>=70&&i.calories<=350&&!veg&&!X_NOFILL.test(nm)&&(meal==='Breakfast'?bkf:meal==='Snacks'?false:!bkf)}}
+const clampS=(v,lo,hi)=>Math.max(lo,Math.min(hi,Math.round(v)));
+function plateTotals(parts){const t={calories:0,protein:0,carbs:0,fat:0};parts.forEach(({item,servings})=>{t.calories+=item.calories*servings;t.protein+=(item.protein||0)*servings;t.carbs+=(item.carbs||0)*servings;t.fat+=(item.fat||0)*servings});return t}
+function plateScore(t,T){return Math.abs(t.calories-T.calories)/T.calories+Math.max(0,T.protein-t.protein)/T.protein*1.5}
+function buildPlates(period,meal,T,shuffle,usedMains){const items=ideaItems(period).map(i=>({i,c:ideaClass(i,meal)})),mains=items.filter(x=>x.c.main).map(x=>x.i),vegs=items.filter(x=>x.c.veg).map(x=>x.i),fills=items.filter(x=>x.c.carb||x.c.fruit).map(x=>x.i);
+ const cands=[];
+ mains.forEach(m=>{let s=clampS(T.protein*.75/Math.max(1,m.protein),1,2);while(s>1&&m.calories*s>T.calories*.8)s--;const parts=[{item:m,servings:s}];
+  if(vegs.length&&meal!=='Snacks'){const v=vegs.slice().sort((a,b)=>(b.fiber||0)-(a.fiber||0)||a.calories-b.calories).find(v=>v.station!==m.station)||vegs[0];if(plateTotals(parts).calories+v.calories<=T.calories*1.1)parts.push({item:v,servings:1})}
+  const rem=T.calories-plateTotals(parts).calories;
+  if(rem>=100&&fills.length){let best=null;fills.forEach(f=>{if(parts.some(p=>p.item.name===f.name))return;const sv=clampS(rem/f.calories,1,2),miss=Math.abs(rem-f.calories*sv)+(f.station===m.station?20:0);if(!best||miss<best.miss)best={f,sv,miss}});if(best&&best.miss<rem*.9)parts.push({item:best.f,servings:best.sv})}
+  const tot=plateTotals(parts);cands.push({parts,totals:tot,score:plateScore(tot,T)})});
+ cands.sort((a,b)=>a.score-b.score);const pool=cands.filter(c=>!usedMains.has(c.parts[0].item.name)).slice(0,5);if(!pool.length)return null;return pool[shuffle%pool.length]}
+function buildIdeas(menu,meal,T,shuffle,n){const per={Breakfast:['Breakfast','Light Breakfast'],Lunch:['Lunch','Light Lunch'],Dinner:['Dinner'],Snacks:['Light Lunch','Light Breakfast','Lunch']}[meal];const used=new Set(),out=[];
+ const halls=menu.halls.map(h=>({h,p:per.map(n=>h.periods.find(p=>p.name===n)).find(Boolean)})).filter(x=>x.p);
+ const first=halls.map(x=>({x,pl:buildPlates(x.p,meal,T,shuffle,new Set())})).filter(r=>r.pl).sort((a,b)=>a.pl.score-b.pl.score);
+ for(const r of first){const pl=buildPlates(r.x.p,meal,T,shuffle,used);if(pl){used.add(pl.parts[0].item.name);out.push({hall:r.x.h,period:r.x.p,plate:pl});if(out.length===n)break}}
+ return out}
+
+// ---------- v10: Meal ideas — plates built from today's real menu, aimed at what's left in your day ----------
+const HI={meal:null,shuffle:0,added:null,plates:[]};
+const IMEALS=['Breakfast','Lunch','Dinner','Snacks'],IBUCKET={Breakfast:'Breakfast',Lunch:'Lunch',Dinner:'Dinner',Snacks:'Snack'};
+function defaultMeal(){const h=new Date().getHours();return h<11?'Breakfast':h<16?'Lunch':'Dinner'}
+function ideaTarget(meal){const G=APP_STATE.goals||{},gc=+G.calories||2000,gp=+G.protein||120,t=todayTotals(),F={Breakfast:.25,Lunch:.35,Dinner:.35,Snacks:.1};
+ const open=IMEALS.filter(m=>m===meal||!(APP_STATE.logs[IBUCKET[m]]||[]).length),sum=open.reduce((a,m)=>a+F[m],0),remC=Math.max(0,gc-t.cal),remP=Math.max(0,gp-t.p),b=meal==='Snacks'?[120,8]:[300,20];
+ return{calories:Math.round(Math.max(b[0],Math.min(remC*F[meal]/sum,gc*F[meal]*1.5))/5)*5,protein:Math.round(Math.max(b[1],Math.min(remP*F[meal]/sum,gp*F[meal]*1.5)))}}
+function drawIdeas(){const box=$('pp-dynamic-list');if(!box)return;HI.meal=HI.meal||defaultMeal();const m=HI.meal;let html='';
+ const note=t=>'<p style="text-align:center;color:#9ca3af;font-size:12px;line-height:1.6;padding:28px 12px">'+t+'</p>';
+ if(!MENUS)html=note(menuLoading?'Loading today’s menu…':'Meal ideas use today’s menu, which couldn’t load. Open Good Eats from its web link with internet on, then <button data-iretry="1" style="color:#fff;text-decoration:underline;font-weight:700">retry</button>.');
+ else if(MENUS.date!==todayS())html=note('Meal ideas use today’s menu, which isn’t posted yet. The latest one is from '+dLabel(MENUS.date)+'. Check back after the halls update.');
+ else{const T=ideaTarget(m),ideas=buildIdeas(MENUS,m,T,HI.shuffle,3);HI.plates=ideas;
+  html='<div style="display:flex;gap:6px;background:#1d1e24;padding:4px;border-radius:16px;border:1px solid rgba(255,255,255,.05)">'+IMEALS.map(x=>'<button data-im="'+x+'" style="flex:1;padding:8px 2px;border-radius:12px;font-size:12px;font-weight:700;'+(x===m?'background:#121317;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4)':'color:#9ca3af')+'">'+x+'</button>').join('')+'</div>'+
+  '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 2px 6px"><div style="font-size:11px;color:#9ca3af;line-height:1.5">Aiming for about <b style="color:#fff">'+T.calories+' cal</b> and <b style="color:#fff">'+T.protein+'g protein</b>, based on what’s left today.</div><button data-ish="1" style="padding:6px 12px;border-radius:99px;background:#18191f;color:#d1d5db;font-size:11px;font-weight:700;white-space:nowrap">↻ Shuffle</button></div>'+
+  (HI.added===m?'<p style="font-size:11px;color:#7ed957;margin:2px 2px 6px">Added to '+m.toLowerCase()+'. The ideas below now fit what’s left.</p>':'');
+  if(!ideas.length)html+=note('No plates to suggest for '+m.toLowerCase()+' today. The halls may not be serving it.');
+  else html+=ideas.map((o,ix)=>{const t=o.plate.totals;return '<div style="background:#16171d;border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:14px;margin-top:8px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><div style="font-size:15px;font-weight:800;color:#fff">'+esc(o.hall.name)+'</div><div style="font-size:12px;color:#9ca3af"><b style="color:#fff">'+Math.round(t.calories)+'</b> cal · <b style="color:#fff">'+Math.round(t.protein)+'g</b> protein</div></div><div style="margin:8px 0 10px">'+o.plate.parts.map(p=>'<div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;color:#e5e7eb;padding:3px 0"><span>'+(p.servings>1?'<b>'+p.servings+'× </b>':'')+esc(p.item.name)+'</span><span style="font-size:11px;color:#6b7280;text-align:right">'+esc(tcase(p.item.station))+'</span></div>').join('')+'</div><div style="font-size:11px;color:#9ca3af;margin-bottom:10px">C '+Math.round(t.carbs)+'g · F '+Math.round(t.fat)+'g</div><button data-iadd="'+ix+'" style="width:100%;padding:10px;border-radius:12px;background:rgba(126,217,87,.16);border:1px solid rgba(126,217,87,.45);color:#7ed957;font-size:13px;font-weight:800">Add to '+m.toLowerCase()+'</button></div>'}).join('');
+  html+='<p style="font-size:10px;color:#6b7280;line-height:1.5;margin:14px 2px 0">Picked from today’s menu by calories and protein. Tap Shuffle for different ideas, or open a hall to build your own plate. Menu data from Phoenix Plate.</p>'}
+ box.innerHTML=html}
+const _rpc10=renderPhoenixContent;
+renderPhoenixContent=function(){if(APP_STATE.phoenix.level1==='ideas'){const c=$('pp-halls-controls');if(c)c.classList.add('hidden');drawIdeas();return}_rpc10.apply(this,arguments)};
+const _spl10=setPhoenixLevel1;setPhoenixLevel1=function(l){_spl10.apply(this,arguments);if(l==='ideas')$('pp-main-heading').innerText='Meal ideas'};
+$('pp-l1-ideas').textContent='Meal ideas';
+document.addEventListener('click',e=>{const b=e.target.closest('[data-im],[data-ish],[data-iadd],[data-iretry]');if(!b||APP_STATE.phoenix.level1!=='ideas')return;
+ if(b.dataset.iretry){menuLoading=true;drawIdeas();loadMenus()}
+ else if(b.dataset.im){HI.meal=b.dataset.im;HI.shuffle=0;HI.added=null;drawIdeas()}
+ else if(b.dataset.ish){HI.shuffle++;HI.added=null;drawIdeas()}
+ else if(b.dataset.iadd!==undefined){const o=HI.plates[+b.dataset.iadd];if(!o)return;const bucket=IBUCKET[HI.meal];
+  o.plate.parts.forEach(p=>{const s=p.servings,i=p.item;APP_STATE.logs[bucket].push({title:(s>1?s+'× ':'')+i.name,cal:Math.round(i.calories*s),p:Math.round((i.protein||0)*s),c:Math.round((i.carbs||0)*s),f:Math.round((i.fat||0)*s),cost:0})});
+  HI.added=HI.meal;try{renderHealthTracker()}catch(x){}showToast('Added to '+HI.meal.toLowerCase());drawIdeas()}});
 
 // ---------- boot ----------
 let profile=ls.get('ge_profile');
