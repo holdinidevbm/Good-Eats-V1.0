@@ -5533,6 +5533,156 @@ else if(authMode)openAuth('profile');
 else openOnboard(false);
 applyFollows();try{hideMoney()}catch(e){}
 hideSplash();
+// ===== v13 (runs inside the social layer so it can see the account state): guest browsing, campus leaderboard, Good Eats Plus (demo), invite friends, school labels =====
+(function(){
+ const $=id=>document.getElementById(id);
+ const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const SCH=window.GE_SCHOOL||{name:'Elon University',short:'Elon'};
+ const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+ const hasAcct=()=>{try{return !!(myProfile&&myProfile.username)}catch(e){return false}};
+ const me=()=>{try{return ME}catch(e){return 'Guest'}};
+
+ // ---------- school labels in static markup (does nothing while the school is Elon) ----------
+ function schoolLabels(){if(SCH.short==='Elon')return;const root=$('phone-container');if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))if(/\bElon\b/.test(n.nodeValue))n.nodeValue=n.nodeValue.replace(/\bElon University\b/g,SCH.name).replace(/\bElon\b/g,SCH.short)}
+
+ // ---------- bottom sheet helper ----------
+ function sheet(id,html){let m=$(id);if(!m){m=document.createElement('div');m.id=id;m.className='ge-sh';$('phone-container').appendChild(m);
+   m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-x]')){m.style.display='none';return}const g=e.target.closest('[data-go]');if(g){m.style.display='none';try{openAuth(g.getAttribute('data-go'))}catch(x){}}})}
+  m.innerHTML='<div class="ge-sh-c"><div class="ge-sh-grab"></div>'+html+'</div>';m.style.display='flex';return m}
+
+ // ---------- 1. guest browsing ----------
+ window.geAskSignup=function(why){sheet('ge-join','<h3>Join Good Eats</h3><p>Create a free account to '+E(why)+'. It takes about a minute.</p><button class="ge-b1" data-go="signup">Create account</button><button class="ge-b2" data-go="login">Log in</button><button class="ge-b3" data-x>Not now</button>')};
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-browse]');if(!b)return;e.preventDefault();e.stopPropagation();try{authEl().style.display='none'}catch(x){}try{switchTab('tab-feed')}catch(x){}try{showToast('Browsing as a guest. Sign up any time from Profile.')}catch(x){}},true);
+ const gate=(fn,why)=>typeof fn!=='function'?fn:function(){if(!hasAcct()){const ev=[...arguments].find(a=>a&&a.stopPropagation);if(ev)ev.stopPropagation();geAskSignup(why);return}return fn.apply(this,arguments)};
+ try{openAdd=gate(openAdd,'post, rank or log dishes')}catch(e){}
+ try{toggleFollowCreator=gate(toggleFollowCreator,'follow people')}catch(e){}
+ try{toggleRecipeLike=gate(toggleRecipeLike,'like dishes')}catch(e){}
+ try{toggleReviewLike=gate(toggleReviewLike,'like reviews')}catch(e){}
+ try{toggleRateDrawer=gate(toggleRateDrawer,'rate dishes')}catch(e){}
+ try{submitRecipeRating=gate(submitRecipeRating,'rate dishes')}catch(e){}
+ try{toggleRecipeBookmark=gate(toggleRecipeBookmark,'save dishes')}catch(e){}
+ try{submitNewComment=gate(submitNewComment,'comment')}catch(e){}
+
+ // ---------- 2. campus leaderboard (Explore) ----------
+ function topBox(){let b=$('ge-top');const g=$('catalogue-recipes-grid');if(!b&&g){b=document.createElement('div');b.id='ge-top';g.parentNode.insertBefore(b,$('ge-people')||g);b.addEventListener('click',e=>{const d=e.target.closest('[data-dish]');if(d){openRecipeModal(d.getAttribute('data-dish'));return}const u=e.target.closest('[data-user]');if(u)openUserProfile(u.getAttribute('data-user'),e)})}return b}
+ window.geTop=function(){const b=topBox();if(!b)return;const q=(($('recipe-search-input')||{}).value||'').trim();if(q){b.innerHTML='';return}
+  let dishes=[];try{dishes=RECIPES.filter(r=>r&&r.title&&typeof r.rating==='number').slice().sort((a,c)=>c.rating-a.rating||(c.likes||0)-(a.likes||0)).slice(0,3)}catch(e){}
+  let ppl=[];try{ppl=Object.values(USER_PROFILES).filter(p=>p&&p.username&&!p.isSelf&&p.username!==me()&&(p.followers||0)>0).sort((a,c)=>(c.followers||0)-(a.followers||0)).slice(0,3)}catch(e){}
+  if(!dishes.length&&!ppl.length){b.innerHTML='';return}
+  b.innerHTML='<div class="ge-top"><div class="ge-top-h"><b>Top at '+E(SCH.short)+'</b><span>Highest rated right now</span></div>'+
+   dishes.map((r,i)=>'<button class="ge-top-r" data-dish="'+E(r.id)+'"><span class="ge-top-n">'+(i+1)+'</span><span class="ge-top-t">'+E(r.title)+'</span><span class="ge-top-s">'+r.rating.toFixed(1)+'</span></button>').join('')+
+   (ppl.length?'<div class="ge-top-p"><span>Top foodies</span>'+ppl.map(p=>'<button data-user="'+E(p.username)+'">@'+E(p.username)+' · '+(p.followers||0)+'</button>').join('')+'</div>':'')+'</div>'};
+ {const _r=renderCatalogueRecipes;renderCatalogueRecipes=function(){const x=_r.apply(this,arguments);try{geTop()}catch(e){}return x}}
+ document.addEventListener('input',e=>{if(e.target&&e.target.id==='recipe-search-input')try{geTop()}catch(x){}});
+
+ // ---------- 3. Good Eats Plus (demo: nothing is charged or locked) ----------
+ let plan='year';
+ window.gePlus=function(){const m=sheet('ge-plus','<h3>Good Eats Plus</h3><p>Free to join. Plus adds the planning tools.</p>'+
+   '<div class="ge-plus-g"><div><b>Free</b><span>Feed, rankings &amp; Top 5</span><span>'+E(SCH.short)+' dining menus</span><span>Calorie &amp; macro logging</span><span>Find &amp; follow people</span></div>'+
+   '<div class="ge-plus-on"><b>Plus</b><span>Meal-prep planner</span><span>Cheaper store swaps</span><span>Budget &amp; spend tracking</span><span>Weekly progress insights</span></div></div>'+
+   '<div class="ge-plus-pr"><button data-plan="month" class="'+(plan==='month'?'on':'')+'"><b>$2.99</b><span>per month</span></button><button data-plan="year" class="'+(plan==='year'?'on':'')+'"><b>$19.99</b><span>per year · save 44%</span></button></div>'+
+   '<button class="ge-b1" data-trial>Start 7-day free trial</button><button class="ge-b3" data-x>Maybe later</button><p class="ge-plus-f">Demo for our class launch. No payment is collected.</p>');
+  m.onclick=e=>{const p=e.target.closest('[data-plan]');if(p){plan=p.getAttribute('data-plan');gePlus();return}if(e.target.closest('[data-trial]')){LS.set('ge_plus_waitlist',plan);m.style.display='none';try{showToast('Plus isn’t live yet. You’re on the early-access list!')}catch(x){}}}};
+
+ // ---------- 4. invite friends ----------
+ window.geInvite=async function(){const base=location.origin+location.pathname,url=hasAcct()?base+'?ref='+encodeURIComponent(me()):base,text='Join me on Good Eats: rank dishes, see '+SCH.short+' dining menus and track macros.';
+  try{if(navigator.share){await navigator.share({title:'Good Eats',text,url});return}}catch(e){if(e&&e.name==='AbortError')return}
+  try{await navigator.clipboard.writeText(text+' '+url);showToast('Invite link copied')}catch(e){prompt('Copy your invite link:',url)}};
+ const refRaw=new URLSearchParams(location.search).get('ref');
+ if(refRaw&&/^[A-Za-z0-9._-]{1,30}$/.test(refRaw)&&!LS.get('ge_ref_done'))LS.set('ge_ref',refRaw);
+ function inviteBanner(){const ref=LS.get('ge_ref'),feed=$('feed-stream');let b=$('ge-inv');
+  if(!ref||LS.get('ge_ref_done')||ref===me()||(typeof isFollowingUser==='function'&&isFollowingUser(ref))||!feed){if(b)b.remove();return}
+  if(!b){b=document.createElement('div');b.id='ge-inv';feed.parentNode.insertBefore(b,feed);b.addEventListener('click',e=>{if(e.target.closest('[data-inv-x]')){LS.set('ge_ref_done',1);b.remove();return}if(e.target.closest('[data-inv-f]')){toggleFollowCreator(ref,e);if(hasAcct()){LS.set('ge_ref_done',1);b.remove()}}})}
+  b.innerHTML='<div><b>@'+E(ref)+' invited you</b><span>Follow them to see their dishes in your feed.</span></div><button class="ge-pp-f" data-inv-f>Follow</button><button class="ge-inv-x" data-inv-x aria-label="Dismiss">✕</button>'}
+ {const _f=renderFeed;renderFeed=function(){const x=_f.apply(this,arguments);try{inviteBanner()}catch(e){}return x}}
+
+ // ---------- profile: guest card + grow row (own profile only) ----------
+ function profileExtras(){const t=$('tab-profile');if(!t)return;const own=!APP_STATE.viewedProfileUser||APP_STATE.viewedProfileUser===me();
+  ['ge-guest','ge-grow'].forEach(id=>{const x=$(id);if(x)x.remove()});if(!own)return;
+  const grow=document.createElement('div');grow.id='ge-grow';grow.innerHTML='<button data-inv>Invite friends</button><button data-plus class="ge-grow-plus">✦ Good Eats Plus</button>';
+  grow.addEventListener('click',e=>{if(e.target.closest('[data-inv]'))geInvite();if(e.target.closest('[data-plus]'))gePlus()});
+  t.insertBefore(grow,t.children[1]||null);
+  if(!hasAcct()){const g=document.createElement('div');g.id='ge-guest';g.innerHTML='<div><b>You’re browsing as a guest</b><span>Create a free account to post, rank and follow.</span></div><button class="ge-pp-f" data-go-signup>Sign up</button>';
+   g.addEventListener('click',e=>{if(e.target.closest('[data-go-signup]'))try{openAuth('signup')}catch(x){}});t.insertBefore(g,t.firstChild)}}
+ {const _p=renderProfileView;renderProfileView=function(){const x=_p.apply(this,arguments);try{profileExtras()}catch(e){}return x}}
+
+ // Plus badges are tappable shortcuts to the Plus sheet (features stay unlocked)
+ document.addEventListener('click',e=>{if(e.target.closest('#ge-plus-badge'))gePlus()});
+
+ function init(){schoolLabels();try{inviteBanner()}catch(e){}try{geTop()}catch(e){}}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+ // ===== v13: 3-page goals setup with TDEE (Mifflin-St Jeor) + goal weight & timeline =====
+ (function(){
+  const T=['t-goal','t-body','t-time'];
+  const num=v=>{const n=parseFloat(v);return isFinite(n)?n:0};
+  function tdee(d){const wt=num(d.wt),ft=num(d.ft),inch=num(d.inch),age=num(d.age),act=num(d.act)||1.375,sex=d.sex||'m';
+   const kg=wt*0.453592,cm=(ft*12+inch)*2.54;if(!kg||!cm||!age)return null;
+   const bmr=10*kg+6.25*cm-5*age+(sex==='f'?-161:5),maint=bmr*act;
+   const mode=d.mode||'maintain',tgt=num(d.target),wk=num(d.weeks)||12;let pace=0,capped=false,bad='';
+   if(mode!=='maintain'){
+    if(tgt&&((mode==='cut'&&tgt<wt)||(mode==='bulk'&&tgt>wt))){pace=(tgt-wt)/wk;const maxLoss=Math.min(2,wt*0.01),maxGain=1;if(pace<-maxLoss){pace=-maxLoss;capped=true}if(pace>maxGain){pace=maxGain;capped=true}}
+    else{if(tgt)bad=mode==='cut'?'Goal weight should be below your current weight.':'Goal weight should be above your current weight.';pace=mode==='cut'?-1:0.5}}
+   let cal=maint+pace*500;const floor=sex==='f'?1200:1500;if(cal<floor){cal=floor;capped=true;pace=(cal-maint)/500}
+   cal=Math.round(cal/10)*10;
+   const p=Math.round(wt*(mode==='maintain'?0.8:mode==='bulk'?1.0:0.9)),f=Math.round(cal*0.27/9),c=Math.max(60,Math.round((cal-p*4-f*9)/4));
+   const weeks=tgt&&Math.abs(pace)>0.05&&!bad?Math.ceil(Math.abs((tgt-wt)/pace)-1e-6):null;
+   return{mode,pace:+Math.abs(pace).toFixed(2),split:'balanced',calories:cal,protein:p,carbs:c,fat:f,tdee:Math.round(maint),targetWt:tgt&&!bad?tgt:null,weeks,body:{sex,age,ft,inch,wt,act},capped,bad}}
+  window.geTdee=tdee;
+  const when=w=>{const x=new Date();x.setDate(x.getDate()+w*7);return x.toLocaleDateString(undefined,{month:'short',day:'numeric'})};
+  function summary(g){if(!g)return'Enter your details to see your targets';
+   let t='<b style="font-size:26px;display:block">'+g.calories.toLocaleString()+' cal / day</b><span style="font-size:13px;color:#d1d5db">'+g.protein+'g protein · '+g.carbs+'g carbs · '+g.fat+'g fat</span>';
+   if(g.mode!=='maintain'&&g.targetWt&&g.weeks)t+='<span style="display:block;font-size:12px;color:#9ca3af;margin-top:6px">'+(g.mode==='cut'?'Lose':'Gain')+' about '+g.pace+' lb/week · reach '+g.targetWt+' lb around '+when(g.weeks)+'</span>';
+   else if(g.mode!=='maintain')t+='<span style="display:block;font-size:12px;color:#9ca3af;margin-top:6px">'+(g.mode==='cut'?'About 1 lb/week loss':'About 0.5 lb/week gain')+'. Add a goal weight for a timeline.</span>';
+   else t+='<span style="display:block;font-size:12px;color:#9ca3af;margin-top:6px">Maintenance: about '+g.tdee.toLocaleString()+' cal burned per day</span>';
+   if(g.bad)t+='<span style="display:block;font-size:12px;color:#fbbf24;margin-top:6px">'+g.bad+'</span>';
+   else if(g.capped)t+='<span style="display:block;font-size:12px;color:#fbbf24;margin-top:6px">We slowed this to a safe pace, so it may take a little longer.</span>';
+   return t}
+  const box='padding:16px;border-radius:16px;background:rgba(91,209,122,.1);border:1px solid rgba(91,209,122,.35);text-align:center;font-weight:700';
+  const BT=(t,label)=>'<button data-t="'+t+'" class="w-full py-3.5 rounded-2xl bg-emerald-500 text-[#0d0d10] font-extrabold text-sm active:scale-95 transition">'+label+'</button>';
+  const SK=label=>'<div style="text-align:center"><button data-t="skip" class="text-xs font-bold text-emerald-400 underline">'+label+'</button></div>';
+  function prog(){const s=steps(),i=s.indexOf(AU.step);return s.length>1?i/(s.length-1):1}
+  function page(){const s=AU.step,d=AU.d,g=tdee(d);
+   if(s==='t-goal')return authShell('<h1 class="text-2xl font-extrabold">What’s your goal?</h1><p class="text-xs text-gray-400 mt-1 mb-4">We’ll set your daily calories around it. You can change it any time.</p><div style="display:grid;gap:8px">'+
+    [['cut','Lose weight'],['maintain','Maintain my weight'],['bulk','Build muscle']].map(([v,t])=>'<button data-g="mode" data-v="'+v+'" class="text-left px-4 py-3.5 rounded-2xl border font-bold text-sm '+((d.mode||'')===v?'bg-emerald-500/20 border-emerald-400 text-emerald-100':'bg-white/[0.05] border-white/10')+'">'+t+'</button>').join('')+
+    '</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+BT('next','Continue')+SK('Skip for now')+'</div>',prog(),true);
+   if(s==='t-body')return authShell('<h1 class="text-2xl font-extrabold">About you</h1><p class="text-xs text-gray-400 mt-1 mb-4">Used only to estimate how many calories you burn.</p><div style="display:grid;gap:12px"><div style="display:flex;gap:8px">'+
+    [['m','Male'],['f','Female']].map(([v,t])=>CH('sex',v,t,(d.sex||'m')===v)).join('')+'</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">'+
+    F('t-age','Age','number','20','inputmode="numeric" value="'+(d.age||'')+'"')+F('t-ft','Ft','number','5','inputmode="numeric" value="'+(d.ft||'')+'"')+F('t-in','In','number','10','inputmode="numeric" value="'+(d.inch||'')+'"')+F('t-wt','Lbs','number','160','inputmode="decimal" value="'+(d.wt||'')+'"')+
+    '</div><label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">How active are you?</span><select id="t-act" class="w-full mt-1 bg-[#1a1a1d] border border-white/10 rounded-xl px-3 py-3 outline-none" style="font-size:16px">'+ACT.map(([v,t])=>'<option value="'+v+'"'+((+d.act||1.375)==v?' selected':'')+'>'+t+'</option>').join('')+'</select></label><p id="t-err" class="text-xs text-rose-400 min-h-[18px]" role="alert"></p></div>'+
+    '<div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+BT('next','Continue')+SK('Skip for now')+'</div>',prog(),true);
+   if(s==='t-time'){const m=d.mode||'maintain';
+    return authShell('<h1 class="text-2xl font-extrabold">'+(m==='maintain'?'Your daily targets':'Goal weight & timeline')+'</h1><p class="text-xs text-gray-400 mt-1 mb-4">'+(m==='maintain'?'Here’s what we’ll track for you.':'Where do you want to be, and by when?')+'</p><div style="display:grid;gap:12px">'+
+     (m==='maintain'?'':F('t-target','Goal weight (lbs)','number',m==='cut'?String(Math.max(90,Math.round(num(d.wt)-10)||150)):String(Math.round(num(d.wt)+8)||170),'inputmode="decimal" value="'+(d.target||'')+'"')+
+      '<div><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">By when?</span><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">'+[['8','8 weeks'],['12','12 weeks'],['16','4 months'],['26','6 months']].map(([v,t])=>CH('weeks',v,t,String(d.weeks||'12')===v)).join('')+'</div></div>')+
+     '<div id="t-prev" style="'+box+'">'+summary(g)+'</div><p style="font-size:10px;color:#6b7280;text-align:center;margin:0">Estimates from the Mifflin-St Jeor formula. Not medical advice.</p></div>'+
+     '<div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+BT('save',AU.edit==='tdee'?'Save my targets':'Save & continue')+SK('I’ll do this later')+'</div>',prog(),true)}
+   return null}
+  const _view=view;view=function(){if(T.includes(AU.step)){const h=page();if(h)return h}return _view.apply(this,arguments)};
+  const _steps=steps;steps=function(){if(AU.edit==='tdee')return T.slice();let s=_steps();if(!AU.edit||AU.edit==='goals'){s=s.filter(x=>x!=='macros'&&!T.includes(x));const i=s.indexOf('goals');if(i>=0)s.splice(i+1,0,...T)}return s};
+  function prefill(){const p=(typeof myProfile!=='undefined'&&myProfile)||{},g=p.goals||{},b=g.body||{};return{mode:g.mode,sex:b.sex,age:b.age,ft:b.ft,inch:b.inch,wt:b.wt,act:b.act,target:g.targetWt||'',weeks:g.weeks?String(g.weeks):undefined}}
+  const _ogs=openGoalStep;openGoalStep=function(step){if(step==='macros'){AU.edit='tdee';AU.step='t-goal';AU.d=prefill();paint();authEl().style.display='block';return}return _ogs.apply(this,arguments)};
+  function readBody(){const d=AU.d,v=id=>{const e=document.getElementById(id);return e?e.value:undefined};if(v('t-age')!==undefined){d.age=v('t-age');d.ft=v('t-ft');d.inch=v('t-in');d.wt=v('t-wt');d.act=+v('t-act')}if(v('t-target')!==undefined)d.target=v('t-target')}
+  async function done(skip){const d=AU.d;
+   if(AU.edit==='tdee'){if(skip){authEl().style.display='none';AU.edit=false;return}
+    try{await saveDoc({goals:d.goals})}catch(e){showToast('Could not save — try again');return}
+    applyPrefs({goals:d.goals});try{if(myProfile)myProfile.goals=d.goals}catch(e){}authEl().style.display='none';AU.edit=false;try{renderHealthTracker()}catch(e){}showToast('Daily target set to '+d.goals.calories.toLocaleString()+' cal');return}
+   if(skip){const s=steps(),i=s.indexOf('t-time');AU.step=s[Math.min(i+1,s.length-1)];paint();return}
+   nextStep()}
+  const el=authEl();
+  el.addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;const a=b.dataset.t,d=AU.d;readBody();
+   if(a==='skip')return done(true);
+   if(a==='next'){if(AU.step==='t-goal'&&!d.mode)d.mode='maintain';if(AU.step==='t-body'){if(!tdee(d)){const er=document.getElementById('t-err');if(er)er.textContent='Fill in your age, height and weight, or tap “Skip for now”.';return}}nextStep();return}
+   if(a==='save'){const g=tdee(d);if(!g){AU.step='t-body';paint();return}if(g.bad){const p=document.getElementById('t-prev');if(p)p.innerHTML=summary(g);return}d.goals=Object.assign({},g);delete d.goals.capped;delete d.goals.bad;return done(false)}});
+  el.addEventListener('input',e=>{if(!T.includes(AU.step))return;readBody();const p=document.getElementById('t-prev');if(p)p.innerHTML=summary(tdee(AU.d))});
+  // keep typed numbers when a chip repaints the page
+  el.addEventListener('click',e=>{if(T.includes(AU.step)&&e.target.closest('[data-g]'))readBody()},true);
+  // Today tab: show the goal timeline under the calorie ring
+  const _rht=renderHealthTracker;renderHealthTracker=function(){const x=_rht.apply(this,arguments);try{const g=APP_STATE.goals||{},ring=document.querySelector('#health-view-today>div:has(.w-36)');let l=document.getElementById('ge-goal-line');
+    if(!ring||!g.targetWt||!g.weeks||g.mode==='maintain'){if(l)l.remove();return x}
+    if(!l){l=document.createElement('p');l.id='ge-goal-line';l.style.cssText='text-align:center;font-size:12px;color:#9ca3af;margin:12px 0 0';ring.appendChild(l)}
+    l.textContent='Goal: '+g.targetWt+' lb · about '+g.pace+' lb/week'}catch(e){}return x};
+ })();
 })();
 </script>
 
@@ -5559,80 +5709,6 @@ hideSplash();
  document.addEventListener('input',e=>{if(e.target&&e.target.id==='recipe-search-input')gePeople()});
  function setPh(){const i=document.getElementById('recipe-search-input');if(i)i.placeholder='Search dishes, ingredients or @people'}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setPh);else setPh();
-})();
-</script>
-<script>
-// ===== v13: guest browsing, campus leaderboard, Good Eats Plus (demo), invite friends, school labels =====
-(function(){
- const $=id=>document.getElementById(id);
- const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const SCH=window.GE_SCHOOL||{name:'Elon University',short:'Elon'};
- const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
- const hasAcct=()=>{try{return !!(myProfile&&myProfile.username)}catch(e){return false}};
- const me=()=>{try{return ME}catch(e){return 'Guest'}};
-
- // ---------- school labels in static markup (does nothing while the school is Elon) ----------
- function schoolLabels(){if(SCH.short==='Elon')return;const root=$('phone-container');if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))if(/\bElon\b/.test(n.nodeValue))n.nodeValue=n.nodeValue.replace(/\bElon University\b/g,SCH.name).replace(/\bElon\b/g,SCH.short)}
-
- // ---------- bottom sheet helper ----------
- function sheet(id,html){let m=$(id);if(!m){m=document.createElement('div');m.id=id;m.className='ge-sh';$('phone-container').appendChild(m);
-   m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-x]')){m.style.display='none';return}const g=e.target.closest('[data-go]');if(g){m.style.display='none';try{openAuth(g.getAttribute('data-go'))}catch(x){}}})}
-  m.innerHTML='<div class="ge-sh-c"><div class="ge-sh-grab"></div>'+html+'</div>';m.style.display='flex';return m}
-
- // ---------- 1. guest browsing ----------
- window.geAskSignup=function(why){sheet('ge-join','<h3>Join Good Eats</h3><p>Create a free account to '+E(why)+'. It takes about a minute.</p><button class="ge-b1" data-go="signup">Create account</button><button class="ge-b2" data-go="login">Log in</button><button class="ge-b3" data-x>Not now</button>')};
- document.addEventListener('click',e=>{const b=e.target.closest('[data-browse]');if(!b)return;e.preventDefault();e.stopPropagation();try{authEl().style.display='none'}catch(x){}try{switchTab('tab-feed')}catch(x){}try{showToast('Browsing as a guest. Sign up any time from Profile.')}catch(x){}},true);
- [['openAdd','post, rank or log dishes'],['toggleFollowCreator','follow people'],['toggleRecipeLike','like dishes'],['toggleReviewLike','like reviews'],['toggleRateDrawer','rate dishes'],['submitRecipeRating','rate dishes'],['toggleRecipeBookmark','save dishes'],['submitNewComment','comment']].forEach(([f,why])=>{
-  const o=window[f];if(typeof o!=='function')return;window[f]=function(){if(!hasAcct()){const ev=[...arguments].find(a=>a&&a.stopPropagation);if(ev)ev.stopPropagation();geAskSignup(why);return}return o.apply(this,arguments)}});
-
- // ---------- 2. campus leaderboard (Explore) ----------
- function topBox(){let b=$('ge-top');const g=$('catalogue-recipes-grid');if(!b&&g){b=document.createElement('div');b.id='ge-top';g.parentNode.insertBefore(b,$('ge-people')||g);b.addEventListener('click',e=>{const d=e.target.closest('[data-dish]');if(d){openRecipeModal(d.getAttribute('data-dish'));return}const u=e.target.closest('[data-user]');if(u)openUserProfile(u.getAttribute('data-user'),e)})}return b}
- window.geTop=function(){const b=topBox();if(!b)return;const q=(($('recipe-search-input')||{}).value||'').trim();if(q){b.innerHTML='';return}
-  let dishes=[];try{dishes=RECIPES.filter(r=>r&&r.title&&typeof r.rating==='number').slice().sort((a,c)=>c.rating-a.rating||(c.likes||0)-(a.likes||0)).slice(0,3)}catch(e){}
-  let ppl=[];try{ppl=Object.values(USER_PROFILES).filter(p=>p&&p.username&&!p.isSelf&&p.username!==me()&&(p.followers||0)>0).sort((a,c)=>(c.followers||0)-(a.followers||0)).slice(0,3)}catch(e){}
-  if(!dishes.length&&!ppl.length){b.innerHTML='';return}
-  b.innerHTML='<div class="ge-top"><div class="ge-top-h"><b>Top at '+E(SCH.short)+'</b><span>Highest rated right now</span></div>'+
-   dishes.map((r,i)=>'<button class="ge-top-r" data-dish="'+E(r.id)+'"><span class="ge-top-n">'+(i+1)+'</span><span class="ge-top-t">'+E(r.title)+'</span><span class="ge-top-s">'+r.rating.toFixed(1)+'</span></button>').join('')+
-   (ppl.length?'<div class="ge-top-p"><span>Top foodies</span>'+ppl.map(p=>'<button data-user="'+E(p.username)+'">@'+E(p.username)+' · '+(p.followers||0)+'</button>').join('')+'</div>':'')+'</div>'};
- if(typeof window.renderCatalogueRecipes==='function'){const _r=window.renderCatalogueRecipes;window.renderCatalogueRecipes=function(){const x=_r.apply(this,arguments);try{geTop()}catch(e){}return x}}
- document.addEventListener('input',e=>{if(e.target&&e.target.id==='recipe-search-input')try{geTop()}catch(x){}});
-
- // ---------- 3. Good Eats Plus (demo: nothing is charged or locked) ----------
- let plan='year';
- window.gePlus=function(){const m=sheet('ge-plus','<h3>Good Eats Plus</h3><p>Free to join. Plus adds the planning tools.</p>'+
-   '<div class="ge-plus-g"><div><b>Free</b><span>Feed, rankings &amp; Top 5</span><span>'+E(SCH.short)+' dining menus</span><span>Calorie &amp; macro logging</span><span>Find &amp; follow people</span></div>'+
-   '<div class="ge-plus-on"><b>Plus</b><span>Meal-prep planner</span><span>Cheaper store swaps</span><span>Budget &amp; spend tracking</span><span>Weekly progress insights</span></div></div>'+
-   '<div class="ge-plus-pr"><button data-plan="month" class="'+(plan==='month'?'on':'')+'"><b>$2.99</b><span>per month</span></button><button data-plan="year" class="'+(plan==='year'?'on':'')+'"><b>$19.99</b><span>per year · save 44%</span></button></div>'+
-   '<button class="ge-b1" data-trial>Start 7-day free trial</button><button class="ge-b3" data-x>Maybe later</button><p class="ge-plus-f">Demo for our class launch. No payment is collected.</p>');
-  m.onclick=e=>{const p=e.target.closest('[data-plan]');if(p){plan=p.getAttribute('data-plan');gePlus();return}if(e.target.closest('[data-trial]')){LS.set('ge_plus_waitlist',plan);m.style.display='none';try{showToast('Plus isn’t live yet. You’re on the early-access list!')}catch(x){}}}};
-
- // ---------- 4. invite friends ----------
- window.geInvite=async function(){const base=location.origin+location.pathname,url=hasAcct()?base+'?ref='+encodeURIComponent(me()):base,text='Join me on Good Eats: rank dishes, see '+SCH.short+' dining menus and track macros.';
-  try{if(navigator.share){await navigator.share({title:'Good Eats',text,url});return}}catch(e){if(e&&e.name==='AbortError')return}
-  try{await navigator.clipboard.writeText(text+' '+url);showToast('Invite link copied')}catch(e){prompt('Copy your invite link:',url)}};
- const refRaw=new URLSearchParams(location.search).get('ref');
- if(refRaw&&/^[A-Za-z0-9._-]{1,30}$/.test(refRaw)&&!LS.get('ge_ref_done'))LS.set('ge_ref',refRaw);
- function inviteBanner(){const ref=LS.get('ge_ref'),feed=$('feed-stream');let b=$('ge-inv');
-  if(!ref||LS.get('ge_ref_done')||ref===me()||(typeof isFollowingUser==='function'&&isFollowingUser(ref))||!feed){if(b)b.remove();return}
-  if(!b){b=document.createElement('div');b.id='ge-inv';feed.parentNode.insertBefore(b,feed);b.addEventListener('click',e=>{if(e.target.closest('[data-inv-x]')){LS.set('ge_ref_done',1);b.remove();return}if(e.target.closest('[data-inv-f]')){toggleFollowCreator(ref,e);if(hasAcct()){LS.set('ge_ref_done',1);b.remove()}}})}
-  b.innerHTML='<div><b>@'+E(ref)+' invited you</b><span>Follow them to see their dishes in your feed.</span></div><button class="ge-pp-f" data-inv-f>Follow</button><button class="ge-inv-x" data-inv-x aria-label="Dismiss">✕</button>'}
- if(typeof window.renderFeed==='function'){const _f=window.renderFeed;window.renderFeed=function(){const x=_f.apply(this,arguments);try{inviteBanner()}catch(e){}return x}}
-
- // ---------- profile: guest card + grow row (own profile only) ----------
- function profileExtras(){const t=$('tab-profile');if(!t)return;const own=!APP_STATE.viewedProfileUser||APP_STATE.viewedProfileUser===me();
-  ['ge-guest','ge-grow'].forEach(id=>{const x=$(id);if(x)x.remove()});if(!own)return;
-  const grow=document.createElement('div');grow.id='ge-grow';grow.innerHTML='<button data-inv>Invite friends</button><button data-plus class="ge-grow-plus">✦ Good Eats Plus</button>';
-  grow.addEventListener('click',e=>{if(e.target.closest('[data-inv]'))geInvite();if(e.target.closest('[data-plus]'))gePlus()});
-  t.insertBefore(grow,t.children[1]||null);
-  if(!hasAcct()){const g=document.createElement('div');g.id='ge-guest';g.innerHTML='<div><b>You’re browsing as a guest</b><span>Create a free account to post, rank and follow.</span></div><button class="ge-pp-f" data-go-signup>Sign up</button>';
-   g.addEventListener('click',e=>{if(e.target.closest('[data-go-signup]'))try{openAuth('signup')}catch(x){}});t.insertBefore(g,t.firstChild)}}
- if(typeof window.renderProfileView==='function'){const _p=window.renderProfileView;window.renderProfileView=function(){const x=_p.apply(this,arguments);try{profileExtras()}catch(e){}return x}}
-
- // Plus badges are tappable shortcuts to the Plus sheet (features stay unlocked)
- document.addEventListener('click',e=>{if(e.target.closest('#ge-plus-badge'))gePlus()});
-
- function init(){schoolLabels();try{inviteBanner()}catch(e){}try{geTop()}catch(e){}}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 </body>
