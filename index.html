@@ -260,6 +260,20 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
 #catalogue-view-dining{background:var(--bg)!important}
 #catalogue-view-dining>.grid.grid-cols-3{background:var(--s1)!important;border-color:var(--line)!important}
 #catalogue-view-dining>.grid.grid-cols-3>button[class*="bg-[#121317]"]{background:var(--s3)!important;box-shadow:none!important}
+
+/* Find people results (Explore search) */
+#ge-people:empty{display:none}
+#ge-people{margin-bottom:14px}
+.ge-pp-h{font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin:2px 2px 8px}
+.ge-pp-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s1,#151619);border:1px solid var(--line,rgba(255,255,255,.07));border-radius:14px;margin-bottom:8px;cursor:pointer}
+.ge-pp-av{width:38px;height:38px;flex-shrink:0;border-radius:50%;background:var(--s3,#26282c);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#e5e7eb;overflow:hidden}
+.ge-pp-av img{width:100%;height:100%;object-fit:cover}
+.ge-pp-tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.ge-pp-tx b{font-size:14px;color:#fff;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ge-pp-tx span{font-size:12px;color:#9ca3af;margin-top:1px}
+.ge-pp-f{flex-shrink:0;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:700;background:var(--acc,#5bd17a);color:#07130b;border:0;cursor:pointer}
+.ge-pp-f.on{background:transparent;color:#e5e7eb;border:1px solid rgba(255,255,255,.16)}
+.ge-pp-none{font-size:13px;color:#9ca3af;padding:4px 2px 0}
 </style>
 </head>
 <body class="min-h-screen flex justify-center items-center antialiased selection:bg-indigo-500 selection:text-white">
@@ -5471,5 +5485,30 @@ hideSplash();
 })();
 </script>
 
+<script>
+// ===== Find people: search usernames in Explore and follow them (uses existing profiles + follows) =====
+(function(){
+ const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function box(){let b=document.getElementById('ge-people');const g=document.getElementById('catalogue-recipes-grid');if(!b&&g){b=document.createElement('div');b.id='ge-people';g.parentNode.insertBefore(b,g);b.addEventListener('click',onClick)}return b}
+ function people(q){q=q.replace(/^@/,'').trim().toLowerCase();
+  return Object.values(USER_PROFILES).filter(p=>p&&p.username&&p.username!==ME&&p.username!=='Guest'&&!p.isSelf&&!(typeof blocked!=='undefined'&&blocked.has(p.username)))
+   .filter(p=>!q||p.username.toLowerCase().includes(q)||(p.handle||'').toLowerCase().includes(q))
+   .sort((a,b)=>{const as=a.username.toLowerCase().startsWith(q)?0:1,bs=b.username.toLowerCase().startsWith(q)?0:1;return as-bs||(b.followers||0)-(a.followers||0)}).slice(0,8)}
+ window.gePeople=function(){const inp=document.getElementById('recipe-search-input'),b=box();if(!inp||!b)return;const raw=inp.value||'',g=document.getElementById('catalogue-recipes-grid');
+  if(g)g.style.display='';
+  if(!raw.trim()){b.innerHTML='';return}
+  const list=people(raw);
+  if(g&&(raw.trim().startsWith('@')||(list.length&&!g.querySelector('[onclick*="openRecipeModal"]'))))g.style.display='none';
+  if(!list.length){b.innerHTML=raw.trim().startsWith('@')?'<div class="ge-pp-h">People</div><p class="ge-pp-none">No one matches '+E(raw.trim())+'</p>':'';return}
+  b.innerHTML='<div class="ge-pp-h">People</div>'+list.map(p=>{const on=typeof isFollowingUser==='function'&&isFollowingUser(p.username),ini=String(p.initials||p.username.slice(0,2).toUpperCase());
+   const av=/^</.test(ini.trim())?ini:E(ini);
+   return '<div class="ge-pp-row" data-open="'+E(p.username)+'"><div class="ge-pp-av">'+av+'</div><div class="ge-pp-tx"><b>'+E(p.handle||'@'+p.username)+'</b><span>'+[p.school&&p.school!=='Home Cook'?E(p.school):'',(p.followers||0)+' follower'+((p.followers||0)===1?'':'s')].filter(Boolean).join(' · ')+'</span></div><button class="ge-pp-f'+(on?' on':'')+'" data-follow="'+E(p.username)+'">'+(on?'Following':'Follow')+'</button></div>'}).join('')}
+ function onClick(e){const f=e.target.closest('[data-follow]');if(f){e.stopPropagation();toggleFollowCreator(f.getAttribute('data-follow'),e);gePeople();return}
+  const r=e.target.closest('[data-open]');if(r)openUserProfile(r.getAttribute('data-open'),e)}
+ document.addEventListener('input',e=>{if(e.target&&e.target.id==='recipe-search-input')gePeople()});
+ function setPh(){const i=document.getElementById('recipe-search-input');if(i)i.placeholder='Search dishes, ingredients or @people'}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setPh);else setPh();
+})();
+</script>
 </body>
 </html>
