@@ -5,6 +5,9 @@
   <script>try{var _t=JSON.parse(localStorage.getItem("ge_theme")||'"dark"');if(_t==="light"||(_t==="auto"&&matchMedia("(prefers-color-scheme: light)").matches))document.documentElement.classList.add("ge-light")}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Good Eats — Social Dishes, Grocery Prices & Macro Tracker</title>
+  <script>/* School settings: every school-specific value lives here. To add a school later, fill in a new block and pick it by URL or profile. */
+  window.GE_SCHOOLS={elon:{id:'elon',name:'Elon University',short:'Elon',dining:'Elon Dining',menuUrl:'https://rbonehoye.github.io/phoenix-plate/menus.json',menuCredit:'Phoenix Plate'}};
+  window.GE_SCHOOL=window.GE_SCHOOLS.elon;</script>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -274,6 +277,54 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
 .ge-pp-f{flex-shrink:0;padding:6px 14px;border-radius:99px;font-size:12px;font-weight:700;background:var(--acc,#5bd17a);color:#07130b;border:0;cursor:pointer}
 .ge-pp-f.on{background:transparent;color:#e5e7eb;border:1px solid rgba(255,255,255,.16)}
 .ge-pp-none{font-size:13px;color:#9ca3af;padding:4px 2px 0}
+
+/* v13: sheets, leaderboard, Plus, invites, guest */
+.ge-sh{position:absolute;inset:0;z-index:130;background:rgba(0,0,0,.6);display:none;align-items:flex-end}
+.ge-sh-c{width:100%;background:#151619;border-top:1px solid rgba(255,255,255,.08);border-radius:22px 22px 0 0;padding:10px 20px calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;max-height:88%;overflow-y:auto}
+.ge-sh-grab{width:38px;height:4px;border-radius:4px;background:rgba(255,255,255,.18);margin:0 auto 6px}
+.ge-sh-c h3{font-size:20px;font-weight:800;color:#fff;margin:0}
+.ge-sh-c>p{font-size:13px;color:#9ca3af;margin:0 0 4px;line-height:1.45}
+.ge-b1,.ge-b2,.ge-b3{width:100%;padding:13px;border-radius:14px;font-size:14px;font-weight:700;border:0;cursor:pointer}
+.ge-b1{background:var(--acc,#5bd17a);color:#07130b}
+.ge-b2{background:#26282c;color:#fff}
+.ge-b3{background:transparent;color:#9ca3af;padding:8px}
+.ge-browse{background:none;border:0;color:#9ca3af;font-size:13px;font-weight:600;text-decoration:underline;padding:4px;cursor:pointer}
+#ge-top{margin-bottom:14px}
+#ge-top:empty{display:none}
+.ge-top{background:#151619;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px}
+.ge-top-h{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 6px}
+.ge-top-h b{font-size:15px;color:#fff}
+.ge-top-h span{font-size:11px;color:#9ca3af}
+.ge-top-r{width:100%;display:flex;align-items:center;gap:10px;padding:9px 4px;background:none;border:0;border-top:1px solid rgba(255,255,255,.06);cursor:pointer;text-align:left}
+.ge-top-r:first-of-type{border-top:0}
+.ge-top-n{width:22px;height:22px;border-radius:50%;background:#26282c;color:#e5e7eb;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ge-top-r:first-of-type .ge-top-n{background:var(--acc,#5bd17a);color:#07130b}
+.ge-top-t{flex:1;min-width:0;font-size:14px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ge-top-s{font-size:13px;font-weight:800;color:var(--acc,#5bd17a)}
+.ge-top-p{display:flex;gap:6px;overflow-x:auto;align-items:center;margin-top:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
+.ge-top-p>span{font-size:11px;color:#9ca3af;white-space:nowrap;margin-right:2px}
+.ge-top-p button{white-space:nowrap;padding:5px 10px;border-radius:99px;background:#1c1d21;border:1px solid rgba(255,255,255,.08);color:#e5e7eb;font-size:12px;font-weight:600;cursor:pointer}
+.ge-plus-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ge-plus-g>div{background:#1c1d21;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.ge-plus-g b{font-size:14px;color:#fff}
+.ge-plus-g span{font-size:12px;color:#c7cad1;line-height:1.35}
+.ge-plus-g .ge-plus-on{border-color:rgba(91,209,122,.5);background:rgba(91,209,122,.08)}
+.ge-plus-pr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ge-plus-pr button{padding:10px;border-radius:14px;background:#1c1d21;border:1px solid rgba(255,255,255,.08);color:#fff;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.ge-plus-pr button.on{border-color:var(--acc,#5bd17a);background:rgba(91,209,122,.1)}
+.ge-plus-pr b{font-size:17px}
+.ge-plus-pr span{font-size:11px;color:#9ca3af}
+.ge-plus-f{font-size:11px!important;color:#6b7280!important;text-align:center;margin:0!important}
+#hlth-btn-planner::after,#rm-swap-btn::after{content:'PLUS';margin-left:5px;padding:1px 5px;border-radius:5px;background:rgba(91,209,122,.16);color:var(--acc,#5bd17a);font-size:8px;font-weight:800;letter-spacing:.04em;vertical-align:1px}
+#ge-inv,#ge-guest{display:flex;align-items:center;gap:10px;background:#151619;border:1px solid rgba(91,209,122,.35);border-radius:16px;padding:12px 14px;margin:12px 16px 0}
+#ge-guest{margin:0 0 12px}
+#ge-inv>div,#ge-guest>div{flex:1;min-width:0;display:flex;flex-direction:column}
+#ge-inv b,#ge-guest b{font-size:14px;color:#fff}
+#ge-inv span,#ge-guest span{font-size:12px;color:#9ca3af;margin-top:2px}
+.ge-inv-x{background:none;border:0;color:#6b7280;font-size:14px;padding:4px;cursor:pointer}
+#ge-grow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#ge-grow button{padding:11px;border-radius:14px;background:#151619;border:1px solid rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+#ge-grow .ge-grow-plus{border-color:rgba(91,209,122,.45);color:var(--acc,#5bd17a)}
 </style>
 </head>
 <body class="min-h-screen flex justify-center items-center antialiased selection:bg-indigo-500 selection:text-white">
@@ -2134,7 +2185,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
     /* Global Application State */
     const APP_STATE = {
       isStudent: true,
-      campusName: 'Elon',
+      campusName: GE_SCHOOL.short,
       feedFilter: 'for-you',
       activeRecipeId: 'r-chickpea',
       shareRecipeId: 'r-pork',
@@ -2274,13 +2325,13 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
       // Filter Recipes according to For You / Following / School rules
       const filteredRecipes = RECIPES.filter(r => {
         if (filter === 'for-you') {
-          return r.isTrending || r.isFollowing || r.authorSchool === 'Elon University';
+          return r.isTrending || r.isFollowing || r.authorSchool === GE_SCHOOL.name;
         }
         if (filter === 'following') {
           return r.isFollowing === true;
         }
         if (filter === 'school') {
-          return r.authorSchool === 'Elon University';
+          return r.authorSchool === GE_SCHOOL.name;
         }
         return true;
       });
@@ -2289,17 +2340,17 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
       const filteredReviews = SOCIAL_REVIEWS.filter(rev => {
         if (filter === 'for-you') return true;
         if (filter === 'following') return rev.isFollowing === true;
-        if (filter === 'school') return rev.authorSchool === 'Elon University';
+        if (filter === 'school') return rev.authorSchool === GE_SCHOOL.name;
         return true;
       });
 
       if (contextText && countPill) {
         if (filter === 'for-you') {
-          contextText.innerText = 'For You: Trending recipes, Friends & Elon students';
+          contextText.innerText = `For You: Trending recipes, Friends & ${GE_SCHOOL.short} students`;
         } else if (filter === 'following') {
           contextText.innerText = 'Following: Only posts & rankings from people you follow';
         } else if (filter === 'school') {
-          contextText.innerText = 'Elon University: Only recipes & rankings by Elon students';
+          contextText.innerText = `${GE_SCHOOL.name}: Only recipes & rankings by ${GE_SCHOOL.short} students`;
         }
         countPill.innerText = `${filteredRecipes.length + filteredReviews.length} posts`;
       }
@@ -2321,7 +2372,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
         const recipe = filteredRecipes[idx];
         if (recipe) {
           const cost = getRecipeCost(recipe).toFixed(2);
-          const isSchoolMember = recipe.authorSchool === 'Elon University';
+          const isSchoolMember = recipe.authorSchool === GE_SCHOOL.name;
           const initials = recipe.author.slice(0, 2).toUpperCase();
 
           html += `
@@ -2335,7 +2386,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
                   <div class="min-w-0">
                     <div class="flex items-center gap-1.5">
                       <span class="text-xs font-extrabold text-white group-hover:text-emerald-400 underline-offset-2 group-hover:underline truncate transition">${recipe.handle}</span>
-                      ${isSchoolMember ? `<span class="text-[10px] px-1.5 py-0.2 rounded-md font-bold bg-white/[0.06] text-gray-300 border border-white/10">Elon</span>` : ''}
+                      ${isSchoolMember ? `<span class="text-[10px] px-1.5 py-0.2 rounded-md font-bold bg-white/[0.06] text-gray-300 border border-white/10">${GE_SCHOOL.short}</span>` : ''}
                     </div>
                     <p class="text-[11px] text-gray-400">${recipe.prepTime} • ${cost === '0.00' ? 'Meal Plan' : '$' + cost + '/serv'}</p>
                   </div>
@@ -2407,7 +2458,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
         // Interleave Modernized Beli-Style Ranked Review Card
         const matchingReview = filteredReviews[idx];
         if (matchingReview) {
-          const isSchoolReviewer = matchingReview.authorSchool === 'Elon University';
+          const isSchoolReviewer = matchingReview.authorSchool === GE_SCHOOL.name;
           const revInitials = matchingReview.user.trim().slice(0, 2).toUpperCase();
           html += `
             <div onclick="openRecipeModal('${matchingReview.recipeId}')" class="bg-[#1e1e21]/90 hover:bg-[#252528] border border-indigo-500/20 rounded-3xl p-4 transition cursor-pointer shadow-lg space-y-3">
@@ -2421,7 +2472,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
                       <span onclick="openUserProfile('${matchingReview.user.trim()}', event)" class="text-xs font-extrabold text-white hover:text-emerald-400 hover:underline transition">@${matchingReview.user.trim()}</span>
                       <span class="text-[10px] text-gray-400">ranked a dish</span>
                       <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${isSchoolReviewer ? 'bg-[#2b2d31]/30 text-rose-200 border border-[#2b2d31]/50' : 'bg-white/10 text-gray-300'}">
-                        ${matchingReview.authorBadge || (isSchoolReviewer ? 'Elon' : 'Global')}
+                        ${matchingReview.authorBadge || (isSchoolReviewer ? GE_SCHOOL.short : 'Global')}
                       </span>
                     </div>
                     <p class="text-sm font-bold text-white mt-0.5 truncate">
@@ -2543,7 +2594,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
                 </div>
                 <div class="flex items-center gap-1.5 flex-wrap min-w-0">
                   <span class="text-xs font-extrabold text-white group-hover:text-emerald-400 group-hover:underline truncate">@${c.user}</span>
-                  <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-white/10 text-gray-300 font-semibold">${c.badge || 'Elon'}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-white/10 text-gray-300 font-semibold">${c.badge || GE_SCHOOL.short}</span>
                   ${c.isTweak ? `<span class="text-[9px] px-2 py-0.2 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 font-extrabold">Recipe Tweak</span>` : ''}
                   <span class="text-[10px] text-gray-500">${c.time}</span>
                 </div>
@@ -2600,7 +2651,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
       targetObj.comments.push({
         id: 'cmt-' + Date.now(),
         user: ME,
-        badge: APP_STATE.isStudent ? 'Elon' : 'Home Cook',
+        badge: APP_STATE.isStudent ? GE_SCHOOL.short : 'Home Cook',
         time: 'Just now',
         text: text,
         isTweak: APP_STATE.activeCommentTarget.isTweakMode,
@@ -2717,14 +2768,14 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
 
       if (APP_STATE.isStudent) {
         if (profBtn) {
-          profBtn.innerText = 'Elon Active';
+          profBtn.innerText = GE_SCHOOL.short + ' Active';
           profBtn.className = 'px-3 py-1.5 rounded-xl bg-[#2b2d31] text-white text-xs font-extrabold transition';
         }
         if (badge) {
-          badge.innerText = 'Elon University';
+          badge.innerText = GE_SCHOOL.name;
           badge.className = 'text-[10px] px-2 py-0.5 rounded-full bg-[#2b2d31]/30 border border-[#2b2d31] text-rose-200 font-semibold';
         }
-        showToast('Elon Student Mode ON: Phoenix Plate Active');
+        showToast(GE_SCHOOL.short + ' Student Mode ON: ' + GE_SCHOOL.menuCredit + ' Active');
       } else {
         if (profBtn) {
           profBtn.innerText = 'Off (Global)';
@@ -3064,8 +3115,8 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
         author: ME,
         handle: ('@'+ME),
         isFollowing: true,
-        authorSchool: 'Elon University',
-        authorBadge: `Elon · ${hall}`,
+        authorSchool: GE_SCHOOL.name,
+        authorBadge: `${GE_SCHOOL.short} · ${hall}`,
         isTrending: true,
         prepTime: '5 min (Dining Hall)',
         rating: 9.5,
@@ -3463,8 +3514,8 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
         id: 'rev-' + Date.now(),
         user: ME,
         isFollowing: true,
-        authorSchool: APP_STATE.isStudent ? 'Elon University' : null,
-        authorBadge: APP_STATE.isStudent ? 'Elon' : 'Home Cook',
+        authorSchool: APP_STATE.isStudent ? GE_SCHOOL.name : null,
+        authorBadge: APP_STATE.isStudent ? GE_SCHOOL.short : 'Home Cook',
         recipeId: recipe.id,
         recipeTitle: recipe.title,
         recipeAuthor: recipe.author,
@@ -3564,14 +3615,14 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
       const allDining = computedIngredients.every(ing => isDiningHallSource(ing.store));
       if (locTag) {
         locTag.innerText = allDining
-          ? 'Elon Dining Hall Recipe • Covered by Meal Plan'
+          ? `${GE_SCHOOL.dining} Hall Recipe • Covered by Meal Plan`
           : (useSwaps ? 'Smart Budget Swaps Applied • Lowest Estimated Price' : 'Verified Recipe • Estimated Store & Campus Prices');
       }
 
       if (totalBatchCost === 0 && allDining) {
         costEl.innerText = '$0.00 (1 Meal Swipe)';
         costEl.className = 'text-[#5bd17a] font-extrabold';
-        budgetEl.innerText = `covered by Elon Dining Plan`;
+        budgetEl.innerText = `covered by ${GE_SCHOOL.dining} Plan`;
       } else {
         costEl.innerText = scale === 1
           ? `$${perServingCost.toFixed(2)} per serving`
@@ -3849,8 +3900,8 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
         id: 'rev-' + Date.now(),
         user: ME,
         isFollowing: true,
-        authorSchool: APP_STATE.isStudent ? 'Elon University' : null,
-        authorBadge: APP_STATE.isStudent ? 'Elon' : 'Home Cook',
+        authorSchool: APP_STATE.isStudent ? GE_SCHOOL.name : null,
+        authorBadge: APP_STATE.isStudent ? GE_SCHOOL.short : 'Home Cook',
         recipeId: recipe.id,
         recipeTitle: recipe.title,
         recipeAuthor: recipe.author,
@@ -4040,8 +4091,8 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
         author: ME,
         handle: ('@'+ME),
         isFollowing: true,
-        authorSchool: (APP_STATE.isStudent || hasDiningIng) ? 'Elon University' : null,
-        authorBadge: hasDiningIng ? `Elon · ${ingredients.find(i => isDiningHallSource(i.store)).store}` : (APP_STATE.isStudent ? 'Elon · Home Kitchen' : 'Home Cook'),
+        authorSchool: (APP_STATE.isStudent || hasDiningIng) ? GE_SCHOOL.name : null,
+        authorBadge: hasDiningIng ? `${GE_SCHOOL.short} · ${ingredients.find(i => isDiningHallSource(i.store)).store}` : (APP_STATE.isStudent ? GE_SCHOOL.short + ' · Home Kitchen' : 'Home Cook'),
         isTrending: true,
         prepTime,
         rating: score,
@@ -4242,7 +4293,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
 
       if (headerCard) {
         const campusLabel = isSelf
-          ? (APP_STATE.isStudent ? 'Elon University' : 'Global Home Cook')
+          ? (APP_STATE.isStudent ? GE_SCHOOL.name : 'Global Home Cook')
           : prof.locationBadge;
 
         headerCard.innerHTML = `
@@ -4596,7 +4647,7 @@ function modal(){let m=$('ge-onboard');if(m)return m;m=document.createElement('d
 function openOnboard(edit){editing=!!edit;const m=modal();
  $('ob-title').textContent=edit?'Edit your profile':'Create your profile';$('ob-go').textContent=edit?'Save changes':'Create profile';
  $('ob-user').value=edit?ME:'';$('ob-user').disabled=!!edit;$('ob-bio').value=edit?(myProfile.bio||''):'';
- $('ob-school').value=edit&&myProfile.school?myProfile.school:'Elon University';$('ob-err').textContent='';
+ $('ob-school').value=edit&&myProfile.school?myProfile.school:GE_SCHOOL.name;$('ob-err').textContent='';
  $('ob-cancel').classList.toggle('hidden',!edit);$('ob-terms').checked=!!edit;$('ob-terms').parentElement.style.display=edit?'none':'flex';
  $('ob-mode').textContent=online?'Online — your posts are shared with other users':'⚪ Offline mode — data saved on this device only';
  m.dataset.emoji=(edit&&myProfile.emoji)||EMOJIS[0];m.querySelectorAll('#ob-emoji button').forEach(b=>b.style.outline=b.dataset.e===m.dataset.emoji?'2px solid #5bd17a':'');
@@ -4734,12 +4785,12 @@ function calc(d){const kg=(+d.wt||0)*0.453592,cm=(((+d.ft||0)*12)+(+d.inch||0))*
 function authShell(inner,prog,back){return '<div style="min-height:100%;display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top,0px)) 22px calc(22px + env(safe-area-inset-bottom,0px))">'+(prog!=null&&isFinite(prog)?'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'+(back?'<button data-a="back" aria-label="Back" style="font-size:20px;color:#9ca3af;width:32px;height:32px">‹</button>':'<span style="width:32px"></span>')+'<div style="flex:1;height:5px;border-radius:9px;background:rgba(255,255,255,.1)"><div style="height:100%;width:'+Math.round(prog*100)+'%;border-radius:9px;background:#5bd17a;transition:width .3s"></div></div></div>':(back?'<button data-a="back" style="font-size:20px;color:#9ca3af;width:32px;height:32px;margin-bottom:8px">‹</button>':''))+inner+'</div>'}
 function steps(){return AU.edit==='one'?[AU.step]:AU.edit&&AU.edit!=='goals'?['profile']:['profile','goals',...AU.queue,'done']}
 function view(){const s=AU.step,d=AU.d,err='<p id="au-err" class="text-xs text-rose-400 min-h-[18px]" role="alert"></p>';
- if(s==='welcome')return authShell('<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding-top:30px">'+logo(150)+'<p style="font-size:14px;color:#cbd5e1;max-width:260px">Rank the dishes you love, track your macros and eat smarter on a student budget.</p></div><div style="display:grid;gap:10px">'+B1('go-signup','Create account')+B2('go-login','Log in')+'<p style="font-size:10px;text-align:center;color:#6b7280;margin-top:4px">By continuing you agree to our <a data-a="terms" style="text-decoration:underline">Terms</a> and <a data-a="privacy" style="text-decoration:underline">Privacy Policy</a>.</p></div>');
+ if(s==='welcome')return authShell('<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding-top:30px">'+logo(150)+'<p style="font-size:14px;color:#cbd5e1;max-width:260px">Rank the dishes you love, track your macros and eat smarter on a student budget.</p></div><div style="display:grid;gap:10px">'+B1('go-signup','Create account')+B2('go-login','Log in')+'<button type="button" data-browse class="ge-browse">Look around first</button><p style="font-size:10px;text-align:center;color:#6b7280;margin-top:4px">By continuing you agree to our <a data-a="terms" style="text-decoration:underline">Terms</a> and <a data-a="privacy" style="text-decoration:underline">Privacy Policy</a>.</p></div>');
  if(s==='login')return authShell('<div style="text-align:center;margin:4px 0 18px">'+logo(70)+'<h1 class="text-xl font-extrabold mt-2">Welcome back</h1></div><div style="display:grid;gap:12px">'+F('au-email','Email','email','you@email.com','autocomplete="email" autocapitalize="none"')+F('au-pw','Password','password','Your password','autocomplete="current-password"')+err+B1('login','Log in')+'<div style="display:flex;justify-content:space-between">'+LK('forgot','Forgot password?')+LK('go-signup','Create account')+'</div></div>',null,true);
  if(s==='forgot')return authShell('<h1 class="text-xl font-extrabold mb-1">Reset your password</h1><p class="text-xs text-gray-400 mb-4">Enter your email and we’ll send you a link to choose a new password.</p><div style="display:grid;gap:12px">'+F('au-email','Email','email','you@email.com','autocomplete="email"')+err+B1('reset','Send reset link')+'</div>',null,true);
  if(s==='signup')return authShell('<h1 class="text-2xl font-extrabold">Create your account</h1><p class="text-xs text-gray-400 mt-1 mb-4">Your dishes, goals and favorites are saved to your account, so you can log in from any device.</p><div style="display:grid;gap:12px">'+F('au-email','Email','email','you@email.com','autocomplete="email" autocapitalize="none"')+F('au-pw','Password (8+ characters)','password','Create a password','autocomplete="new-password"')+'<div style="height:5px;border-radius:9px;background:rgba(255,255,255,.1)"><div id="au-meter" style="height:100%;width:0;border-radius:9px;transition:all .2s"></div></div><label style="display:flex;gap:8px;align-items:flex-start;font-size:11px;color:#9ca3af"><input type="checkbox" id="au-terms" style="margin-top:2px;width:18px;height:18px"><span>I agree to the <a data-a="terms" style="color:#5bd17a;text-decoration:underline">Terms &amp; Community Guidelines</a> and <a data-a="privacy" style="color:#5bd17a;text-decoration:underline">Privacy Policy</a>. No hate, harassment, nudity or spam.</span></label>'+err+B1('signup','Continue')+'<div style="text-align:center">'+LK('go-login','I already have an account')+'</div></div>',null,true);
- if(s==='profile'){const i=steps().indexOf('profile'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">'+(AU.edit?'Edit profile':'Set up your profile')+'</h1><p class="text-xs text-gray-400 mt-1 mb-4">This is how other cooks will see you.</p><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:14px"><div id="au-av" style="width:96px;height:96px;border-radius:50%;overflow:hidden;background:#222225;border:2px solid #5bd17a;display:flex;align-items:center;justify-content:center;font-size:42px">'+avatarHtml({photo:d.photo,emoji:d.emoji||EMOJIS[0]})+'</div><div style="display:flex;gap:14px">'+LK('pick-photo','Upload photo')+(d.photo?LK('rm-photo','Remove'):'')+'</div><input id="au-file" type="file" accept="image/*" style="display:none"><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+EMOJIS.map(e=>'<button data-a="emoji" data-e="'+e+'" aria-label="Avatar '+e+'" style="width:38px;height:38px;border-radius:50%;font-size:19px;background:#1a1a1d;border:1px solid '+(!d.photo&&(d.emoji||EMOJIS[0])===e?'#5bd17a':'rgba(255,255,255,.1)')+'">'+e+'</button>').join('')+'</div></div><div style="display:grid;gap:12px">'+F('au-user','Username','text','e.g. Maya.eats','maxlength="20" autocomplete="off" autocapitalize="none"'+(AU.edit?' disabled':''))+'<p id="au-av-msg" class="text-[11px] min-h-[14px]" style="margin-top:-6px"></p>'+'<label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Bio (optional)</span><textarea id="au-bio" maxlength="120" rows="2" placeholder="What do you like to cook?" class="w-full mt-1 bg-[#1a1a1d] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400" style="font-size:16px"></textarea></label><label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Are you an Elon student?</span><select id="au-school" class="w-full mt-1 bg-[#1a1a1d] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none" style="font-size:16px"><option value="Elon University">Yes, I’m an Elon student</option><option value="Home Cook">No, I’m not</option></select></label>'+err+B1('profile-next',AU.edit?'Save changes':'Continue')+(AU.edit?'<div style="text-align:center">'+LK('close','Cancel')+'</div>':'')+'</div>',AU.edit?null:i/(n-1),false)}
- if(s==='goals'){const i=steps().indexOf('goals'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">What brings you to Good Eats?</h1><p class="text-xs text-gray-400 mt-1 mb-4">Pick everything that fits. We’ll set the app up around it.</p><div style="display:grid;gap:8px">'+INTENTS.filter(x=>x[0]!=='campus'||(AU.d.school||'Elon University')==='Elon University').map(([k,e,t])=>'<button data-g="intent" data-v="'+k+'" class="text-left px-4 py-3.5 rounded-2xl border font-bold text-sm '+((d.intents||[]).includes(k)?'bg-emerald-500/20 border-emerald-400 text-emerald-100':'bg-white/[0.05] border-white/10')+'">'+e+'  '+t+'</button>').join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('goals-next','Continue')+'<div style="text-align:center">'+LK('skip','Skip for now')+'</div></div>',i/(n-1),!AU.edit)}
+ if(s==='profile'){const i=steps().indexOf('profile'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">'+(AU.edit?'Edit profile':'Set up your profile')+'</h1><p class="text-xs text-gray-400 mt-1 mb-4">This is how other cooks will see you.</p><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:14px"><div id="au-av" style="width:96px;height:96px;border-radius:50%;overflow:hidden;background:#222225;border:2px solid #5bd17a;display:flex;align-items:center;justify-content:center;font-size:42px">'+avatarHtml({photo:d.photo,emoji:d.emoji||EMOJIS[0]})+'</div><div style="display:flex;gap:14px">'+LK('pick-photo','Upload photo')+(d.photo?LK('rm-photo','Remove'):'')+'</div><input id="au-file" type="file" accept="image/*" style="display:none"><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+EMOJIS.map(e=>'<button data-a="emoji" data-e="'+e+'" aria-label="Avatar '+e+'" style="width:38px;height:38px;border-radius:50%;font-size:19px;background:#1a1a1d;border:1px solid '+(!d.photo&&(d.emoji||EMOJIS[0])===e?'#5bd17a':'rgba(255,255,255,.1)')+'">'+e+'</button>').join('')+'</div></div><div style="display:grid;gap:12px">'+F('au-user','Username','text','e.g. Maya.eats','maxlength="20" autocomplete="off" autocapitalize="none"'+(AU.edit?' disabled':''))+'<p id="au-av-msg" class="text-[11px] min-h-[14px]" style="margin-top:-6px"></p>'+'<label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Bio (optional)</span><textarea id="au-bio" maxlength="120" rows="2" placeholder="What do you like to cook?" class="w-full mt-1 bg-[#1a1a1d] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none focus:border-emerald-400" style="font-size:16px"></textarea></label><label class="block"><span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-400">Are you an '+GE_SCHOOL.short+' student?</span><select id="au-school" class="w-full mt-1 bg-[#1a1a1d] border border-white/10 rounded-xl px-3 py-3 text-sm outline-none" style="font-size:16px"><option value="'+GE_SCHOOL.name+'">Yes, I’m an '+GE_SCHOOL.short+' student</option><option value="Home Cook">No, I’m not</option></select></label>'+err+B1('profile-next',AU.edit?'Save changes':'Continue')+(AU.edit?'<div style="text-align:center">'+LK('close','Cancel')+'</div>':'')+'</div>',AU.edit?null:i/(n-1),false)}
+ if(s==='goals'){const i=steps().indexOf('goals'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">What brings you to Good Eats?</h1><p class="text-xs text-gray-400 mt-1 mb-4">Pick everything that fits. We’ll set the app up around it.</p><div style="display:grid;gap:8px">'+INTENTS.filter(x=>x[0]!=='campus'||(AU.d.school||GE_SCHOOL.name)===GE_SCHOOL.name).map(([k,e,t])=>'<button data-g="intent" data-v="'+k+'" class="text-left px-4 py-3.5 rounded-2xl border font-bold text-sm '+((d.intents||[]).includes(k)?'bg-emerald-500/20 border-emerald-400 text-emerald-100':'bg-white/[0.05] border-white/10')+'">'+e+'  '+t+'</button>').join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('goals-next','Continue')+'<div style="text-align:center">'+LK('skip','Skip for now')+'</div></div>',i/(n-1),!AU.edit)}
  if(s==='macros'){const i=steps().indexOf('macros'),n=steps().length,g=calc(d);return authShell('<h1 class="text-2xl font-extrabold">Set your daily targets</h1><p class="text-xs text-gray-400 mt-1 mb-3">We’ll calculate calories and macros for you. You can change them any time.</p><div style="display:grid;gap:12px"><div style="display:flex;gap:8px;flex-wrap:wrap">'+[['cut','Lose weight'],['maintain','Maintain'],['bulk','Build muscle']].map(([v,t])=>CH('mode',v,t,(d.mode||'cut')===v)).join('')+'</div><div style="display:flex;gap:8px">'+[['m','Male'],['f','Female']].map(([v,t])=>CH('sex',v,t,(d.sex||'m')===v)).join('')+'</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">'+F('m-age','Age','number','20','inputmode="numeric"')+F('m-ft','Ft','number','5','inputmode="numeric"')+F('m-in','In','number','10','inputmode="numeric"')+F('m-wt','Lbs','number','160','inputmode="numeric"')+'</div><select id="m-act" class="bg-[#1a1a1d] border border-white/10 rounded-xl px-3 py-3 outline-none" style="font-size:16px">'+ACT.map(([v,t])=>'<option value="'+v+'"'+((d.act||1.375)==v?' selected':'')+'>'+t+'</option>').join('')+'</select><div id="m-prev" style="padding:14px;border-radius:16px;background:rgba(91,209,122,.1);border:1px solid rgba(91,209,122,.35);text-align:center;font-weight:800">'+(g?g.calories.toLocaleString()+' cal · '+g.protein+'g protein':'Enter your details to see your targets')+'</div>'+err+B1('macros-next','Save my targets')+'<div style="text-align:center">'+LK('skip','I’ll do this later')+'</div></div>',i/(n-1),true)}
  if(s==='budget'){const i=steps().indexOf('budget'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">What’s your meal budget?</h1><p class="text-xs text-gray-400 mt-1 mb-4">Roughly how much do you want to spend per serving? We’ll highlight dishes that fit.</p><div style="display:flex;flex-wrap:wrap;gap:8px">'+[[4,'Under $4'],[6,'$4–6'],[8,'$6–8'],[12,'$8+']].map(([v,t])=>CH('budget',v,t,(d.budget||6)==v)).join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('next','Continue')+'<div style="text-align:center">'+LK('skip','Skip for now')+'</div></div>',i/(n-1),true)}
  if(s==='diet'){const i=steps().indexOf('diet'),n=steps().length;return authShell('<h1 class="text-2xl font-extrabold">Any dietary needs?</h1><p class="text-xs text-gray-400 mt-1 mb-4">We’ll filter dining hall items and dishes for you. Always double-check allergens with the dining hall.</p><div style="display:flex;flex-wrap:wrap;gap:8px">'+[['vegetarian','Vegetarian'],['vegan','Vegan'],['gluten-free','Gluten-free'],['dairy-free','Dairy-free'],['nut-free','Nut-free']].map(([v,t])=>CH('diet',v,t,(d.diets||[]).includes(v))).join('')+'</div><div style="margin-top:auto;padding-top:18px;display:grid;gap:10px">'+B1('next','Continue')+'<div style="text-align:center">'+LK('skip','None / skip')+'</div></div>',i/(n-1),true)}
@@ -4747,7 +4798,7 @@ function view(){const s=AU.step,d=AU.d,err='<p id="au-err" class="text-xs text-r
 function authEl(){let m=$('ge-auth');if(!m){m=document.createElement('div');m.id='ge-auth';m.style.cssText='position:absolute;inset:0;z-index:125;background:linear-gradient(180deg,#18181b 0%,#0d0d10 100%);overflow-y:auto;display:none;color:#f3f4f6';$('phone-container').appendChild(m);m.addEventListener('click',authClick);m.addEventListener('input',authInput)}return m}
 function openAuth(step,edit){AU.edit=edit||false;AU.step=step;if(edit===true&&step==='profile'){AU.d=Object.assign({},myProfile)}if(step==='goals'&&edit){AU.d=Object.assign({},myProfile,{intents:(myProfile&&myProfile.intents)||[]});AU.d.mode=myProfile.goals&&myProfile.goals.mode}
  if(!edit&&(step==='welcome'||step==='login'||step==='signup'))AU.d={};paint();authEl().style.display='block'}
-function paint(){const m=authEl();m.innerHTML=view();m.scrollTop=0;const d=AU.d;if(AU.step==='profile'){$('au-user').value=d.username||'';$('au-bio').value=d.bio||'';$('au-school').value=d.school||'Elon University';if(d.username&&!AU.edit)userMsg()}if(AU.step==='macros'){$('m-age').value=d.age||'';$('m-ft').value=d.ft||'';$('m-in').value=d.inch||'';$('m-wt').value=d.wt||''}}
+function paint(){const m=authEl();m.innerHTML=view();m.scrollTop=0;const d=AU.d;if(AU.step==='profile'){$('au-user').value=d.username||'';$('au-bio').value=d.bio||'';$('au-school').value=d.school||GE_SCHOOL.name;if(d.username&&!AU.edit)userMsg()}if(AU.step==='macros'){$('m-age').value=d.age||'';$('m-ft').value=d.ft||'';$('m-in').value=d.inch||'';$('m-wt').value=d.wt||''}}
 const say=(t,ok)=>{const e=$('au-err');if(e){e.textContent=t||'';e.style.color=ok?'#5bd17a':''}};
 let utm;function userMsg(){const u=$('au-user').value.trim(),m=$('au-av-msg');clearTimeout(utm);if(AU.edit||!u){m.textContent='';return}if(!/^[A-Za-z0-9._]{3,20}$/.test(u)){m.style.color='#9ca3af';m.textContent='3–20 letters, numbers, . or _';return}
  m.style.color='#9ca3af';m.textContent='Checking…';utm=setTimeout(async()=>{try{const s=await db.doc('profiles/u_'+lname(u)).get();m.style.color=s.exists?'#fb7185':'#5bd17a';m.textContent=s.exists?'That username is taken':'✓ Available'}catch(e){m.textContent=''}},450)}
@@ -4817,11 +4868,11 @@ GE_SEED.forEach((s,i)=>RECIPES.push({id:'ge-'+(i+1),emoji:s[1],title:s[0],author
 USER_PROFILES.GoodEats=Object.assign(getOrCreateProfileData('GoodEats'),{username:'GoodEats',handle:'@GoodEats',initials:'🍽️',bio:'Official Good Eats picks: popular, healthy, budget-friendly classics. New dishes added often.',school:'',locationBadge:'✓ Verified',followers:0,followingCount:0,isSelf:false,top5:mapT(GE_SEED.slice(0,5).map((s,i)=>({title:s[0],emoji:s[1],recipeId:'ge-'+(i+1)})))});
 // ----- Settings page -----
 function drawSettings(){const st=$('tab-settings');if(!st)return;let w=$('ge-settings');if(!w){[...st.children].forEach(c=>c.style.display='none');w=document.createElement('div');w.id='ge-settings';w.style.cssText='padding:18px 16px 120px';st.appendChild(w);
- w.onclick=async e=>{const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;({theme:cycleTheme,edit:()=>authMode?openAuth('profile',true):openOnboard(true),pw:async()=>{try{await auth.sendPasswordResetEmail(auth.currentUser.email);showToast('Password reset link sent to '+auth.currentUser.email)}catch(x){showToast('Could not send reset email')}},verify:async()=>{try{await auth.currentUser.sendEmailVerification();showToast('Verification email sent')}catch(x){showToast('Try again in a minute')}},campus:async()=>{const on=myProfile.school==='Elon University';try{await saveDoc({school:on?'Home Cook':'Elon University'})}catch(x){}applyProfile(myProfile);drawSettings()},blocked:blockedList,terms:()=>openLegal('terms'),privacy:()=>openLegal('privacy'),out:doLogout,del:deleteAccount})[k]()}}
+ w.onclick=async e=>{const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;({theme:cycleTheme,edit:()=>authMode?openAuth('profile',true):openOnboard(true),pw:async()=>{try{await auth.sendPasswordResetEmail(auth.currentUser.email);showToast('Password reset link sent to '+auth.currentUser.email)}catch(x){showToast('Could not send reset email')}},verify:async()=>{try{await auth.currentUser.sendEmailVerification();showToast('Verification email sent')}catch(x){showToast('Try again in a minute')}},campus:async()=>{const on=myProfile.school===GE_SCHOOL.name;try{await saveDoc({school:on?'Home Cook':GE_SCHOOL.name})}catch(x){}applyProfile(myProfile);drawSettings()},blocked:blockedList,terms:()=>openLegal('terms'),privacy:()=>openLegal('privacy'),out:doLogout,del:deleteAccount})[k]()}}
  const u=authMode&&auth.currentUser,row=(k,t,s,c)=>'<button data-k="'+k+'" style="display:flex;width:100%;justify-content:space-between;align-items:center;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin-bottom:8px;text-align:left"><span><b style="font-size:14px;color:'+(c||'#f3f4f6')+'">'+t+'</b>'+(s?'<br><span style="font-size:11px;color:#9ca3af">'+s+'</span>':'')+'</span><span style="color:#6b7280;font-size:18px">›</span></button>',
- hd=t=>'<div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;margin:18px 4px 8px">'+t+'</div>',on=myProfile&&myProfile.school==='Elon University';
+ hd=t=>'<div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ca3af;margin:18px 4px 8px">'+t+'</div>',on=myProfile&&myProfile.school===GE_SCHOOL.name;
  w.innerHTML='<h1 style="font-size:22px;font-weight:900;margin-bottom:2px">Settings</h1>'+hd('Account')+(u?'<div style="padding:12px 14px;margin-bottom:8px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)"><div style="font-size:11px;color:#9ca3af">Signed in as</div><div style="font-size:14px;font-weight:700;word-break:break-all">'+esc(u.email)+'</div><div style="font-size:11px;margin-top:2px;color:'+(u.emailVerified?'#5bd17a':'#fbbf24')+'">'+(u.emailVerified?'✓ Email verified':'Email not verified')+'</div></div>':'')+row('edit','Edit profile','Photo, username, bio')+(u?row('pw','Change password','We’ll email you a reset link'):'')+(u&&!u.emailVerified?row('verify','Resend verification email',''):'')
- +hd('Preferences')+row('theme','Appearance',themeLabel())+row('campus','I’m an Elon student',on?'On — campus dining features are shown':'Off — campus features are hidden')+hd('Privacy &amp; safety')+row('blocked','Blocked users','')+row('terms','Community Guidelines &amp; Terms','')+row('privacy','Privacy Policy','')
+ +hd('Preferences')+row('theme','Appearance',themeLabel())+row('campus','I’m an '+GE_SCHOOL.short+' student',on?'On — campus dining features are shown':'Off — campus features are hidden')+hd('Privacy &amp; safety')+row('blocked','Blocked users','')+row('terms','Community Guidelines &amp; Terms','')+row('privacy','Privacy Policy','')
  +hd('About')+'<div style="padding:12px 14px;font-size:12px;color:#9ca3af">Good Eats · beta v0.9<br>Nutrition and price info are estimates. Always check allergens on the label or with dining staff.</div>'+hd('Account actions')+row('out','Log out','')+row('del','Delete my account','Permanently removes your profile and posts','#fb7185')}
 async function doLogout(){if(!confirm('Log out of Good Eats? You can log back in any time with your email and password.'))return;['ge_profile','ge_posts','ge_follows','ge_blocked','ge_hidden'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});try{sessionStorage.clear()}catch(e){}try{if(window.firebase&&firebase.apps.length)await firebase.auth().signOut()}catch(e){}location.reload()}
 const _st=switchTab;switchTab=function(id){_st.apply(this,arguments);if(id==='tab-settings')try{drawSettings()}catch(e){console.warn(e)}};
@@ -5056,7 +5107,7 @@ async function addClick(e){const b=e.target.closest('[data-a]');if(!b||b.tagName
 async function doPost(b){const d=AD.d,err=$('add-err');const cap=($('add-cap')?$('add-cap').value:AD.caption||'').trim();AD.caption=cap;if(AD.rec){AD.ing=$('add-ing')?$('add-ing').value:AD.ing;AD.stp=$('add-stp')?$('add-stp').value:AD.stp}
  if(isBad(cap+' '+d.t+' '+(AD.rec?AD.ing+' '+AD.stp:'')))return err.textContent='That contains language that isn’t allowed on Good Eats.';
  const ri=rankIdx(d),rs=ri>=0?scoreOf(myProfile.rankings,ri):null,rating=AD.sent==='love'?9:AD.sent==='ok'?7:AD.sent==='no'?4.5:(rs||8),lines=s=>String(s||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,30),id='r-custom-'+Date.now();
- const r={id,emoji:d.e,title:d.t,author:ME,handle:'@'+ME,isFollowing:true,authorSchool:APP_STATE.isStudent?'Elon':null,authorBadge:APP_STATE.isStudent?'Elon':'Home Cook',isTrending:false,prepTime:'—',rating:+(+rating).toFixed(1),ratingsCount:1,category:['recommended'],caption:cap||('My take on '+d.t),image:AD.photo||phImg(d.e),macros:{cal:d.cal||0,p:d.p||0,c:d.c||0,f:d.f||0},ingredients:AD.rec?lines(AD.ing).map(n=>({name:n,qty:'',store:'Home',price:0})):[],steps:AD.rec?lines(AD.stp):[],likes:0,liked:false,bookmarked:true,comments:[],_shared:true};
+ const r={id,emoji:d.e,title:d.t,author:ME,handle:'@'+ME,isFollowing:true,authorSchool:APP_STATE.isStudent?GE_SCHOOL.short:null,authorBadge:APP_STATE.isStudent?GE_SCHOOL.short:'Home Cook',isTrending:false,prepTime:'—',rating:+(+rating).toFixed(1),ratingsCount:1,category:['recommended'],caption:cap||('My take on '+d.t),image:AD.photo||phImg(d.e),macros:{cal:d.cal||0,p:d.p||0,c:d.c||0,f:d.f||0},ingredients:AD.rec?lines(AD.ing).map(n=>({name:n,qty:'',store:'Home',price:0})):[],steps:AD.rec?lines(AD.stp):[],likes:0,liked:false,bookmarked:true,comments:[],_shared:true};
  b.disabled=true;try{if(online)await db.doc('posts/'+id).set({uid,author:ME,ts:Date.now(),json:JSON.stringify(Object.assign({},r,{image:''})),photo:AD.photo||''});else{const a=ls.get('ge_posts')||[];a.unshift(r);ls.set('ge_posts',a.slice(0,20))}}catch(x){b.disabled=false;err.textContent='Could not post — check your connection and try again.';return}
  RECIPES.unshift(r);addEl().style.display='none';try{switchTab('tab-feed')}catch(x){}refresh();showToast('Posted!')}
 const xClean=a=>(Array.isArray(a)?a:[]).slice(0,100).map(o=>({t:esc(o.t||''),e:esc(o.e||'🍽️'),tier:+o.tier||2,r:+o.r||0,n:esc(o.n||''),m:esc(o.m||''),d:+o.d||0}));
@@ -5269,7 +5320,7 @@ APP_STATE.phoenix.level1='halls';setPhoenixLevel1('halls');
 setInterval(()=>{if(APP_STATE.phoenix.level1==='hours'||APP_STATE.phoenix.level1==='halls'){const v=$('catalogue-view-dining');if(v&&!v.classList.contains('hidden')&&!v.contains(document.activeElement))renderPhoenixContent()}},60000);
 
 // ---------- v8: real daily Elon dining hall menus (data courtesy of Phoenix Plate) ----------
-const MENU_URL='https://rbonehoye.github.io/phoenix-plate/menus.json';
+const MENU_URL=GE_SCHOOL.menuUrl;
 
 // rough corrections for hall items whose published macros clearly contradict their calories
 const MFIX={'Nonfat Vanilla Greek Yogurt':{calories:90,protein:9,carbs:11,fat:0},'Raisins':{calories:100,protein:1,carbs:25,fat:0},'Diced Ham':{calories:30,protein:5,carbs:0,fat:1},'Honey':{calories:60,protein:0,carbs:17,fat:0},'Dried Apricots':{calories:80,protein:1,carbs:20,fat:0},'Arnold Palmer':{calories:80,protein:0,carbs:20,fat:0},'Carrot Sticks':{calories:25,protein:1,carbs:6,fat:0},'Lemon Pepper Chicken':{calories:125,protein:10,carbs:3,fat:8},'Chicken Pesto Alfredo Bake':{calories:600,protein:29,carbs:39,fat:33},'Steak Sauce':{calories:35,protein:0,carbs:8,fat:0},'Grated Parmesan Cheese':{calories:60,protein:5,carbs:1,fat:4},'Spicy Brown Mustard':{calories:5,protein:0,carbs:0,fat:0},'Feta Cheese Crumbles':{calories:80,protein:5,carbs:1,fat:6}};
@@ -5441,7 +5492,7 @@ function syncNav(){const nav=document.querySelector('.ge-nav');if(!nav)return;co
  const vis=[...document.querySelectorAll('.app-tab')].find(t=>!t.classList.contains('hidden')),id=vis?vis.id:'tab-feed';
  const key=id==='tab-feed'?'home':id==='tab-health'?'health':id==='tab-catalogue'?(CMODE==='dining'?'dining':CMODE==='cart'?'':'explore'):'profile';
  nav.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active-nav',b.dataset.nav===key));
- const t=$('ge-ph-title');if(t)t.textContent=CMODE==='dining'?'Elon Dining':CMODE==='cart'?'Grocery cart':'Explore';
+ const t=$('ge-ph-title');if(t)t.textContent=CMODE==='dining'?GE_SCHOOL.dining:CMODE==='cart'?'Grocery cart':'Explore';
  const bk=$('ge-ph-back'),ct=$('ge-ph-cart');if(bk)bk.style.display=CMODE==='cart'?'':'none';if(ct)ct.style.display=CMODE==='recipes'?'':'none';
  const n=$('ge-ph-cartn');if(n)n.textContent=(APP_STATE.cart||[]).length}
 const _st11=switchTab;switchTab=function(id){_st11.apply(this,arguments);if(id==='tab-catalogue'&&CMODE==='dining'&&!APP_STATE.isStudent){CMODE='recipes';switchCatalogueMode('recipes')}syncNav()};
@@ -5508,6 +5559,80 @@ hideSplash();
  document.addEventListener('input',e=>{if(e.target&&e.target.id==='recipe-search-input')gePeople()});
  function setPh(){const i=document.getElementById('recipe-search-input');if(i)i.placeholder='Search dishes, ingredients or @people'}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setPh);else setPh();
+})();
+</script>
+<script>
+// ===== v13: guest browsing, campus leaderboard, Good Eats Plus (demo), invite friends, school labels =====
+(function(){
+ const $=id=>document.getElementById(id);
+ const E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const SCH=window.GE_SCHOOL||{name:'Elon University',short:'Elon'};
+ const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+ const hasAcct=()=>{try{return !!(myProfile&&myProfile.username)}catch(e){return false}};
+ const me=()=>{try{return ME}catch(e){return 'Guest'}};
+
+ // ---------- school labels in static markup (does nothing while the school is Elon) ----------
+ function schoolLabels(){if(SCH.short==='Elon')return;const root=$('phone-container');if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode()))if(/\bElon\b/.test(n.nodeValue))n.nodeValue=n.nodeValue.replace(/\bElon University\b/g,SCH.name).replace(/\bElon\b/g,SCH.short)}
+
+ // ---------- bottom sheet helper ----------
+ function sheet(id,html){let m=$(id);if(!m){m=document.createElement('div');m.id=id;m.className='ge-sh';$('phone-container').appendChild(m);
+   m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-x]')){m.style.display='none';return}const g=e.target.closest('[data-go]');if(g){m.style.display='none';try{openAuth(g.getAttribute('data-go'))}catch(x){}}})}
+  m.innerHTML='<div class="ge-sh-c"><div class="ge-sh-grab"></div>'+html+'</div>';m.style.display='flex';return m}
+
+ // ---------- 1. guest browsing ----------
+ window.geAskSignup=function(why){sheet('ge-join','<h3>Join Good Eats</h3><p>Create a free account to '+E(why)+'. It takes about a minute.</p><button class="ge-b1" data-go="signup">Create account</button><button class="ge-b2" data-go="login">Log in</button><button class="ge-b3" data-x>Not now</button>')};
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-browse]');if(!b)return;e.preventDefault();e.stopPropagation();try{authEl().style.display='none'}catch(x){}try{switchTab('tab-feed')}catch(x){}try{showToast('Browsing as a guest. Sign up any time from Profile.')}catch(x){}},true);
+ [['openAdd','post, rank or log dishes'],['toggleFollowCreator','follow people'],['toggleRecipeLike','like dishes'],['toggleReviewLike','like reviews'],['toggleRateDrawer','rate dishes'],['submitRecipeRating','rate dishes'],['toggleRecipeBookmark','save dishes'],['submitNewComment','comment']].forEach(([f,why])=>{
+  const o=window[f];if(typeof o!=='function')return;window[f]=function(){if(!hasAcct()){const ev=[...arguments].find(a=>a&&a.stopPropagation);if(ev)ev.stopPropagation();geAskSignup(why);return}return o.apply(this,arguments)}});
+
+ // ---------- 2. campus leaderboard (Explore) ----------
+ function topBox(){let b=$('ge-top');const g=$('catalogue-recipes-grid');if(!b&&g){b=document.createElement('div');b.id='ge-top';g.parentNode.insertBefore(b,$('ge-people')||g);b.addEventListener('click',e=>{const d=e.target.closest('[data-dish]');if(d){openRecipeModal(d.getAttribute('data-dish'));return}const u=e.target.closest('[data-user]');if(u)openUserProfile(u.getAttribute('data-user'),e)})}return b}
+ window.geTop=function(){const b=topBox();if(!b)return;const q=(($('recipe-search-input')||{}).value||'').trim();if(q){b.innerHTML='';return}
+  let dishes=[];try{dishes=RECIPES.filter(r=>r&&r.title&&typeof r.rating==='number').slice().sort((a,c)=>c.rating-a.rating||(c.likes||0)-(a.likes||0)).slice(0,3)}catch(e){}
+  let ppl=[];try{ppl=Object.values(USER_PROFILES).filter(p=>p&&p.username&&!p.isSelf&&p.username!==me()&&(p.followers||0)>0).sort((a,c)=>(c.followers||0)-(a.followers||0)).slice(0,3)}catch(e){}
+  if(!dishes.length&&!ppl.length){b.innerHTML='';return}
+  b.innerHTML='<div class="ge-top"><div class="ge-top-h"><b>Top at '+E(SCH.short)+'</b><span>Highest rated right now</span></div>'+
+   dishes.map((r,i)=>'<button class="ge-top-r" data-dish="'+E(r.id)+'"><span class="ge-top-n">'+(i+1)+'</span><span class="ge-top-t">'+E(r.title)+'</span><span class="ge-top-s">'+r.rating.toFixed(1)+'</span></button>').join('')+
+   (ppl.length?'<div class="ge-top-p"><span>Top foodies</span>'+ppl.map(p=>'<button data-user="'+E(p.username)+'">@'+E(p.username)+' · '+(p.followers||0)+'</button>').join('')+'</div>':'')+'</div>'};
+ if(typeof window.renderCatalogueRecipes==='function'){const _r=window.renderCatalogueRecipes;window.renderCatalogueRecipes=function(){const x=_r.apply(this,arguments);try{geTop()}catch(e){}return x}}
+ document.addEventListener('input',e=>{if(e.target&&e.target.id==='recipe-search-input')try{geTop()}catch(x){}});
+
+ // ---------- 3. Good Eats Plus (demo: nothing is charged or locked) ----------
+ let plan='year';
+ window.gePlus=function(){const m=sheet('ge-plus','<h3>Good Eats Plus</h3><p>Free to join. Plus adds the planning tools.</p>'+
+   '<div class="ge-plus-g"><div><b>Free</b><span>Feed, rankings &amp; Top 5</span><span>'+E(SCH.short)+' dining menus</span><span>Calorie &amp; macro logging</span><span>Find &amp; follow people</span></div>'+
+   '<div class="ge-plus-on"><b>Plus</b><span>Meal-prep planner</span><span>Cheaper store swaps</span><span>Budget &amp; spend tracking</span><span>Weekly progress insights</span></div></div>'+
+   '<div class="ge-plus-pr"><button data-plan="month" class="'+(plan==='month'?'on':'')+'"><b>$2.99</b><span>per month</span></button><button data-plan="year" class="'+(plan==='year'?'on':'')+'"><b>$19.99</b><span>per year · save 44%</span></button></div>'+
+   '<button class="ge-b1" data-trial>Start 7-day free trial</button><button class="ge-b3" data-x>Maybe later</button><p class="ge-plus-f">Demo for our class launch. No payment is collected.</p>');
+  m.onclick=e=>{const p=e.target.closest('[data-plan]');if(p){plan=p.getAttribute('data-plan');gePlus();return}if(e.target.closest('[data-trial]')){LS.set('ge_plus_waitlist',plan);m.style.display='none';try{showToast('Plus isn’t live yet. You’re on the early-access list!')}catch(x){}}}};
+
+ // ---------- 4. invite friends ----------
+ window.geInvite=async function(){const base=location.origin+location.pathname,url=hasAcct()?base+'?ref='+encodeURIComponent(me()):base,text='Join me on Good Eats: rank dishes, see '+SCH.short+' dining menus and track macros.';
+  try{if(navigator.share){await navigator.share({title:'Good Eats',text,url});return}}catch(e){if(e&&e.name==='AbortError')return}
+  try{await navigator.clipboard.writeText(text+' '+url);showToast('Invite link copied')}catch(e){prompt('Copy your invite link:',url)}};
+ const refRaw=new URLSearchParams(location.search).get('ref');
+ if(refRaw&&/^[A-Za-z0-9._-]{1,30}$/.test(refRaw)&&!LS.get('ge_ref_done'))LS.set('ge_ref',refRaw);
+ function inviteBanner(){const ref=LS.get('ge_ref'),feed=$('feed-stream');let b=$('ge-inv');
+  if(!ref||LS.get('ge_ref_done')||ref===me()||(typeof isFollowingUser==='function'&&isFollowingUser(ref))||!feed){if(b)b.remove();return}
+  if(!b){b=document.createElement('div');b.id='ge-inv';feed.parentNode.insertBefore(b,feed);b.addEventListener('click',e=>{if(e.target.closest('[data-inv-x]')){LS.set('ge_ref_done',1);b.remove();return}if(e.target.closest('[data-inv-f]')){toggleFollowCreator(ref,e);if(hasAcct()){LS.set('ge_ref_done',1);b.remove()}}})}
+  b.innerHTML='<div><b>@'+E(ref)+' invited you</b><span>Follow them to see their dishes in your feed.</span></div><button class="ge-pp-f" data-inv-f>Follow</button><button class="ge-inv-x" data-inv-x aria-label="Dismiss">✕</button>'}
+ if(typeof window.renderFeed==='function'){const _f=window.renderFeed;window.renderFeed=function(){const x=_f.apply(this,arguments);try{inviteBanner()}catch(e){}return x}}
+
+ // ---------- profile: guest card + grow row (own profile only) ----------
+ function profileExtras(){const t=$('tab-profile');if(!t)return;const own=!APP_STATE.viewedProfileUser||APP_STATE.viewedProfileUser===me();
+  ['ge-guest','ge-grow'].forEach(id=>{const x=$(id);if(x)x.remove()});if(!own)return;
+  const grow=document.createElement('div');grow.id='ge-grow';grow.innerHTML='<button data-inv>Invite friends</button><button data-plus class="ge-grow-plus">✦ Good Eats Plus</button>';
+  grow.addEventListener('click',e=>{if(e.target.closest('[data-inv]'))geInvite();if(e.target.closest('[data-plus]'))gePlus()});
+  t.insertBefore(grow,t.children[1]||null);
+  if(!hasAcct()){const g=document.createElement('div');g.id='ge-guest';g.innerHTML='<div><b>You’re browsing as a guest</b><span>Create a free account to post, rank and follow.</span></div><button class="ge-pp-f" data-go-signup>Sign up</button>';
+   g.addEventListener('click',e=>{if(e.target.closest('[data-go-signup]'))try{openAuth('signup')}catch(x){}});t.insertBefore(g,t.firstChild)}}
+ if(typeof window.renderProfileView==='function'){const _p=window.renderProfileView;window.renderProfileView=function(){const x=_p.apply(this,arguments);try{profileExtras()}catch(e){}return x}}
+
+ // Plus badges are tappable shortcuts to the Plus sheet (features stay unlocked)
+ document.addEventListener('click',e=>{if(e.target.closest('#ge-plus-badge'))gePlus()});
+
+ function init(){schoolLabels();try{inviteBanner()}catch(e){}try{geTop()}catch(e){}}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 </body>
