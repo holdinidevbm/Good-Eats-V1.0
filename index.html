@@ -5613,9 +5613,9 @@ hideSplash();
   ['ge-guest','ge-grow'].forEach(id=>{const x=$(id);if(x)x.remove()});if(!own)return;
   const grow=document.createElement('div');grow.id='ge-grow';grow.innerHTML='<button data-inv>Invite friends</button><button data-plus class="ge-grow-plus">✦ Good Eats Plus</button>';
   grow.addEventListener('click',e=>{if(e.target.closest('[data-inv]'))geInvite();if(e.target.closest('[data-plus]'))gePlus()});
-  t.insertBefore(grow,t.children[1]||null);
+  const hdr=$('profile-header-card');if(hdr)hdr.after(grow);else t.appendChild(grow);
   if(!hasAcct()){const g=document.createElement('div');g.id='ge-guest';g.innerHTML='<div><b>You’re browsing as a guest</b><span>Create a free account to post, rank and follow.</span></div><button class="ge-pp-f" data-go-signup>Sign up</button>';
-   g.addEventListener('click',e=>{if(e.target.closest('[data-go-signup]'))try{openAuth('signup')}catch(x){}});t.insertBefore(g,t.firstChild)}}
+   g.addEventListener('click',e=>{if(e.target.closest('[data-go-signup]'))try{openAuth('signup')}catch(x){}});if(hdr)t.insertBefore(g,hdr);else t.appendChild(g)}}
  {const _p=renderProfileView;renderProfileView=function(){const x=_p.apply(this,arguments);try{profileExtras()}catch(e){}return x}}
 
  // Plus badges are tappable shortcuts to the Plus sheet (features stay unlocked)
@@ -5745,6 +5745,8 @@ hideSplash();
    let txt;if(g.mode==='maintain'||!g.targetWt)txt=g.mode==='maintain'?'Maintaining · '+w+' lb':(g.mode==='cut'?'Losing':'Gaining')+' · '+w+' lb now';
    else{const left=Math.abs(+(g.targetWt-w).toFixed(1));txt=w+' → '+g.targetWt+' lb'+(g.targetDate?' · by '+fmt(g.targetDate):'')+(left?' · '+left+' lb to go':'')}
    line.innerHTML='<p>'+txt+(ago!=null&&ago>=7?'<span> · last weigh-in '+ago+' days ago</span>':'')+'</p><div><button data-ge-w>Log weight</button><button data-ge-edit>Edit goals</button></div>'}
+  {const _st=switchTab;switchTab=function(tab){const x=_st.apply(this,arguments);if(tab==='tab-health')try{drawGoalUI()}catch(e){}return x}}
+  try{drawGoalUI()}catch(e){}
  })();
 })();
 </script>
