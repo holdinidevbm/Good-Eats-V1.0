@@ -337,6 +337,7 @@ input:focus,textarea:focus,select:focus{border-color:rgba(91,209,122,.6)!importa
 #ge-goal-line div{display:flex;gap:8px;justify-content:center}
 #ge-goal-line button{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:700;background:#1c1d21;border:1px solid rgba(255,255,255,.1);color:#e5e7eb;cursor:pointer}
 #ge-goal-line button[data-ge-w]{background:var(--acc,#5bd17a);color:#07130b;border-color:transparent}
+#ge-auth button[data-g]:not([class*="border-emerald"]){border:1px solid rgba(255,255,255,.1)!important;background:rgba(255,255,255,.04)!important}
 </style>
 </head>
 <body class="min-h-screen flex justify-center items-center antialiased selection:bg-indigo-500 selection:text-white">
@@ -5743,6 +5744,7 @@ hideSplash();
    if(!line){line=document.createElement('div');line.id='ge-goal-line';ring.appendChild(line);line.addEventListener('click',e=>{if(e.target.closest('[data-ge-w]'))geLogWeight();if(e.target.closest('[data-ge-edit]'))geEditGoals()})}
    const wl=(g.weights||[]).slice(-1)[0],w=wl?wl.w:g.body.wt,ago=wl?Math.floor((Date.parse(today()+'T00:00:00')-Date.parse(wl.d+'T00:00:00'))/DAY):null;
    let txt;if(g.mode==='maintain'||!g.targetWt)txt=g.mode==='maintain'?'Maintaining · '+w+' lb':(g.mode==='cut'?'Losing':'Gaining')+' · '+w+' lb now';
+   else if((g.mode==='cut'&&w<=g.targetWt)||(g.mode==='bulk'&&w>=g.targetWt))txt='Goal reached · '+w+' lb 🎉';
    else{const left=Math.abs(+(g.targetWt-w).toFixed(1));txt=w+' → '+g.targetWt+' lb'+(g.targetDate?' · by '+fmt(g.targetDate):'')+(left?' · '+left+' lb to go':'')}
    line.innerHTML='<p>'+txt+(ago!=null&&ago>=7?'<span> · last weigh-in '+ago+' days ago</span>':'')+'</p><div><button data-ge-w>Log weight</button><button data-ge-edit>Edit goals</button></div>'}
   {const _st=switchTab;switchTab=function(tab){const x=_st.apply(this,arguments);if(tab==='tab-health')try{drawGoalUI()}catch(e){}return x}}
